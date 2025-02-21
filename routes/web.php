@@ -2,9 +2,11 @@
 
 use Inertia\Inertia;
 use App\Models\Produto;
+use App\Models\Endereco;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\EstampadorasController;
 
@@ -23,6 +25,9 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/cep/{numero}', [EnderecoController::class, 'cep'])->name('endereco.cep');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

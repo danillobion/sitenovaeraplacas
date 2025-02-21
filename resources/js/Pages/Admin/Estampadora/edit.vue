@@ -7,6 +7,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import axios from 'axios'; // Importa Axios para a requisição HTTP
 
 const props = defineProps({
   estampadora: Object,
@@ -24,8 +25,8 @@ const form = useForm({
   logradouro: '',
   numero: '',
   complemento: '',
-  latitude: '',
-  longitude: '',
+  latitude: 0,
+  longitude: 0,
 });
 
 const enderecoFields = [
@@ -45,6 +46,36 @@ const submit = () => {
     onFinish: () => form.reset(),
   });
 };
+
+// Método para buscar CEP na API do ViaCEP
+const consultarCep = async () => {
+  const cep = form.cep.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+  if (cep.length !== 8) {
+    alert("CEP inválido! Digite um CEP com 8 dígitos.");
+    return;
+  }
+
+  try {
+    const response = await axios.get(route('endereco.cep', cep));
+
+    if (response.data.error) {
+      alert(response.data.error);
+      return;
+    }
+
+    form.cep = response.data.cep;
+    form.uf = response.data.uf;
+    form.cidade = response.data.cidade;
+    form.bairro = response.data.bairro;
+    form.logradouro = response.data.logradouro;
+    form.complemento = response.data.complemento || '';
+  } catch (error) {
+    alert("Erro ao buscar o CEP. Tente novamente.");
+    console.error(error);
+  }
+};
+
 
 onMounted(() => {
   const { estampadora, endereco } = props;
@@ -112,7 +143,27 @@ onMounted(() => {
               <h2 class="mt-4 text-lg">Endereço</h2>
 
               <div class="mt-4 grid md:grid-cols-2 md:gap-6">
-                <div v-for="field in enderecoFields" :key="field.id">
+                <!-- Campo CEP com Botão ao Lado -->
+                <div class="flex items-center space-x-2">
+                  <div class="w-full">
+                    <InputLabel for="cep" value="CEP" />
+                    <TextInput
+                      id="cep"
+                      type="text"
+                      class="mt-1 block w-full"
+                      v-model="form.cep"
+                      required
+                      autocomplete="cep"
+                    />
+                    <InputError class="mt-2" :message="form.errors.cep" />
+                  </div>
+                  <PrimaryButton @click.prevent="consultarCep" class="mt-6">
+                    Localizar
+                  </PrimaryButton>
+                </div>
+
+                <!-- Outros Campos do Endereço -->
+                <div v-for="field in enderecoFields.slice(1)" :key="field.id">
                   <InputLabel :for="field.id" :value="field.label" />
                   <TextInput
                     :id="field.id"
