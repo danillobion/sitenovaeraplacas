@@ -1,9 +1,11 @@
 <?php
 
 use Inertia\Inertia;
+use App\Models\Produto;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\EstampadorasController;
 
 Route::get('/', function () {
@@ -27,10 +29,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/estampadoras', [EstampadorasController::class, 'index'])->name('estampadora.index');
     Route::get('/estampadoras/edit/{id?}', [EstampadorasController::class, 'editar'])->name('estampadora.editar');
-    // Route::get('/estampadoras/find-all', [EstampadorasController::class, 'findAll'])->name('estampadora.findAll');
     Route::post('/estampadoras/salvar', [EstampadorasController::class, 'salvar'])->name('estampadora.salvar');
+    Route::delete('/estampadoras/deletar', [EstampadorasController::class, 'deletar'])->name('estampadora.deletar');
 
-
+    Route::get('/estampadoras/produtos/{estampadora_id}', [ProdutosController::class, 'index'])->name('estampadora.produtos.index');
+    Route::get('/estampadoras/produtos/editar/{estampadora_id?}/{id?}', [ProdutosController::class, 'editar'])->name('estampadora.produtos.editar');
+    Route::post('/estampadoras/produtos/salvar', [ProdutosController::class, 'salvar'])->name('estampadora.produtos.salvar');
+    Route::delete('/estampadoras/produtos/deletar', [ProdutosController::class, 'deletar'])->name('estampadora.produtos.deletar');
 
 });
 

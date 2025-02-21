@@ -7,17 +7,15 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Estampadora extends Model
+class Produto extends Model
 {
     use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
+        'id',
+        'estampadora_id',
         'nome',
-        'cnpj',
-        'endereco_id',
+        'descricao',
+        'valor',
     ];
-
-    public function endereco(){
-        return $this->belongsTo(Endereco::class);
-    }
 }

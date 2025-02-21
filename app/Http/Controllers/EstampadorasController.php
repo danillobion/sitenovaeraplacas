@@ -57,13 +57,14 @@ class EstampadorasController extends Controller
 
     public function deletar(Request $request)
     {
-        $estampadora = Estampadora::find($request->id);
+        $request->validate([
+            'estampadora_id' => 'required'
+        ]);
+        $estampadora = Estampadora::find($request->estampadora_id);
         if (!$estampadora) {
             return response()->json(['error' => 'Estampadora não encontrada'], 404);
         }
-
         $estampadora->delete();
-
         return Redirect::route('estampadora.index')->with('success', 'Estampadora deletada com sucesso!');
     }
 }
