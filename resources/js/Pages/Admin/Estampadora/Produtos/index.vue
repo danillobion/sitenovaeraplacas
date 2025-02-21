@@ -5,6 +5,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 const props = defineProps({
     produtos: Array,
     estampadora_id: Number,
+    estampadora_nome: String,
 });
 
 const form = useForm({});
@@ -22,7 +23,10 @@ const deletarProduto = (id) => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Produtos</h2>
+                <div>
+                    <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Produtos</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Estampadora: {{ props.estampadora_nome }}</p>
+                </div>
                 <Link
                     :href="route('estampadora.produtos.editar', { id: null, estampadora_id: props.estampadora_id })"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

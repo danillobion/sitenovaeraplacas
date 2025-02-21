@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estampadora;
 use Inertia\Inertia;
 use App\Models\Produto;
 use Illuminate\Http\Request;
@@ -11,9 +12,11 @@ class ProdutosController extends Controller
 {
     public function index($estampadora_id = null){
         $produtos = Produto::where("estampadora_id",$estampadora_id)->get();
+        $estampadora_nome = Estampadora::find($estampadora_id)->nome;
         return Inertia::render('Admin/Estampadora/Produtos/index', [
             'produtos' => $produtos,
-            'estampadora_id' => $estampadora_id
+            'estampadora_id' => $estampadora_id,
+            'estampadora_nome' => $estampadora_nome
         ]);
     }
 
