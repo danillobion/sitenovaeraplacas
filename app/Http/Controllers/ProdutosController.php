@@ -7,6 +7,8 @@ use Inertia\Inertia;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProdutosController extends Controller
 {
@@ -24,15 +26,45 @@ class ProdutosController extends Controller
         ]);
     }   
 
-    public function salvar(Request $request){
-        $produto = is_null($request->id) ? new Produto() : Produto::find($request->id);
+    public function salvar(Request $request)
+    {
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+            $request->validate([
+                'imagem' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+        }
+
+        $produto = $request->id ? Produto::find($request->id) : new Produto();
+    
         $produto->nome = $request->nome;
-        $produto->caminho_imagem = "";
         $produto->descricao = $request->descricao;
         $produto->valor = $request->valor;
+    
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+    
+            if ($produto->imagem) {
+                $caminhoAnterior = public_path($produto->imagem);
+                if (file_exists($caminhoAnterior)) {
+                    unlink($caminhoAnterior);
+                }
+            }
+    
+            $extensao = $request->file('imagem')->getClientOriginalExtension();
+            $nomeArquivo = 'produto_' . uniqid() . '.' . $extensao;
+            $caminho = $request->file('imagem')->storeAs('produtos', $nomeArquivo, 'public');
+    
+            if ($caminho) {
+                $produto->imagem = 'storage/' . $caminho;
+            } else {
+                return back()->withErrors(['imagem' => 'Falha ao salvar a imagem no servidor.']);
+            }
+        }
+    
         $produto->save();
+    
         return Redirect::route('produtos.index')->with('success', 'Produto salvo com sucesso!');
     }
+    
 
     public function deletar(Request $request){
         $request->validate([

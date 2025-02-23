@@ -10,16 +10,17 @@ import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
   produto: Object,
-  estampadora_id: Number,
 });
 
 const form = useForm({
   id: null,
-  estampadora_id: null,
   nome: '',
   descricao: '',
   valor: '',
+  imagem: null,
 });
+
+const imagePreview = ref(null);
 
 const produtoFields = [
   { id: 'nome', label: 'Nome', model: 'nome' },
@@ -28,9 +29,44 @@ const produtoFields = [
 ];
 
 const submit = () => {
-  form.post(route('produto.salvar'), {
-    onFinish: () => form.reset(),
+  const formData = new FormData();
+
+  if(form.id != undefined){
+    formData.append("id",props.produto.id);
+  }
+  formData.append("nome", form.nome);
+  formData.append("descricao", form.descricao);
+  formData.append("valor", form.valor);
+
+  if (form.imagem) {
+    formData.append("imagem", form.imagem);
+  } else {
+    console.warn("Nenhuma imagem foi selecionada.");
+  }
+
+  axios.post(route('produto.salvar'), formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  .then(() => {
+    alert('Produto salvo com sucesso!');
+    window.location.href = route('produtos.index');
+  })
+  .catch(error => {
+    console.error("Erro ao salvar produto:", error);
+    alert('Erro ao salvar produto.');
   });
+};
+
+
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    form.imagem = file;
+    imagePreview.value = URL.createObjectURL(file);
+  }
 };
 
 onMounted(() => {
@@ -39,8 +75,12 @@ onMounted(() => {
     form.nome = props.produto.nome;
     form.descricao = props.produto.descricao;
     form.valor = props.produto.valor;
+    form.imagem = props.produto.imagem;
   }
-  form.estampadora_id = props.estampadora_id;
+
+  if (props.produto.imagem) {
+    imagePreview.value = `/${props.produto.imagem}`;
+  }
 });
 </script>
 
@@ -57,10 +97,26 @@ onMounted(() => {
         <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
           <div class="p-6 text-gray-900 dark:text-gray-100">
 
-            <form @submit.prevent="submit">
+            <form @submit.prevent="submit" enctype="multipart/form-data">
               <h2 class="mb-4 text-lg">Informações</h2>
-
+              <img v-if="imagePreview" :src="imagePreview || `/${form.imagem}`" 
+                  alt="Imagem do Produto" 
+                  class="mt-4 w-40 h-40 object-cover rounded-lg shadow-md">              
+                  
               <div class="mt-4 grid md:grid-cols-2 md:gap-6">
+                <div class="mt-4">
+                  <InputLabel for="imagem" value="Imagem da Estampadora" />
+                  <input
+                    id="imagem"
+                    type="file"
+                    class="mt-1 block w-full"
+                    @change="handleImageUpload"
+                    accept="image/*"
+                  />
+                  <InputError class="mt-2" :message="form.errors.imagem" />
+                </div>
+                <div></div>
+                
                 <div v-for="field in produtoFields" :key="field.id">
                   <InputLabel :for="field.id" :value="field.label" />
                   <TextInput

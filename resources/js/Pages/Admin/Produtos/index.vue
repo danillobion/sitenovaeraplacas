@@ -40,6 +40,7 @@ const deletarProduto = (produto_id) => {
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
+                                        <th scope="col" class="px-6 py-3">Imagem</th>
                                         <th scope="col" class="px-6 py-3">Nome</th>
                                         <th scope="col" class="px-6 py-3">Descrição</th>
                                         <th scope="col" class="px-6 py-3">Valor (R$)</th>
@@ -49,6 +50,9 @@ const deletarProduto = (produto_id) => {
                                 <tbody>
                                     <tr v-if="produtos.length > 0" v-for="produto in produtos" :key="produto.id"
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <img :src="`/${produto.imagem}`" alt="Imagem do produto" class="mt-4 w-10 h-10 object-cover rounded-lg">
+                                        </th>
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ produto.nome }}
                                         </th>

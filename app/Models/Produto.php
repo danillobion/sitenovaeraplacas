@@ -14,7 +14,7 @@ class Produto extends Model
     protected $fillable = [
         'id',
         'estampadora_id',
-        'caminho_imagem',
+        'imagem',
         'nome',
         'descricao',
         'valor',

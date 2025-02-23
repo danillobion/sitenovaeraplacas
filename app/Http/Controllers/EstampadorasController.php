@@ -49,24 +49,19 @@ class EstampadorasController extends Controller
             ]);
         }
     
-        // Se for uma edição, busca o registro. Caso contrário, cria um novo.
         $estampadora = is_null($request->id) || $request->id == 'undefined' ? new Estampadora() : Estampadora::find($request->id);
         $endereco = is_null($request->id) || $request->id == 'undefined' ? new Endereco() : Endereco::find($estampadora->endereco_id);
     
-        // Preenche e salva o endereço
         $endereco->fill($request->all());
         $endereco->save();
     
-        // Preenche os dados da estampadora e associa o endereço
         $estampadora->fill($request->all());
         $estampadora->cnpj = str_replace(['.', '-', '/'], '', $estampadora->cnpj);
         $estampadora->endereco_id = $endereco->id;
         $estampadora->save();
     
-        // Verifica se há um arquivo de imagem
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
     
-            // Remover imagem anterior, se existir
             if ($estampadora->imagem) {
                 $caminhoAnterior = public_path($estampadora->imagem);
                 if (file_exists($caminhoAnterior)) {
@@ -74,16 +69,12 @@ class EstampadorasController extends Controller
                 }
             }
     
-            // Gera um nome único para a imagem
             $extensao = $request->file('imagem')->getClientOriginalExtension();
             $nomeArquivo = 'estampadora_' . $estampadora->id . '.' . $extensao;
     
-            // Armazena a imagem no diretório correto: 'public/estampadoras'
             $caminho = $request->file('imagem')->storeAs('estampadoras', $nomeArquivo, 'public');   
 
-            // Atualiza o caminho da imagem no banco de dados
             if ($caminho) {
-                // O caminho correto a ser armazenado no banco
                 $estampadora->imagem = 'storage/estampadoras/' . $nomeArquivo;
                 $estampadora->save();
             } else {
