@@ -10,15 +10,17 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\EstampadorasController;
+use App\Http\Controllers\ApresentacaoController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+Route::get('/', [ApresentacaoController::class, 'index'])->name('apresentacao.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -26,6 +28,7 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
+
 
     Route::get('/cep/{numero}', [EnderecoController::class, 'cep'])->name('endereco.cep');
     Route::get('/cnpj/{numero}', [CnpjController::class,'cnpj'])->name('consultar.cnpj');

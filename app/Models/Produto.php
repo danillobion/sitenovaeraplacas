@@ -13,7 +13,6 @@ class Produto extends Model
 
     protected $fillable = [
         'id',
-        'estampadora_id',
         'imagem',
         'nome',
         'descricao',

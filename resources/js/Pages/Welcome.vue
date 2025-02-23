@@ -2,19 +2,11 @@
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
-    canLogin: {
-        type: Boolean,
+    estampadoras: {
+        type: Array,
     },
-    canRegister: {
-        type: Boolean,
-    },
-    laravelVersion: {
-        type: String,
-        required: true,
-    },
-    phpVersion: {
-        type: String,
-        required: true,
+    produtos: {
+        type: Array,
     },
 });
 
@@ -32,8 +24,8 @@ function handleImageError() {
       <nav class="bg-white shadow-md fixed w-full top-0 z-50">
         <div class="container mx-auto flex justify-between items-center py-4 px-6">
             <div class="logo-container flex justify-center items-center">
-  <!-- <img src="../Image/logo.jpg" alt="Logo da Empresa" class="w-32 h-auto" /> -->
-</div>
+              <!-- <img src="../Image/logo.jpg" alt="Logo da Empresa" class="w-20 h-auto" /> -->
+          </div>
           <ul class="flex space-x-6 text-lg">
             <li><a href="#home" class="hover:text-red-600">Início</a></li>
             <li><a href="#sobre" class="hover:text-red-600">Quem Somos</a></li>
@@ -127,11 +119,11 @@ function handleImageError() {
           :key="index" 
           class="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl"
         >
-          <!-- <img :src="produto.imagem" :alt="produto.nome" class="w-full h-56 object-cover"> -->
+          <img :src="produto.imagem" :alt="produto.nome" class="w-full h-56 object-cover">
           <div class="p-4 text-center">
             <h3 class="text-xl font-semibold text-gray-800">{{ produto.nome }}</h3>
-            <p class="text-lg font-bold text-blue-600 mt-2">{{ produto.valor }}</p>
             <p class="text-gray-600 mt-2">{{ produto.descricao }}</p>
+            <p class="text-lg font-bold text-blue-600 mt-2">{{ produto.valor }}</p>
           </div>
         </div>
       </div>
@@ -143,15 +135,17 @@ function handleImageError() {
     <section id="lojas" class="py-20 px-6 text-center fade-in">
       <h2 class="text-3xl font-semibold">Onde Estamos</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        <div v-for="(loja, index) in lojas" :key="index" 
+        <div v-for="(loja, index) in estampadoras" :key="index" 
              class="relative bg-white p-4 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer" 
              @click="toggleCard(index)">
-          <!-- <img :src="loja.imagem" alt="Loja" class="w-full h-auto object-contain rounded-t-lg"> -->
+          <img :src="loja.imagem" alt="Loja" class="w-full h-auto object-contain rounded-t-lg">
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
             <h3 class="text-xl font-semibold text-red-600">{{ loja.nome }}</h3>
-            <p v-if="loja.expandido" class="text-sm text-gray-700 mt-2">CNPJ: {{ loja.cnpj }}</p>
-            <p v-if="loja.expandido" class="text-sm text-gray-700">Telefone: {{ loja.telefone }}</p>
-            <p v-if="loja.expandido" class="text-sm text-gray-700">Localização: <a :href="loja.maps" target="_blank" class="text-red-600 underline">Ver no Maps</a></p>
+            <p class="text-sm text-gray-700 mt-2 dark:text-gray-400">CNPJ: {{ loja.cnpj }}</p>
+            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: {{ loja.telefone }}</p>
+            <p class="text-sm text-gray-700 dark:text-gray-400">Localização: 
+              <a :href="'https://www.google.com/maps?q=' + loja.endereco.latitude + ',' + loja.endereco.longitude" target="_blank" class="text-red-600 underline">Ver no Maps</a>
+            </p>
           </div>
         </div>
       </div>
@@ -292,14 +286,14 @@ function handleImageError() {
    
 };
 
-const produtos = [
-  { nome: "Par de placas Mercosul", valor: "R$ 300,00", descricao: "Placas Mercosul de alta qualidade, resistentes e em conformidade com as normas legais, garantindo segurança e visibilidade para o seu veículo.", imagem: "/images/par.png" },
-  { nome: "Unidade Carro Mercosul", valor: "R$ 180,00", descricao: "Placa para carro, com tecnologia avançada e alta resistência. Atende todos os requisitos legais, oferecendo um produto seguro e durável.", imagem: "/images/unidade.png" },
-  { nome: "Unidade Moto Mercosul", valor: "R$ 180,00", descricao: "Placa para moto, com excelente visibilidade e resistência. Totalmente conforme as exigências legais, oferecendo segurança e durabilidade.", imagem: "/images/moto.png" },
-  { nome: "Par Preta Carro Mercosul", valor: "R$ 350,00", descricao: "Placa preta fosca para carro, com design moderno e materiais de alta qualidade. Resistente e conforme as normas do Mercosul, oferece um visual elegante e seguro.", imagem: "/images/parcolecao.png" },
-  { nome: "Unidade Preta Moto Mercosul", valor: "R$ 200,00", descricao: "Placa preta fosca para moto, com design discreto e durável. Conformidade com as normas legais e segurança garantida.", imagem: "/images/unidadecolecao.png" },
-  { nome: "Par Reduzida Carro Mercosul", valor: "R$ 380,00", descricao: "Placa reduzida para carro, compacta e eficiente. Oferece praticidade, segurança e está em conformidade com as normas do Mercosul.", imagem: "/images/par.png" }
-];
+// const produtos = [
+//   { nome: "Par de placas Mercosul", valor: "R$ 300,00", descricao: "Placas Mercosul de alta qualidade, resistentes e em conformidade com as normas legais, garantindo segurança e visibilidade para o seu veículo.", imagem: "/images/par.png" },
+//   { nome: "Unidade Carro Mercosul", valor: "R$ 180,00", descricao: "Placa para carro, com tecnologia avançada e alta resistência. Atende todos os requisitos legais, oferecendo um produto seguro e durável.", imagem: "/images/unidade.png" },
+//   { nome: "Unidade Moto Mercosul", valor: "R$ 180,00", descricao: "Placa para moto, com excelente visibilidade e resistência. Totalmente conforme as exigências legais, oferecendo segurança e durabilidade.", imagem: "/images/moto.png" },
+//   { nome: "Par Preta Carro Mercosul", valor: "R$ 350,00", descricao: "Placa preta fosca para carro, com design moderno e materiais de alta qualidade. Resistente e conforme as normas do Mercosul, oferece um visual elegante e seguro.", imagem: "/images/parcolecao.png" },
+//   { nome: "Unidade Preta Moto Mercosul", valor: "R$ 200,00", descricao: "Placa preta fosca para moto, com design discreto e durável. Conformidade com as normas legais e segurança garantida.", imagem: "/images/unidadecolecao.png" },
+//   { nome: "Par Reduzida Carro Mercosul", valor: "R$ 380,00", descricao: "Placa reduzida para carro, compacta e eficiente. Oferece praticidade, segurança e está em conformidade com as normas do Mercosul.", imagem: "/images/par.png" }
+// ];
   
   </script>
   
