@@ -14,6 +14,9 @@ class Estampadora extends Model
     protected $fillable = [
         'nome',
         'cnpj',
+        'imagem',
+        'telefone',
+        'horario_funcionamento',
         'endereco_id',
     ];
 

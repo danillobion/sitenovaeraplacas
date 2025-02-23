@@ -45,6 +45,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Estampadoras
                                 </NavLink>
+                                <NavLink
+                                    :href="route('produtos.index')"
+                                    :active="route().current('produtos.index')"
+                                >
+                                    Produtos
+                                </NavLink>
                             </div>
                         </div>
 

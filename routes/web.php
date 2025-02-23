@@ -5,6 +5,7 @@ use App\Models\Produto;
 use App\Models\Endereco;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\CnpjController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\ProdutosController;
@@ -27,6 +28,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
     Route::get('/cep/{numero}', [EnderecoController::class, 'cep'])->name('endereco.cep');
+    Route::get('/cnpj/{numero}', [CnpjController::class,'cnpj'])->name('consultar.cnpj');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -37,10 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/estampadoras/salvar', [EstampadorasController::class, 'salvar'])->name('estampadora.salvar');
     Route::delete('/estampadoras/deletar', [EstampadorasController::class, 'deletar'])->name('estampadora.deletar');
 
-    Route::get('/estampadoras/produtos/{estampadora_id}', [ProdutosController::class, 'index'])->name('estampadora.produtos.index');
-    Route::get('/estampadoras/produtos/editar/{estampadora_id?}/{id?}', [ProdutosController::class, 'editar'])->name('estampadora.produtos.editar');
-    Route::post('/estampadoras/produtos/salvar', [ProdutosController::class, 'salvar'])->name('estampadora.produtos.salvar');
-    Route::delete('/estampadoras/produtos/deletar', [ProdutosController::class, 'deletar'])->name('estampadora.produtos.deletar');
+    Route::get('/produtos', [ProdutosController::class, 'index'])->name('produtos.index');
+    Route::get('/produto/editar/{id?}', [ProdutosController::class, 'editar'])->name('produto.editar');
+    Route::post('/produto/salvar', [ProdutosController::class, 'salvar'])->name('produto.salvar');
+    Route::delete('/produto/deletar', [ProdutosController::class, 'deletar'])->name('produto.deletar');
 
 });
 

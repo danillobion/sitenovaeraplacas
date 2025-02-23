@@ -28,7 +28,7 @@ const produtoFields = [
 ];
 
 const submit = () => {
-  form.post(route('estampadora.produtos.salvar'), {
+  form.post(route('produto.salvar'), {
     onFinish: () => form.reset(),
   });
 };

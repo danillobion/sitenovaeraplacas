@@ -4,15 +4,13 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     produtos: Array,
-    estampadora_id: Number,
-    estampadora_nome: String,
 });
 
 const form = useForm({});
 
-const deletarProduto = (id) => {
+const deletarProduto = (produto_id) => {
     if (confirm("Tem certeza que deseja excluir este produto?")) {
-        form.delete(route('estampadora.produtos.deletar', { id: id, estampadora_id: props.estampadora_id }));
+        form.delete(route('produto.deletar', { produto_id: produto_id }));
     }
 };
 </script>
@@ -23,12 +21,9 @@ const deletarProduto = (id) => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Produtos</h2>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Estampadora: {{ props.estampadora_nome }}</p>
-                </div>
+                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Produtos</h2>
                 <Link
-                    :href="route('estampadora.produtos.editar', { id: null, estampadora_id: props.estampadora_id })"
+                    :href="route('produto.editar', { id: null })"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                     Adicionar
@@ -65,7 +60,7 @@ const deletarProduto = (id) => {
                                         </td>
                                         <td class="px-6 py-4 flex inline-flex space-x-2">
                                             <Link
-                                                :href="route('estampadora.produtos.editar', { id: produto.id, estampadora_id: props.estampadora_id })"
+                                                :href="route('produto.editar', { id: produto.id })"
                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                             >
                                                 Editar

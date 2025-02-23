@@ -11,6 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        Schema::create('tipos', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->string('descricao')->nullable();
+            $table->timestamps();
+        });
+        
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tipo_id')->constrained('tipos')->onDelete('cascade');

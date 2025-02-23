@@ -11,12 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipos', function (Blueprint $table) {
-            $table->id();
-            $table->string('nome');
-            $table->string('descricao')->nullable();
-            $table->timestamps();
-        });
 
         Schema::create('enderecos', function (Blueprint $table) {
             $table->id();
@@ -43,9 +37,18 @@ return new class extends Migration
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
+            $table->string('caminho_imagem');
             $table->text('descricao')->nullable();
-            $table->foreignId('estampadora_id')->constrained('estampadoras')->onDelete('cascade');
             $table->decimal('valor', 10, 2);
+            $table->timestamps();
+        });
+
+        Schema::create('horarios_funcionamento', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('estampadora_id')->constrained('estampadoras')->onDelete('cascade');
+            $table->string('dia_semana');
+            $table->time('abertura')->nullable();
+            $table->time('fechamento')->nullable();
             $table->timestamps();
         });
     }
