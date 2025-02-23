@@ -161,7 +161,7 @@ onMounted(() => {
     imagePreview.value = `/${estampadora.imagem}`;
   }
   
-  form.id = estampadora.id;
+  form.id = estampadora.id == undefined ? null : estampadora.id;
   form.nome = estampadora.nome;
   form.cnpj = estampadora.cnpj;
   form.telefone = estampadora.telefone;

@@ -53,6 +53,7 @@ class EstampadorasController extends Controller
         $endereco = is_null($request->id) || $request->id == 'undefined' ? new Endereco() : Endereco::find($estampadora->endereco_id);
     
         $endereco->fill($request->all());
+        $endereco->cep = str_replace(['.', '-'], '', $endereco->cep);
         $endereco->save();
     
         $estampadora->fill($request->all());
