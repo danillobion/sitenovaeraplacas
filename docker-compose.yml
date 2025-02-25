@@ -1,49 +1,27 @@
-version: '3.8'
-
 services:
-  # Serviço do MySQL
-  mysql:
-    image: mysql:8.0
-    container_name: laravel_mysql
-    restart: always
-    environment:
-      MYSQL_DATABASE: laravel_db
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: password
-    volumes:
-      - ./mysql_data:/var/lib/mysql  # Persistência no host
-    ports:
-      - "3306:3306"
-    networks:
-      - laravel_network
-
-  # Serviço do Laravel rodando com PHP, Apache e Node.js (incluindo Vite)
   app:
+    image: laravel_app
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel_app
-    volumes:
-      - ./:/var/www/html
     ports:
-      - "80:80"
-    networks:
-      - laravel_network
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
     depends_on:
       - mysql
+
+  mysql:
+    image: mysql:8
     environment:
-      - APACHE_DOCUMENT_ROOT=/var/www/html/public
-      - LANG=en_US.UTF-8
-      - LANGUAGE=en_US.UTF-8
-      - LC_ALL=en_US.UTF-8
-    working_dir: /var/www/html
-    restart: always
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
 
 volumes:
-  mysql_data:
-    driver: local  # Volume local
-
-networks:
-  laravel_network:
-    driver: bridge
+  mysql-data: {}
