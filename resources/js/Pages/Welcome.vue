@@ -24,7 +24,7 @@ function handleImageError() {
       <nav class="bg-white shadow-md fixed w-full top-0 z-50">
         <div class="container mx-auto flex justify-between items-center py-4 px-6">
             <div class="logo-container flex justify-center items-center">
-              <!-- <img src="../Image/logo.jpg" alt="Logo da Empresa" class="w-20 h-auto" /> -->
+              <img src="../../../public/images/logo.jpg" alt="Logo da Empresa" class="w-20 h-auto" />
           </div>
           <ul class="flex space-x-6 text-lg">
             <li><a href="#home" class="hover:text-red-600">Início</a></li>
@@ -41,7 +41,7 @@ function handleImageError() {
       <!-- Inicial -->
       <section id="home" class="h-screen flex flex-col justify-center items-center text-center bg-gray-100 px-4 fade-in">
         <h1 class="text-5xl font-bold">Bem-vindo à Nossa Empresa</h1>
-        <!-- <div> <img src="../Image/suv.gif" alt=""></div> -->
+        <div> <img src="../../../public/images/suv.gif" alt=""></div>
         <p class="text-lg mt-4">Soluções inovadoras para o seu negócio.</p>
         <a href="https://wa.me/5555988420909" class="mt-6 bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700">Entre em Contato</a>
       </section>
@@ -52,7 +52,7 @@ function handleImageError() {
   
   <div class="flex flex-col md:flex-row items-center justify-center gap-8">
     <div class="w-full md:w-1/2 flex justify-center">
-      <!-- <img src="../Image/foto.png" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-lg shadow-lg object-contain"> -->
+      <img src="../../../public/images/foto.png" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-lg shadow-lg object-contain">
     </div>
     
     <div class="w-full md:w-1/2 p-8 text-center md:text-left">
@@ -72,33 +72,33 @@ function handleImageError() {
   <!-- Seção de Logos e Textos -->
   <div class="flex flex-col space-y-4 text-red-600">
     <div class="flex items-center text-3xl font-semibold">
-      <!-- <img src="../Image/seta.GIF" alt="Logo" class="h-12 w-auto mr-4"> -->
+      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
       <span>Qualidade</span>
     </div>
     <div class="flex items-center text-3xl font-semibold">
-      <!-- <img src="../Image/seta.GIF" alt="Logo" class="h-12 w-auto mr-4"> -->
+      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
       <span>Confiança</span>
     </div>
     <div class="flex items-center text-3xl font-semibold">
-      <!-- <img src="../Image/seta.GIF" alt="Logo" class="h-12 w-auto mr-4"> -->
+      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
       <span>Credibilidade</span>
     </div>
     <div class="flex items-center text-3xl font-semibold">
-      <!-- <img src="../Image/seta.GIF" alt="Logo" class="h-12 w-auto mr-4"> -->
+      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
       <span>Garantia</span>
     </div>
     <div class="flex items-center text-3xl font-semibold">
-      <!-- <img src="../Image/seta.GIF" alt="Logo" class="h-12 w-auto mr-4"> -->
+      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
       <span>Eficiência</span>
     </div>
   </div>
 
   <!-- Seção de Imagens à Direita -->
   <div class="flex flex-col items-center space-y-16">
-    <!-- <img src="../Image/selo.png" alt="Imagem 1" class="h-48 w-48 object-contain"> -->
+    <img src="../../../public/images/selo.png" alt="Imagem 1" class="h-48 w-48 object-contain">
 </div>
 <div class="flex flex-col items-center space-y-16">
-    <!-- <img src="../Image/iso.png" alt="Imagem 2" class="h-48 w-48 object-contain"> -->
+    <img src="../../../public/images/iso.png" alt="Imagem 2" class="h-48 w-48 object-contain">
 </div>
 </div>
 
