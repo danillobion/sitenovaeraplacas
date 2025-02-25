@@ -7,7 +7,7 @@ RUN a2enmod rewrite
 # Defina o diretório de trabalho
 WORKDIR /var/www/html
 
-# Instale as extensões PHP necessárias, incluindo a extensão MongoDB e GD
+# Instale as extensões PHP necessárias
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     libonig-dev \
@@ -21,9 +21,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libpng-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath xml gd \
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath xml gd
 
 # Instale o Node.js e npm (usando a versão 18)
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
