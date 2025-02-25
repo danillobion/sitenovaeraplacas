@@ -48,7 +48,7 @@ function handleImageError() {
       
       <!-- Sobre -->
       <<section id="sobre" class="py-20 px-6 text-center fade-in bg-white-100">
-  <h2 class="text-3xl font-semibold mb-8">Sobre Nós</h2>
+  <h2 class="text-4xl font-semibold mb-4">Sobre Nós</h2>
   
   <div class="flex flex-col md:flex-row items-center justify-center gap-8">
     <div class="w-full md:w-1/2 flex justify-center">
@@ -56,7 +56,7 @@ function handleImageError() {
     </div>
     
     <div class="w-full md:w-1/2 p-8 text-center md:text-left">
-      <h2 class="text-4xl font-bold text-gray-800 text-center">A Nova Era Placas</h2>
+      <h2 class="text-2xl font-bold text-gray-800 text-center">A Nova Era Placas</h2>
       <p class="mt-4 text-lg text-gray-600">
         É sinônimo de qualidade, compromisso e transparência. Nossa equipe altamente capacitada garante um atendimento ágil, personalizado e focado na satisfação do cliente. Trabalhamos com responsabilidade para entregar soluções seguras e de alta qualidade. Escolha a excelência. Escolha a Nova Era Placas!
       </p>
@@ -109,25 +109,25 @@ function handleImageError() {
       </section>
   
       <!-- Produtos -->
-      <section id="produtos" class="py-20 bg-gray-100 px-6 text-center fade-in">
+      <section v-if="produtos.length > 0" id="produtos" class="py-20 bg-gray-100 px-6 text-center fade-in">
         <div class="container mx-auto px-6">
-      <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Nossos Produtos</h2>
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Nossos Produtos</h2>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div 
-          v-for="(produto, index) in produtos" 
-          :key="index" 
-          class="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl"
-        >
-          <img :src="produto.imagem" :alt="produto.nome" class="w-full h-56 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-semibold text-gray-800">{{ produto.nome }}</h3>
-            <p class="text-gray-600 mt-2">{{ produto.descricao }}</p>
-            <p class="text-lg font-bold text-blue-600 mt-2">{{ produto.valor }}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div 
+            v-for="(produto, index) in produtos" 
+            :key="index" 
+            class="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl"
+          >
+            <img :src="produto.imagem" :alt="produto.nome" class="w-full">
+            <div class="p-4 text-left">
+              <h2 class="font-semibold text-gray-800" style="font-size: 25px;">{{ produto.nome }}</h2>
+              <p class="text-gray-600 mt-2">{{ produto.descricao }}</p>
+              <p class="text-lg font-bold text-blue-600 mt-2">{{ produto.valor }}</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
       </section>
   
       <!-- Lojas -->
@@ -135,6 +135,7 @@ function handleImageError() {
     <section id="lojas" class="py-20 px-6 text-center fade-in">
       <h2 class="text-3xl font-semibold">Onde Estamos</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        
         <div v-for="(loja, index) in estampadoras" :key="index" 
              class="relative bg-white p-4 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer" 
              @click="toggleCard(index)">
@@ -148,6 +149,7 @@ function handleImageError() {
             </p>
           </div>
         </div>
+        
       </div>
     </section>
   </div>
@@ -185,7 +187,7 @@ function handleImageError() {
   </section>
   
       <!-- Contato -->
-      <section id="contato" class="py-20 bg-white-100 px-6 text-center fade-in">
+      <!-- <section id="contato" class="py-20 bg-white-100 px-6 text-center fade-in">
         <h2 class="text-3xl font-semibold">Entre em Contato</h2>
         <form class="mt-6 max-w-lg mx-auto">
           <input type="text" placeholder="Seu Nome" class="w-full p-3 border rounded-lg mb-4" />
@@ -193,7 +195,12 @@ function handleImageError() {
           <textarea placeholder="Sua Mensagem" class="w-full p-3 border rounded-lg mb-4"></textarea>
           <button type="submit" class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700">Enviar</button>
         </form>
-      </section>
+      </section> -->
+  
+      <!-- Rodapé -->
+      <footer class="bg-gray-800 py-3 px-6 text-white text-center">
+        <p>&copy; 2025 Nova Era Placas. Todos os direitos reservados.</p>
+      </footer>
     </div>
   </template>
   
