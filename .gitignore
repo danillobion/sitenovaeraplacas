@@ -19,6 +19,8 @@ storage/framework/cache/
 storage/framework/sessions/
 storage/framework/views/
 
+public/build/
+
 # Banco de dados SQLite (caso esteja usando)
 database/*.sqlite
 
@@ -27,3 +29,5 @@ database/*.sqlite
 .idea/
 *.swp
 *.swo
+
+

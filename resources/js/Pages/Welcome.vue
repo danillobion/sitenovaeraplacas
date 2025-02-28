@@ -62,7 +62,7 @@ function handleImageError() {
   
   <div class="flex flex-col md:flex-row items-center justify-center gap-8">
     <div class="w-full md:w-1/2 flex justify-center">
-      <img src="../../../public/images/foto.png" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-lg shadow-lg object-contain">
+      <img src="../../../public/images/foto.jpeg" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-lg shadow-lg object-contain">
     </div>
     
     <div class="w-full md:w-1/2 p-8 text-center md:text-left">
