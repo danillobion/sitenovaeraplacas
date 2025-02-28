@@ -1,5 +1,15 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { onMounted } from "vue";
+
+const scrollToSection = (event, sectionId) => {
+  event.preventDefault(); // Evita o comportamento padrão do link
+
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
 
 defineProps({
     estampadoras: {
@@ -24,16 +34,16 @@ function handleImageError() {
       <nav class="bg-white shadow-md fixed w-full top-0 z-50">
         <div class="container mx-auto flex justify-between items-center py-4 px-6">
             <div class="logo-container flex justify-center items-center">
-              <img src="../../../public/images/logo.jpg" alt="Logo da Empresa" class="w-20 h-auto" />
+              <img src="../../../public/images/logo.jpg" alt="Logo da Empresa" class="w-20 h-auto scale-150" />
           </div>
-          <ul class="flex space-x-6 text-lg">
-            <li><a href="#home" class="hover:text-red-600">Início</a></li>
-            <li><a href="#sobre" class="hover:text-red-600">Quem Somos</a></li>
-            <li><a href="#produtos" class="hover:text-red-600">Produtos</a></li>
-            <li><a href="#lojas" class="hover:text-red-600">Nossas Lojas</a></li>
-            <li><a href="#faq" class="hover:text-red-600">Dúvidas Frequentes</a></li>
-            <li><a href="#contato" class="hover:text-red-600">Contato</a></li>
-          </ul>
+        <ul class="flex space-x-6 text-lg">
+          <li><a href="#home" @click="scrollToSection($event, 'home')" class="hover:text-red-600">Início</a></li>
+          <li><a href="#sobre" @click="scrollToSection($event, 'sobre')" class="hover:text-red-600">Quem Somos</a></li>
+          <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
+          <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
+          <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas Frequentes</a></li>
+          <!-- <li><a href="#contato" @click="scrollToSection($event, 'contato')" class="hover:text-red-600">Contato</a></li> -->
+        </ul>
           <a href="/login" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Área Restrita</a>
         </div>
       </nav>
@@ -47,7 +57,7 @@ function handleImageError() {
       </section>
       
       <!-- Sobre -->
-      <<section id="sobre" class="py-20 px-6 text-center fade-in bg-white-100">
+      <section id="sobre" class="py-20 px-6 text-center fade-in bg-white-100">
   <h2 class="text-4xl font-semibold mb-4">Sobre Nós</h2>
   
   <div class="flex flex-col md:flex-row items-center justify-center gap-8">
@@ -198,9 +208,30 @@ function handleImageError() {
       </section> -->
   
       <!-- Rodapé -->
-      <footer class="bg-gray-800 py-3 px-6 text-white text-center">
-        <p>&copy; 2025 Nova Era Placas. Todos os direitos reservados.</p>
-      </footer>
+      <footer class="bg-red-600 text-white py-6">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
+      <!-- Direitos Autorais -->
+      <p class="text-sm text-center md:text-left">
+        © {{ new Date().getFullYear() }} Nova Era Placas - Todos os direitos reservados.
+      </p>
+
+      <!-- Redes Sociais -->
+      <div class="flex space-x-4 mt-4 md:mt-0">
+        <a href="https://www.instagram.com/novaera.placass/" target="_blank" class="hover:text-gray-300">
+          <i class="fab fa-instagram text-2xl"></i>
+        </a>
+        <a href="https://www.facebook.com/people/Nova-Era-Placas/61559921292385/" target="_blank" class="hover:text-gray-300">
+          <i class="fab fa-facebook text-2xl"></i>
+        </a>
+        <a href="https://wa.me/559884209099" target="_blank" class="hover:text-gray-300">
+          <i class="fab fa-whatsapp text-2xl"></i>
+        </a>
+        <a href="mailto:novaeraplacas@yahoo.com" class="hover:text-gray-300">
+          <i class="fas fa-envelope text-2xl"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
     </div>
   </template>
   
@@ -305,6 +336,7 @@ function handleImageError() {
   </script>
   
   <style>
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");
   body {
   font-family: sans-serif;
 }
