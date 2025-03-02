@@ -1,6 +1,8 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { onMounted } from "vue";
+import CarAnimation from '@/Components/CarAnimation.vue';
+import LinksSection from "@/Components/LinksSection.vue";
 
 const scrollToSection = (event, sectionId) => {
   event.preventDefault(); // Evita o comportamento padrão do link
@@ -42,19 +44,50 @@ function handleImageError() {
           <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
           <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
           <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas Frequentes</a></li>
-          <!-- <li><a href="#contato" @click="scrollToSection($event, 'contato')" class="hover:text-red-600">Contato</a></li> -->
+          <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
         </ul>
           <a href="/login" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Área Restrita</a>
         </div>
       </nav>
   
       <!-- Inicial -->
-      <section id="home" class="h-screen flex flex-col justify-center items-center text-center bg-gray-100 px-4 fade-in">
-        <h1 class="text-5xl font-bold">Bem-vindo à Nossa Empresa</h1>
-        <div> <img src="../../../public/images/suv.gif" alt=""></div>
-        <p class="text-lg mt-4">Soluções inovadoras para o seu negócio.</p>
-        <a href="https://wa.me/5555988420909" class="mt-6 bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700">Entre em Contato</a>
-      </section>
+      <section id="home" class="relative h-screen flex items-center justify-center bg-white text-gray-900 overflow-hidden">
+    <!-- Elementos decorativos animados -->
+    <div class="absolute top-0 left-0 w-48 h-48 bg-red-500 opacity-50 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-10 right-10 w-32 h-32 bg-red-500 opacity-50 rounded-full animate-bounce"></div>
+    <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-red-300 opacity-30 rounded-full animate-spin-slow"></div>
+
+    <div class="container mx-auto px-6 flex flex-col-reverse md:flex-row items-center relative z-10">
+      <!-- Texto e Botão -->
+      <div class="text-center md:text-left md:w-1/2 opacity-0 translate-y-10 transition-all duration-1000" ref="textBlock">
+        <h1 class="text-4xl font-extrabold mb-4 text-red-600 animate-fade-in">A Evolução que Seu Veículo Precisa!</h1>
+        <p class="text-lg mb-6 text-gray-700 animate-slide-in">O trânsito está mudando, e com ele, a identificação veicular também evolui! As Placas Mercosul chegaram para trazer mais segurança, modernidade e padronização para os veículos em circulação. Mas não basta apenas instalar qualquer placa, você precisa escolher qualidade, confiabilidade e durabilidade. E é exatamente isso que a Nova Era oferece!</p>
+        <br>
+        <h1 class="text-2xl font-extrabold mb-4 text-red-600 animate-fade-in">🚗 Por que escolher as Placas Mercosul com a Nova Era?</h1>
+         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Maior segurança – Com QR Code Gravado a laser e elementos de proteção, elas dificultam fraudes e clonagens.</p>
+         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Padrão internacional – Permite circulação livre entre os países do Mercosul.</p>
+         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Estética moderna – Design inovador que valoriza o seu veículo.</p>
+         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Material resistente – Placas feitas para durar mais tempo, mesmo em condições extremas.</p>         
+         <p class="text-lg mb-6 text-gray-700 animate-slide-in">📍 Entre em contato agora mesmo e garanta a sua placa Mercosul com quem entende do assunto!</p>
+          <a 
+          href="https://wa.me/559884209099" 
+          target="_blank"
+          class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-110 animate-wiggle">
+          Fale Conosco no WhatsApp
+        </a>
+      </div>
+
+      <!-- Imagem -->
+      <div class="md:w-1/2 flex justify-center opacity-0 translate-x-10 transition-all duration-1000" ref="imageBlock">
+        <img src="../../../public/images/foto2.jpg" alt="Pessoa" class="w-96 h-96 object-cover rounded-full shadow-lg animate-zoom-in">
+      </div>
+    </div>
+
+    <!--  Animação do Carro na parte de baixo -->
+    <div class="absolute bottom-0 left-0 w-full">
+      <CarAnimation />
+    </div>
+  </section>
       
       <!-- Sobre -->
       <section id="sobre" class="py-20 px-6 text-center fade-in bg-white-100">
@@ -62,7 +95,7 @@ function handleImageError() {
   
   <div class="flex flex-col md:flex-row items-center justify-center gap-8">
     <div class="w-full md:w-1/2 flex justify-center">
-      <img src="../../../public/images/foto.jpeg" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-lg shadow-lg object-contain">
+      <img src="../../../public/images/foto.jpg" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-lg shadow-lg object-contain">
     </div>
     
     <div class="w-full md:w-1/2 p-8 text-center md:text-left">
@@ -141,13 +174,13 @@ function handleImageError() {
       </section>
   
       <!-- Lojas -->
-      <div class="bg-white text-gray-900">
+      
     <section id="lojas" class="py-20 px-6 text-center fade-in">
       <h2 class="text-3xl font-semibold">Onde Estamos</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         
         <div v-for="(loja, index) in estampadoras" :key="index" 
-             class="relative bg-white p-4 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer" 
+             class="relative bg-white p-4 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300" 
              @click="toggleCard(index)">
           <img :src="loja.imagem" alt="Loja" class="w-full h-auto object-contain rounded-t-lg">
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
@@ -162,22 +195,22 @@ function handleImageError() {
         
       </div>
     </section>
-  </div>
+  
   
      
     <!-- Cards de Dúvidas Frequentes -->
     <section id="duvidas" class="py-20 px-6 bg-gray-100">
     <h2 class="text-3xl font-semibold text-center mb-8">Dúvidas Frequentes</h2>
-    <div class="flex flex-wrap justify-center gap-6">
-      <div v-for="(faq, index) in faqs" :key="index" class="w-full sm:w-1/2 lg:w-1/3">
-        <div
-          class="bg-white shadow-lg rounded-lg p-6 mb-4 cursor-pointer hover:scale-105 hover:shadow-2xl"
-          @click="openModal(faq)"
-        >
-          <h3 class="text-xl font-semibold text-gray-800">{{ faq.question }}</h3>
-        </div>
-      </div>
+    <div class="flex flex-col items-center gap-6">
+  <div v-for="(faq, index) in faqs" :key="index" class="w-full max-w-[100rem]">
+    <div
+      class="bg-white shadow-lg rounded-lg p-6 cursor-pointer hover:scale-105 hover:shadow-2xl"
+      @click="openModal(faq)"
+    >
+      <h3 class="text-xl text-center font-semibold text-gray-800">{{ faq.question }}</h3>
     </div>
+  </div>
+</div>
 
     <!-- Modal (janela de FAQ expandido) -->
     <transition name="modal">
@@ -193,23 +226,24 @@ function handleImageError() {
           </button>
         </div>
       </div>
-    </transition>
-  </section>
+      </transition>
+      </section>
   
-      <!-- Contato -->
-      <!-- <section id="contato" class="py-20 bg-white-100 px-6 text-center fade-in">
-        <h2 class="text-3xl font-semibold">Entre em Contato</h2>
-        <form class="mt-6 max-w-lg mx-auto">
-          <input type="text" placeholder="Seu Nome" class="w-full p-3 border rounded-lg mb-4" />
-          <input type="email" placeholder="Seu Email" class="w-full p-3 border rounded-lg mb-4" />
-          <textarea placeholder="Sua Mensagem" class="w-full p-3 border rounded-lg mb-4"></textarea>
-          <button type="submit" class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700">Enviar</button>
-        </form>
-      </section> -->
+      <!-- Links -->
+      <section id="links" class="py-20 bg-white-100 px-6 text-center fade-in">
+        <LinksSection :links="meusLinks" />
+        
+      
+
+<p class="mt-6 text-sm text-gray-600 text-center">
+      <strong>Aviso de Isenção de Responsabilidade:</strong> Este site não possui qualquer vínculo com o Departamento Estadual de Trânsito (DETRAN) ou qualquer outro órgão governamental. Os links aqui disponibilizados são de fontes oficiais e têm o propósito de facilitar o acesso a informações públicas. Recomendamos sempre conferir diretamente nos sites oficiais para garantir a veracidade das informações.
+    </p><br>
+    <p>Para acessar o site oficial do Detran, <a href="https://www.detran.ma.gov.br/inicio/paginas/Home.xhtml" target="_blank" rel="noopener noreferrer" class="text-red-500 hover:underline">Clique Aqui</a>.</p>
+</section>
   
       <!-- Rodapé -->
       <footer class="bg-red-600 text-white py-6">
-    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
+      <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
       <!-- Direitos Autorais -->
       <p class="text-sm text-center md:text-left">
         © {{ new Date().getFullYear() }} Nova Era Placas - Todos os direitos reservados.
@@ -230,13 +264,15 @@ function handleImageError() {
           <i class="fas fa-envelope text-2xl"></i>
         </a>
       </div>
-    </div>
-  </footer>
+      </div>
+      </footer>
     </div>
   </template>
   
   <script>
   export default {
+    components: { CarAnimation },
+    components: { LinksSection },
   data() {
     return {
       lojas: [
@@ -291,6 +327,18 @@ function handleImageError() {
           answer: "Aceitamos cartão de débito, crédito (parcelado em até 3x sem juros), boleto bancário e PIX. De acordo com as portarias 618/2021 e 537/2023, os pagamentos devem ser rastreáveis, portanto, não aceitamos dinheiro em espécie."
         },
       ],
+      meusLinks: [
+        { label: "Emplacamento Digital", url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23611" },
+        { label: "Portarias", url: "https://www.detran.ma.gov.br/inicio/paginas/Portarias.xhtml" },
+        { label: "Parcelamento de débitos", url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=22878" },
+        { label: "Vistoria", url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23581" },
+        { label: "Credenciados", url: "https://www.detran.ma.gov.br/inicio/paginas/Credenciado.xhtml" },
+        { label: "Ciretrans", url: "https://www.detran.ma.gov.br/inicio/paginas/ListarCiretrans.xhtml" },
+        { label: "Multas PRF", url: "https://nadaconsta.prf.gov.br/nada_consta/index.jsf" },
+        { label: "Multas DNIT", url: "https://servicos.dnit.gov.br/multas/" },
+        { label: "CEP dos Municípios", url: "https://buscacepinter.correios.com.br/app/endereco/index.php" },
+
+      ],
       selectedFaq: null
     };
   },
@@ -305,6 +353,11 @@ function handleImageError() {
       });
     });
     document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+    //animação tela inicial
+    setTimeout(() => {
+      this.$refs.textBlock.classList.remove("opacity-0", "translate-y-10");
+      this.$refs.imageBlock.classList.remove("opacity-0", "translate-x-10");
+    }, 300);
   },
 
   methods: {
@@ -406,4 +459,44 @@ nav ul li a:hover {
   transform: translateY(0); /* Modal começa na posição correta ao abrir */
 }
 
+/*tela inicial*/
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fade-in 1.5s ease-out;
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-in {
+  animation: slide-in 1.5s ease-out;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+.animate-wiggle {
+  animation: wiggle 0.3s ease-in-out infinite;
+}
+
+@keyframes zoom-in {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.animate-zoom-in {
+  animation: zoom-in 1.5s ease-out;
+}
   </style>
