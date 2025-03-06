@@ -41,7 +41,9 @@ function handleImageError() {
         </div>
 
         <!-- Botão de Menu (Mobile) -->
+
         <button @click="showMenuMobile = !showMenu" class="block md:hidden text-gray-900 focus:outline-none">
+
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
@@ -58,6 +60,7 @@ function handleImageError() {
       <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
     </ul>
 
+
         <!-- Botão Login -->
         <a href="/login" class="hidden md:block bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">
             Área Restrita
@@ -66,6 +69,7 @@ function handleImageError() {
 
     <!-- Menu Mobile -->
     <transition name="fade">
+
         <ul v-if="showMenuMobile" class="absolute left-0 top-full w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden">
             <li><a href="#home" @click="scrollToSection($event, 'home'); showMenuMobile = false" class="hover:text-red-600">Início</a></li>
             <li><a href="#sobre" @click="scrollToSection($event, 'sobre'); showMenuMobile = false" class="hover:text-red-600">Quem Somos</a></li>
@@ -73,6 +77,7 @@ function handleImageError() {
             <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-600">Nossas Lojas</a></li>
             <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-600">Dúvidas Frequentes</a></li>
             <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-600">Muito Mais</a></li>
+
             <a href="/login" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Área Restrita</a>
         </ul>
     </transition>
