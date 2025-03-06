@@ -34,61 +34,97 @@ function handleImageError() {
     <div class="bg-white text-gray-900">
       <!-- Navbar no 12 -->
       <nav class="bg-white shadow-md fixed w-full top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center py-4 px-6">
-            <div class="logo-container flex justify-center items-center">
-              <img src="../../../public/images/logo.jpg" alt="Logo da Empresa" class="w-20 h-auto scale-150" />
-          </div>
-        <ul class="flex space-x-6 text-lg">
-          <li><a href="#home" @click="scrollToSection($event, 'home')" class="hover:text-red-600">Início</a></li>
-          <li><a href="#sobre" @click="scrollToSection($event, 'sobre')" class="hover:text-red-600">Quem Somos</a></li>
-          <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
-          <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
-          <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas Frequentes</a></li>
-          <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
-        </ul>
-          <a href="/login" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Área Restrita</a>
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+        <!-- Logo -->
+        <div class="logo-container flex justify-center items-center">
+            <img src="../../../public/images/logo.jpg" alt="Logo da Empresa" class="w-16 md:w-20 h-auto" />
         </div>
-      </nav>
+
+        <!-- Botão de Menu (Mobile) -->
+        <button @click="showMenuMobile = !showMenu" class="block md:hidden text-gray-900 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+        
+
+    <!-- Lista de navegação que será controlada pelo showMenu -->
+    <ul :class="{'block': showMenu, 'hidden': !showMenu, 'md:flex': true} " class="space-x-6 text-lg">
+      <li><a href="#home" @click="scrollToSection($event, 'home')" class="hover:text-red-600">Início</a></li>
+      <li><a href="#sobre" @click="scrollToSection($event, 'sobre')" class="hover:text-red-600">Quem Somos</a></li>
+      <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
+      <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
+      <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas Frequentes</a></li>
+      <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
+    </ul>
+
+        <!-- Botão Login -->
+        <a href="/login" class="hidden md:block bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">
+            Área Restrita
+        </a>
+    </div>
+
+    <!-- Menu Mobile -->
+    <transition name="fade">
+        <ul v-if="showMenuMobile" class="absolute left-0 top-full w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden">
+            <li><a href="#home" @click="scrollToSection($event, 'home'); showMenuMobile = false" class="hover:text-red-600">Início</a></li>
+            <li><a href="#sobre" @click="scrollToSection($event, 'sobre'); showMenuMobile = false" class="hover:text-red-600">Quem Somos</a></li>
+            <li><a href="#produtos" @click="scrollToSection($event, 'produtos'); showMenuMobile = false" class="hover:text-red-600">Produtos</a></li>
+            <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-600">Nossas Lojas</a></li>
+            <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-600">Dúvidas Frequentes</a></li>
+            <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-600">Muito Mais</a></li>
+            <a href="/login" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Área Restrita</a>
+        </ul>
+    </transition>
+</nav>
   
       <!-- Inicial -->
-      <section id="home" class="relative h-screen flex items-center justify-center bg-white text-gray-900 overflow-hidden">
+      <section id="home" class="relative flex flex-wrap items-center justify-center bg-white text-gray-900 overflow-hidden min-h-screen py-20">
     <!-- Elementos decorativos animados -->
-    <div class="absolute top-0 left-0 w-48 h-48 bg-red-500 opacity-50 rounded-full animate-pulse"></div>
-    <div class="absolute bottom-10 right-10 w-32 h-32 bg-red-500 opacity-50 rounded-full animate-bounce"></div>
-    <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-red-300 opacity-30 rounded-full animate-spin-slow"></div>
+    <div class="absolute top-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-red-500 opacity-50 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-5 right-5 sm:bottom-10 sm:right-10 w-16 h-16 sm:w-24 sm:h-24 bg-red-500 opacity-50 rounded-full animate-bounce"></div>
+    <div class="absolute top-1/2 left-1/2 w-32 h-32 sm:w-48 sm:h-48 bg-red-300 opacity-30 rounded-full animate-spin-slow"></div>
 
-    <div class="container mx-auto px-6 flex flex-col-reverse md:flex-row items-center relative z-10">
-      <!-- Texto e Botão -->
-      <div class="text-center md:text-left md:w-1/2 opacity-0 translate-y-10 transition-all duration-1000" ref="textBlock">
-        <h1 class="text-4xl font-extrabold mb-4 text-red-600 animate-fade-in">A Evolução que Seu Veículo Precisa!</h1>
-        <p class="text-lg mb-6 text-gray-700 animate-slide-in">O trânsito está mudando, e com ele, a identificação veicular também evolui! As Placas Mercosul chegaram para trazer mais segurança, modernidade e padronização para os veículos em circulação. Mas não basta apenas instalar qualquer placa, você precisa escolher qualidade, confiabilidade e durabilidade. E é exatamente isso que a Nova Era oferece!</p>
-        <br>
-        <h1 class="text-2xl font-extrabold mb-4 text-red-600 animate-fade-in">🚗 Por que escolher as Placas Mercosul com a Nova Era?</h1>
-         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Maior segurança – Com QR Code Gravado a laser e elementos de proteção, elas dificultam fraudes e clonagens.</p>
-         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Padrão internacional – Permite circulação livre entre os países do Mercosul.</p>
-         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Estética moderna – Design inovador que valoriza o seu veículo.</p>
-         <p class="text-lg mb-6 text-gray-700 animate-slide-in">✅ Material resistente – Placas feitas para durar mais tempo, mesmo em condições extremas.</p>         
-         <p class="text-lg mb-6 text-gray-700 animate-slide-in">📍 Entre em contato agora mesmo e garanta a sua placa Mercosul com quem entende do assunto!</p>
-          <a 
-          href="https://wa.me/559884209099" 
-          target="_blank"
-          class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-110 animate-wiggle">
-          Fale Conosco no WhatsApp
-        </a>
-      </div>
+    <div class="container mx-auto px-4 md:px-6 flex flex-col-reverse md:flex-row items-center gap-12 md:gap-16 max-w-[90%]">
+        <!-- Texto e Botão -->
+        <div class="text-center md:text-left w-full md:w-1/2">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 text-red-600 max-w-[90%] leading-tight">
+                A Evolução que Seu Veículo Precisa!
+            </h1>
+            <p class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700">
+                O trânsito está mudando, e com ele, a identificação veicular também evolui! As Placas Mercosul chegaram para trazer mais segurança, modernidade e padronização para os veículos em circulação. Mas não basta apenas instalar qualquer placa, você precisa escolher qualidade, confiabilidade e durabilidade. E é exatamente isso que a Nova Era oferece!
+            </p>
+            <h2 class="text-xl sm:text-2xl font-extrabold mb-4 text-red-600">
+                🚗 Por que escolher as Placas Mercosul com a Nova Era?
+            </h2>
+            <ul class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700 space-y-2">
+                <li>✅ Maior segurança – Com QR Code Gravado a laser e elementos de proteção.</li>
+                <li>✅ Padrão internacional – Permite circulação livre entre os países do Mercosul.</li>
+                <li>✅ Estética moderna – Design inovador que valoriza o seu veículo.</li>
+                <li>✅ Material resistente – Placas feitas para durar mais tempo.</li>
+            </ul>
+            <p class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700">
+                📍 Entre em contato agora mesmo e garanta a sua placa Mercosul com quem entende do assunto!
+            </p>
+            <a href="https://wa.me/559884209099" 
+               target="_blank"
+               class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-110 block md:inline-block">
+               Fale Conosco no WhatsApp
+            </a>
+        </div>
 
-      <!-- Imagem -->
-      <div class="md:w-1/2 flex justify-center opacity-0 translate-x-10 transition-all duration-1000" ref="imageBlock">
-        <img src="../../../public/images/foto2.jpg" alt="Pessoa" class="w-96 h-96 object-cover rounded-full shadow-lg animate-zoom-in">
-      </div>
+        <!-- Imagem -->
+        <div class="w-full md:w-1/2 flex justify-center">
+            <img src="../../../public/images/foto2.jpg" 
+                 alt="Pessoa" 
+                 class="w-96 h-96 object-cover rounded-full shadow-lg animate-zoom-in">
+        </div>
     </div>
-
-    <!--  Animação do Carro na parte de baixo -->
-    <div class="absolute bottom-0 left-0 w-full">
-      <CarAnimation />
+    <div class="absolute bottom-[-10px] sm:bottom-[-10px] md:bottom-[-10px] left-0 w-screen z-0">
+        <CarAnimation />
     </div>
-  </section>
-      
+</section>
+
       <!-- Sobre -->
       <section id="sobre" class="py-20 px-6 text-center fade-in bg-white-100">
   <h2 class="text-4xl font-semibold mb-4">Sobre Nós</h2>
@@ -186,7 +222,7 @@ function handleImageError() {
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
             <h3 class="text-xl font-semibold text-red-600">{{ loja.nome }}</h3>
             <p class="text-sm text-gray-700 mt-2 dark:text-gray-400">CNPJ: {{ loja.cnpj }}</p>
-            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: {{ loja.telefone }}</p>
+            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: <a :href="'https://wa.me/' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone }}</a></p>
             <p class="text-sm text-gray-700 dark:text-gray-400">Localização: 
               <a :href="'https://www.google.com/maps?q=' + loja.endereco.latitude + ',' + loja.endereco.longitude" target="_blank" class="text-red-600 underline">Ver no Maps</a>
             </p>
@@ -275,6 +311,7 @@ function handleImageError() {
     components: { LinksSection },
   data() {
     return {
+      showMenuMobile: false,
       lojas: [
         { nome: "ACAILÂNDIA", cnpj:"50.483.492/0013-25", telefone: "(00) 0000-0001", imagem: "/images/ACAILANDIA.png", maps: "https://maps.app.goo.gl/EzL2ggDGavA3mQPi6", expandido: false },
         { nome: "BACABAL", cnpj:"50.483.492/0009-49", telefone: "(00) 0000-0002", imagem: "/images/BACABAL.png", maps: "https://maps.app.goo.gl/m2ZHh3ccYwVnBiUX9", expandido: false },
@@ -370,21 +407,22 @@ function handleImageError() {
     },
     closeModal() {
       this.selectedFaq = null;
-    }
+    },
+    scrollToSection(event, sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    },
   
   
-  }
+  },
    
 };
-
-// const produtos = [
-//   { nome: "Par de placas Mercosul", valor: "R$ 300,00", descricao: "Placas Mercosul de alta qualidade, resistentes e em conformidade com as normas legais, garantindo segurança e visibilidade para o seu veículo.", imagem: "/images/par.png" },
-//   { nome: "Unidade Carro Mercosul", valor: "R$ 180,00", descricao: "Placa para carro, com tecnologia avançada e alta resistência. Atende todos os requisitos legais, oferecendo um produto seguro e durável.", imagem: "/images/unidade.png" },
-//   { nome: "Unidade Moto Mercosul", valor: "R$ 180,00", descricao: "Placa para moto, com excelente visibilidade e resistência. Totalmente conforme as exigências legais, oferecendo segurança e durabilidade.", imagem: "/images/moto.png" },
-//   { nome: "Par Preta Carro Mercosul", valor: "R$ 350,00", descricao: "Placa preta fosca para carro, com design moderno e materiais de alta qualidade. Resistente e conforme as normas do Mercosul, oferece um visual elegante e seguro.", imagem: "/images/parcolecao.png" },
-//   { nome: "Unidade Preta Moto Mercosul", valor: "R$ 200,00", descricao: "Placa preta fosca para moto, com design discreto e durável. Conformidade com as normas legais e segurança garantida.", imagem: "/images/unidadecolecao.png" },
-//   { nome: "Par Reduzida Carro Mercosul", valor: "R$ 380,00", descricao: "Placa reduzida para carro, compacta e eficiente. Oferece praticidade, segurança e está em conformidade com as normas do Mercosul.", imagem: "/images/par.png" }
-// ];
+const formatarNumero = (numero) => {
+  if (!numero) return "";
+  return numero.replace(/\D/g, ""); // Remove tudo que não for número
+};
   
   </script>
   
