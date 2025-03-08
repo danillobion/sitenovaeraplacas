@@ -39,6 +39,7 @@ class ProdutosController extends Controller
         $produto->nome = $request->nome;
         $produto->descricao = $request->descricao;
         $produto->valor = $request->valor;
+        $produto->exibir_valor = $request->exibir_valor == 'true' ? true : false;
     
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
     

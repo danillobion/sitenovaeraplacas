@@ -207,7 +207,7 @@ function handleImageError() {
             <div class="p-4 text-left">
               <h2 class="font-semibold text-gray-800" style="font-size: 25px;">{{ produto.nome }}</h2>
               <p class="text-gray-600 mt-2">{{ produto.descricao }}</p>
-              <p class="text-lg font-bold text-blue-600 mt-2">{{ produto.valor }}</p>
+              <p v-if="produto.exibir_valor" class="text-lg font-bold text-blue-600 mt-2">{{ produto.valor }}</p>
             </div>
           </div>
         </div>
@@ -226,8 +226,8 @@ function handleImageError() {
           <img :src="loja.imagem" alt="Loja" class="w-full h-auto object-contain rounded-t-lg">
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
             <h3 class="text-xl font-semibold text-red-600">{{ loja.nome }}</h3>
-            <p class="text-sm text-gray-700 mt-2 dark:text-gray-400">CNPJ: {{ loja.cnpj }}</p>
-            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: <a :href="'https://wa.me/' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone }}</a></p>
+            <p class="text-sm text-gray-700 mt-2 dark:text-gray-400">CNPJ: {{ loja.cnpj_formatado }}</p>
+            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: <a :href="'https://wa.me/' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone_formatado }}</a></p>
             <p class="text-sm text-gray-700 dark:text-gray-400">Localização: 
               <a :href="'https://www.google.com/maps?q=' + loja.endereco.latitude + ',' + loja.endereco.longitude" target="_blank" class="text-red-600 underline">Ver no Maps</a>
             </p>

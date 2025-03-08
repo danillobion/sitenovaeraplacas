@@ -18,6 +18,7 @@ const form = useForm({
   descricao: '',
   valor: '',
   imagem: null,
+  exibir_valor: false
 });
 
 const imagePreview = ref(null);
@@ -37,6 +38,7 @@ const submit = () => {
   formData.append("nome", form.nome);
   formData.append("descricao", form.descricao);
   formData.append("valor", form.valor);
+  formData.append("exibir_valor", form.exibir_valor);
 
   if (form.imagem) {
     formData.append("imagem", form.imagem);
@@ -76,8 +78,8 @@ onMounted(() => {
     form.descricao = props.produto.descricao;
     form.valor = props.produto.valor;
     form.imagem = props.produto.imagem;
+    form.exibir_valor = props.produto.exibir_valor == 1 ? true : false;
   }
-
   if (props.produto.imagem) {
     imagePreview.value = `/${props.produto.imagem}`;
   }
@@ -116,7 +118,6 @@ onMounted(() => {
                   <InputError class="mt-2" :message="form.errors.imagem" />
                 </div>
                 <div></div>
-                
                 <div v-for="field in produtoFields" :key="field.id">
                   <InputLabel :for="field.id" :value="field.label" />
                   <TextInput
@@ -128,6 +129,15 @@ onMounted(() => {
                     :autocomplete="field.id"
                   />
                   <InputError class="mt-2" :message="form.errors[field.model]" />
+                </div>
+                <div class="flex mt-7">
+                  <input
+                    id="exibir_valor"
+                    type="checkbox"
+                    class="mr-1 rounded-md border-gray-300 dark:border-gray-700 dark:focus:border-indigo-600"
+                    v-model="form.exibir_valor"
+                  />
+                  <InputLabel for="exibir_valor" value="Exibir o valor na tela?" />
                 </div>
               </div>
 
