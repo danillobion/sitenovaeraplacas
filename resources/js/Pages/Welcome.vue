@@ -41,21 +41,25 @@ function handleImageError() {
         </div>
 
         <!-- Botão de Menu (Mobile) -->
-        <button @click="showMenu = !showMenu" class="block md:hidden text-gray-900 focus:outline-none">
+
+        <button @click="showMenuMobile = !showMenu" class="block md:hidden text-gray-900 focus:outline-none">
+
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
         </button>
+        
 
-        <!-- Menu Desktop -->
-        <ul class="hidden md:flex space-x-6 text-lg">
-            <li><a href="#home" @click="scrollToSection($event, 'home')" class="hover:text-red-600">Início</a></li>
-            <li><a href="#sobre" @click="scrollToSection($event, 'sobre')" class="hover:text-red-600">Quem Somos</a></li>
-            <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
-            <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
-            <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas Frequentes</a></li>
-            <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
-        </ul>
+    <!-- Lista de navegação que será controlada pelo showMenu -->
+    <ul :class="{'block': showMenu, 'hidden': !showMenu, 'md:flex': true} " class="space-x-6 text-lg">
+      <li><a href="#home" @click="scrollToSection($event, 'home')" class="hover:text-red-600">Início</a></li>
+      <li><a href="#sobre" @click="scrollToSection($event, 'sobre')" class="hover:text-red-600">Quem Somos</a></li>
+      <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
+      <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
+      <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas Frequentes</a></li>
+      <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
+    </ul>
+
 
         <!-- Botão Login -->
         <a href="/login" class="hidden md:block bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">
@@ -65,13 +69,15 @@ function handleImageError() {
 
     <!-- Menu Mobile -->
     <transition name="fade">
-        <ul v-if="showMenu" class="absolute left-0 top-full w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden">
-            <li><a href="#home" @click="scrollToSection($event, 'home'); showMenu = false" class="hover:text-red-600">Início</a></li>
-            <li><a href="#sobre" @click="scrollToSection($event, 'sobre'); showMenu = false" class="hover:text-red-600">Quem Somos</a></li>
-            <li><a href="#produtos" @click="scrollToSection($event, 'produtos'); showMenu = false" class="hover:text-red-600">Produtos</a></li>
-            <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenu = false" class="hover:text-red-600">Nossas Lojas</a></li>
-            <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenu = false" class="hover:text-red-600">Dúvidas Frequentes</a></li>
-            <li><a href="#links" @click="scrollToSection($event, 'links'); showMenu = false" class="hover:text-red-600">Muito Mais</a></li>
+
+        <ul v-if="showMenuMobile" class="absolute left-0 top-full w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden">
+            <li><a href="#home" @click="scrollToSection($event, 'home'); showMenuMobile = false" class="hover:text-red-600">Início</a></li>
+            <li><a href="#sobre" @click="scrollToSection($event, 'sobre'); showMenuMobile = false" class="hover:text-red-600">Quem Somos</a></li>
+            <li><a href="#produtos" @click="scrollToSection($event, 'produtos'); showMenuMobile = false" class="hover:text-red-600">Produtos</a></li>
+            <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-600">Nossas Lojas</a></li>
+            <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-600">Dúvidas Frequentes</a></li>
+            <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-600">Muito Mais</a></li>
+
             <a href="/login" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Área Restrita</a>
         </ul>
     </transition>
@@ -221,7 +227,7 @@ function handleImageError() {
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
             <h3 class="text-xl font-semibold text-red-600">{{ loja.nome }}</h3>
             <p class="text-sm text-gray-700 mt-2 dark:text-gray-400">CNPJ: {{ loja.cnpj }}</p>
-            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: {{ loja.telefone }}</p>
+            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: <a :href="'https://wa.me/' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone }}</a></p>
             <p class="text-sm text-gray-700 dark:text-gray-400">Localização: 
               <a :href="'https://www.google.com/maps?q=' + loja.endereco.latitude + ',' + loja.endereco.longitude" target="_blank" class="text-red-600 underline">Ver no Maps</a>
             </p>
@@ -310,6 +316,7 @@ function handleImageError() {
     components: { LinksSection },
   data() {
     return {
+      showMenuMobile: false,
       lojas: [
         { nome: "ACAILÂNDIA", cnpj:"50.483.492/0013-25", telefone: "(00) 0000-0001", imagem: "/images/ACAILANDIA.png", maps: "https://maps.app.goo.gl/EzL2ggDGavA3mQPi6", expandido: false },
         { nome: "BACABAL", cnpj:"50.483.492/0009-49", telefone: "(00) 0000-0002", imagem: "/images/BACABAL.png", maps: "https://maps.app.goo.gl/m2ZHh3ccYwVnBiUX9", expandido: false },
@@ -405,21 +412,22 @@ function handleImageError() {
     },
     closeModal() {
       this.selectedFaq = null;
-    }
+    },
+    scrollToSection(event, sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    },
   
   
-  }
+  },
    
 };
-
-// const produtos = [
-//   { nome: "Par de placas Mercosul", valor: "R$ 300,00", descricao: "Placas Mercosul de alta qualidade, resistentes e em conformidade com as normas legais, garantindo segurança e visibilidade para o seu veículo.", imagem: "/images/par.png" },
-//   { nome: "Unidade Carro Mercosul", valor: "R$ 180,00", descricao: "Placa para carro, com tecnologia avançada e alta resistência. Atende todos os requisitos legais, oferecendo um produto seguro e durável.", imagem: "/images/unidade.png" },
-//   { nome: "Unidade Moto Mercosul", valor: "R$ 180,00", descricao: "Placa para moto, com excelente visibilidade e resistência. Totalmente conforme as exigências legais, oferecendo segurança e durabilidade.", imagem: "/images/moto.png" },
-//   { nome: "Par Preta Carro Mercosul", valor: "R$ 350,00", descricao: "Placa preta fosca para carro, com design moderno e materiais de alta qualidade. Resistente e conforme as normas do Mercosul, oferece um visual elegante e seguro.", imagem: "/images/parcolecao.png" },
-//   { nome: "Unidade Preta Moto Mercosul", valor: "R$ 200,00", descricao: "Placa preta fosca para moto, com design discreto e durável. Conformidade com as normas legais e segurança garantida.", imagem: "/images/unidadecolecao.png" },
-//   { nome: "Par Reduzida Carro Mercosul", valor: "R$ 380,00", descricao: "Placa reduzida para carro, compacta e eficiente. Oferece praticidade, segurança e está em conformidade com as normas do Mercosul.", imagem: "/images/par.png" }
-// ];
+const formatarNumero = (numero) => {
+  if (!numero) return "";
+  return numero.replace(/\D/g, ""); // Remove tudo que não for número
+};
   
   </script>
   
