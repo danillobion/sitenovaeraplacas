@@ -17,5 +17,6 @@ class Produto extends Model
         'nome',
         'descricao',
         'valor',
+        'exibir_valor'
     ];
 }
