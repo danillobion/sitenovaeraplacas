@@ -96,12 +96,6 @@ function handleImageError() {
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 text-red-600 max-w-[90%] leading-tight">
                 A Evolução que Seu Veículo Precisa!
             </h1>
-            <p class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700">
-                O trânsito está mudando, e com ele, a identificação veicular também evolui! As Placas Mercosul chegaram para trazer mais segurança, modernidade e padronização para os veículos em circulação. Mas não basta apenas instalar qualquer placa, você precisa escolher qualidade, confiabilidade e durabilidade. E é exatamente isso que a Nova Era oferece!
-            </p>
-            <h2 class="text-xl sm:text-2xl font-extrabold mb-4 text-red-600">
-                🚗 Por que escolher as Placas Mercosul com a Nova Era?
-            </h2>
             <ul class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700 space-y-2">
                 <li>✅ Maior segurança – Com QR Code Gravado a laser e elementos de proteção.</li>
                 <li>✅ Padrão internacional – Permite circulação livre entre os países do Mercosul.</li>
