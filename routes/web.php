@@ -6,6 +6,7 @@ use App\Models\Endereco;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\CepController;
 use App\Http\Controllers\CnpjController;
 use App\Http\Controllers\TiposController;
 use App\Http\Controllers\ProfileController;
@@ -63,6 +64,16 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/permissao/editar/{tipo_id}', [PermissoesController::class, 'editar'])->name('permissao.editar');
         Route::post('/permissao/salvar', [PermissoesController::class, 'salvar'])->name('permissao.salvar');
+    });
+            
+    Route::middleware(['auth', 'permission:tela-consultar-cep'])->group(function () {
+        Route::get('/consultar/cep', [CepController::class, 'index'])->name('consultar.cep.index');
+        Route::get('/consultar/cep/{numero}', [CepController::class, 'consultarCep'])->name('consultar.cep');
+    });
+            
+    Route::middleware(['auth', 'permission:tela-consultar-cnpj'])->group(function () {
+        Route::get('/consultar/cnpj', [CnpjController::class, 'index'])->name('consultar.cnpj.index');
+        Route::get('/consultar/cnpj/{numero}', [CnpjController::class, 'consultarCnpj'])->name('tela.consultar.cnpj');
     });
 });
 

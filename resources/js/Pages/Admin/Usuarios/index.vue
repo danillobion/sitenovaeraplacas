@@ -70,12 +70,12 @@ const deletarUsuario = (produto_id) => {
                                             >
                                                 Editar
                                             </Link>
-                                            <button
+                                            <!-- <button
                                                 @click="deletarUsuario(usuario.id)"
                                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                             >
                                                 Deletar
-                                            </button>
+                                            </button> -->
                                         </td>
                                     </tr>
                                     <tr v-if="usuarios.length === 0"

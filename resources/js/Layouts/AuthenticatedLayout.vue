@@ -11,7 +11,6 @@ const showingNavigationDropdown = ref(false);
 const { auth } = usePage().props;
 
 const userHasPermission = (permission) => {
-    console.log(auth.permissions);
     return auth?.permissions?.includes(permission);
 };
 </script>
@@ -72,6 +71,20 @@ const userHasPermission = (permission) => {
                                     :active="route().current('tipos.index')"
                                 >
                                     Tipos de usuários
+                                </NavLink>
+                                <NavLink
+                                    v-if="userHasPermission('tela-consultar-cep')"
+                                    :href="route('consultar.cep.index')"
+                                    :active="route().current('consultar.cep.index')"
+                                >
+                                    CEP
+                                </NavLink>
+                                <NavLink
+                                    v-if="userHasPermission('tela-consultar-cnpj')"
+                                    :href="route('consultar.cnpj.index')"
+                                    :active="route().current('consultar.cnpj.index')"
+                                >
+                                    CNPJ
                                 </NavLink>
                             </div>
                         </div>
@@ -207,6 +220,20 @@ const userHasPermission = (permission) => {
                             :active="route().current('tipos.index')"
                         >
                             Tipos de usuários
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-consultar-cep')"
+                            :href="route('consultar.cep.index')"
+                            :active="route().current('consultar.cep.index')"
+                        >
+                            CEP
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-consultar-cnpj')"
+                            :href="route('consultar.cnpj.index')"
+                            :active="route().current('consultar.cnpj.index')"
+                        >
+                            CNPJ
                         </ResponsiveNavLink>
                     </div>
 
