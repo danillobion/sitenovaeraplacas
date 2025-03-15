@@ -54,7 +54,7 @@ const consultarCep = async () => {
         alert("Erro ao buscar o CEP. Tente novamente.");
         console.error(error);
     } finally {
-        consulta_em_andamento.value = false; // Liberar campos após consulta
+        consulta_em_andamento.value = false;
     }
 };
 

@@ -58,10 +58,10 @@ const consultarCnpj = async () => {
         }
 
         resultado.value = response.data;
-        consulta_em_andamento.value = false;
     } catch (error) {
         alert("Erro ao buscar o CNPJ. Tente novamente.");
         console.error(error);
+    } finally {
         consulta_em_andamento.value = false;
     }
 };
