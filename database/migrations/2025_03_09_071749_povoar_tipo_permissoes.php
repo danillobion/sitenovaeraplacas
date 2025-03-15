@@ -16,11 +16,9 @@ return new class extends Migration
     {
         $tipo_root = Usuario::with("tipo")->where('email', 'root@email.com')->first();
 
-        $permissao_dashboard_admin = Permissao::where('nome', 'dashboard-admin')->first();
         $permissao_tela_listagem_estampadoras = Permissao::where('nome', 'tela-listagem-estampadoras')->first();
 
         DB::table('tipo_permissoes')->insert([
-            ['tipo_id' => $tipo_root->tipo->id, 'permissao_id' => $permissao_dashboard_admin->id, 'created_at' => now(), 'updated_at' => now()],
             ['tipo_id' => $tipo_root->tipo->id, 'permissao_id' => $permissao_tela_listagem_estampadoras->id, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
