@@ -1,13 +1,18 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link,usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+const { auth } = usePage().props;
+
+const userHasPermission = (permission) => {
+    return auth?.permissions?.includes(permission);
+};
 </script>
 
 <template>
@@ -40,16 +45,46 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                                 <NavLink
+                                    v-if="userHasPermission('tela-listagem-estampadoras')"
                                     :href="route('estampadora.index')"
                                     :active="route().current('estampadora.index')"
                                 >
                                     Estampadoras
                                 </NavLink>
                                 <NavLink
+                                    v-if="userHasPermission('tela-listagem-produtos')"
                                     :href="route('produtos.index')"
                                     :active="route().current('produtos.index')"
                                 >
                                     Produtos
+                                </NavLink>
+                                <NavLink
+                                    v-if="userHasPermission('tela-listagem-usuarios')"
+                                    :href="route('usuarios.index')"
+                                    :active="route().current('usuarios.index')"
+                                >
+                                    Usuários
+                                </NavLink>
+                                <NavLink
+                                    v-if="userHasPermission('tela-tipos-usuarios')"
+                                    :href="route('tipos.index')"
+                                    :active="route().current('tipos.index')"
+                                >
+                                    Tipos de usuários
+                                </NavLink>
+                                <NavLink
+                                    v-if="userHasPermission('tela-consultar-cep')"
+                                    :href="route('consultar.cep.index')"
+                                    :active="route().current('consultar.cep.index')"
+                                >
+                                    CEP
+                                </NavLink>
+                                <NavLink
+                                    v-if="userHasPermission('tela-consultar-cnpj')"
+                                    :href="route('consultar.cnpj.index')"
+                                    :active="route().current('consultar.cnpj.index')"
+                                >
+                                    CNPJ
                                 </NavLink>
                             </div>
                         </div>
@@ -159,10 +194,46 @@ const showingNavigationDropdown = ref(false);
                             Dashboard
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
+                            v-if="userHasPermission('tela-listagem-estampadoras')"
                             :href="route('estampadora.index')"
                             :active="route().current('estampadora.index')"
                         >
                             Estampadora
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-listagem-produtos')"
+                            :href="route('produtos.index')"
+                            :active="route().current('produtos.index')"
+                        >
+                            Produtos
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-listagem-usuarios')"
+                            :href="route('usuarios.index')"
+                            :active="route().current('usuarios.index')"
+                        >
+                            Usuários
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-tipos-usuarios')"
+                            :href="route('tipos.index')"
+                            :active="route().current('tipos.index')"
+                        >
+                            Tipos de usuários
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-consultar-cep')"
+                            :href="route('consultar.cep.index')"
+                            :active="route().current('consultar.cep.index')"
+                        >
+                            CEP
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-consultar-cnpj')"
+                            :href="route('consultar.cnpj.index')"
+                            :active="route().current('consultar.cnpj.index')"
+                        >
+                            CNPJ
                         </ResponsiveNavLink>
                     </div>
 

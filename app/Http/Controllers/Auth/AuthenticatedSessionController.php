@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\TipoPermissao;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,16 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        $user = Auth::user();
+        
+        $tipo_permissao = TipoPermissao::with("permissoes")->where('tipo_id', $user->tipo_id)->get();
+        
+        $nomesPermissoes = $tipo_permissao->map(function ($item) {
+            return $item['permissoes']['nome'] ?? null; 
+        })->filter()->toArray();
+
+        session()->put('permissoes', $nomesPermissoes);
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

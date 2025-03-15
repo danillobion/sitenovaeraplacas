@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\LogConsulta;
+use App\Services\CepService;
 use Illuminate\Http\Request;
-use App\Services\CnpjService;
 
-class CnpjController extends Controller
+class CepController extends Controller
 {
     public function index(){
-        return Inertia::render('Admin/Consultar/Cnpj/index',[
+        return Inertia::render('Admin/Consultar/Cep/index',[
             'cep' => []
         ]);
     }
-    public function consultarCnpj($numero){
+    public function consultarCep($numero){
         $resultado = [];
-        $resultado = CnpjService::consultar($numero);
+        $resultado = CepService::consultar($numero);
 
         if(is_null($resultado)){
             return [];
@@ -27,16 +27,11 @@ class CnpjController extends Controller
         return $resultado;
     }
 
-    public function cnpj($numero = null){
-        $cnpjService = CnpjService::consultar($numero);
-        return $cnpjService;
-    }
-
     private function registrarLog($numero, $resultado){
         $log = new LogConsulta();
         $log->usuario_id = auth()->user()->id;
-        $log->tipo = "CNP";
-        $log->json_envio = json_encode(["cnpj" => $numero]);
+        $log->tipo = "CEP";
+        $log->json_envio = json_encode(["cep" => $numero]);
         $log->json_retorno = json_encode($resultado);
         $log->save();
     }

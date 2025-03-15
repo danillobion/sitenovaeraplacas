@@ -36,7 +36,27 @@ class CnpjService
             'cidade' => $dados['estabelecimento']['cidade']['nome'],
             'uf' => $dados['estabelecimento']['estado']['sigla'],
             'numero' => $dados['estabelecimento']['numero'],
-            'complemento' => $dados['estabelecimento']['complemento']
+            'complemento' => $dados['estabelecimento']['complemento'],
+
+            'socios' => $dados['socios'],
+
+            'atualizado_em' => $dados['atualizado_em'],
+
+            'razao_social' => $dados['razao_social'],
+
+            'cnpj_raiz' => $dados['cnpj_raiz'],
+
+            'responsavel_federativo' => $dados['responsavel_federativo'],
+
+            'porte' => $dados['porte'],
+
+            'natureza_juridica' => $dados['natureza_juridica'],
+
+            'qualificacao_do_responsavel' => $dados['qualificacao_do_responsavel'],
+
+            'simples' => $dados['simples'],
+
+            'atividades_secundarias' => $dados['estabelecimento']['atividades_secundarias'],
         ];
     }
 }
