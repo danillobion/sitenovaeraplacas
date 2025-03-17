@@ -30,7 +30,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-white relative overflow-hidden">
+  <div class="min-h-screen flex items-center justify-center bg-white relative overflow-hidden p-4">
     <!-- Background Balls -->
     <div class="absolute inset-0 z-0">
       <div class="absolute animate-ping bg-red-300 rounded-full w-24 h-24 opacity-40" style="top: 10%; left: 10%;"></div>
@@ -39,15 +39,15 @@ const submit = () => {
       <div class="absolute animate-ping bg-red-600 rounded-full w-18 h-18 opacity-60" style="top: 80%; left: 60%;"></div>
     </div>
 
-    <!-- Main Content (Login Card + Image) -->
-    <div class="flex items-center justify-center w-full max-w-screen-xl p-6 z-10">
+    <!-- Main Content -->
+    <div class="flex flex-col md:flex-row items-center justify-center w-full max-w-screen-xl p-6 z-10">
       <!-- Login Card + Side Image Wrapper -->
-      <div class="flex w-full max-w-6xl border-2 border-red-500 rounded-lg overflow-hidden">
+      <div class="flex flex-col md:flex-row w-full max-w-4xl border-2 border-red-500 rounded-lg overflow-hidden shadow-lg">
         <!-- Login Card -->
-        <div class="w-1/2 p-10 bg-white shadow-lg">
+        <div class="w-full md:w-1/2 p-6 sm:p-8 md:p-10 bg-white">
           <div class="mb-6 text-center">
-            <img src="../../../../public/images/logo.jpg" alt="Logo" class="w-36 mx-auto mb-4" />
-            <h2 class="text-2xl font-bold text-red-500">Bem-vindo de volta!</h2>
+            <img src="../../../../public/images/logo.jpg" alt="Logo" class="w-28 sm:w-36 mx-auto mb-4" />
+            <h2 class="text-xl sm:text-2xl font-bold text-red-500">Bem-vindo de volta!</h2>
           </div>
 
           <!-- Login Form -->
@@ -65,7 +65,6 @@ const submit = () => {
                 autocomplete="username"
               />
               <InputError class="mt-2" :message="form.errors.email" />
-
             </div>
 
             <!-- Password -->
@@ -80,7 +79,6 @@ const submit = () => {
                 autocomplete="current-password"
               />
               <InputError class="mt-2" :message="form.errors.password" />
-
             </div>
 
             <!-- Submit Button -->
@@ -98,8 +96,8 @@ const submit = () => {
           </div>
         </div>
 
-        <!-- Side Image -->
-        <div class="w-1/2 h-full">
+        <!-- Side Image (Hidden on Small Screens) -->
+        <div class="w-full md:w-1/2 h-64 md:h-auto hidden md:block">
           <img src="../../../../public/images/chip.png" alt="Side Image" class="w-full h-full object-cover" />
         </div>
       </div>

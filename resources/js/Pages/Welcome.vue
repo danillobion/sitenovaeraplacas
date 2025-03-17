@@ -93,15 +93,15 @@ function handleImageError() {
     <div class="container mx-auto px-4 md:px-6 flex flex-col-reverse md:flex-row items-center gap-12 md:gap-16 max-w-[90%]">
         <!-- Texto e Botão -->
         <div class="text-center md:text-left w-full md:w-1/2">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 text-red-600 max-w-[90%] leading-tight">
-                A Evolução que Seu Veículo Precisa!
-            </h1>
-            <ul class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700 space-y-2">
-                <li>✅ Maior segurança – Com QR Code Gravado a laser e elementos de proteção.</li>
-                <li>✅ Padrão internacional – Permite circulação livre entre os países do Mercosul.</li>
-                <li>✅ Estética moderna – Design inovador que valoriza o seu veículo.</li>
-                <li>✅ Material resistente – Placas feitas para durar mais tempo.</li>
-            </ul>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 text-red-600 max-w-[90%] leading-tight">
+                A evolução que seu veículo precisa!
+            </h1><br><br>
+            <ul class="text-centertext-lg sm:text-xl lg:text-4xl mb-6 text-gray-700 space-y-2">
+                <li>✅ Maior segurança </li>
+                <li>✅ Padrão internacional</li>
+                <li>✅ Estética moderna </li>
+                <li>✅ Material resistente </li>
+            </ul><br>
             <p class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700">
                 📍 Entre em contato agora mesmo e garanta a sua placa Mercosul com quem entende do assunto!
             </p>
