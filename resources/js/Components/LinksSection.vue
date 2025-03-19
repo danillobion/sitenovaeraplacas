@@ -1,34 +1,37 @@
 <template>
-    <section class="bg-white py-10 px-5 md:px-10 rounded-2xl shadow-lg border border-red-500">
-      <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Explore Mais</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <a
-          v-for="link in links"
-          :key="link.url"
-          :href="link.url"
-          target="_blank"
-          class="flex items-center justify-center p-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
-        >
-          {{ link.label }}
-        </a>
-      </div>
-    </section>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      links: {
-        type: Array,
-        required: true,
-      },
+  <section class="py-12 px-6 md:px-12 bg-gray-50 rounded-2xl shadow-xl border border-red-500">
+    <h2 class="text-3xl font-extrabold text-gray-800 text-center mb-8">
+      Explore Mais
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <a
+        v-for="link in links"
+        :key="link.url"
+        :href="link.url"
+        target="_blank"
+        class="flex flex-col items-center justify-center p-5 bg-white text-gray-800 font-semibold rounded-xl shadow-md border border-gray-300 hover:bg-red-500 hover:text-white transition-all duration-300 transform hover:scale-105"
+      >
+        <i :class="link.icon" class="text-3xl mb-2"></i>
+        {{ link.label }}
+      </a>
+    </div>
+  </section>
+</template>
+
+<script>
+export default {
+  props: {
+    links: {
+      type: Array,
+      required: true,
     },
-  };
-  </script>
-  
-  <style scoped>
-  section {
-    background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,0,0,0.1) 100%);
-  }
-  </style>
-  
+  },
+};
+</script>
+
+<style scoped>
+section {
+  background: linear-gradient(135deg, #fe3f3f 0%, #f9fafb 100%);
+}
+</style>

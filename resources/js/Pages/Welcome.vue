@@ -31,160 +31,135 @@ function handleImageError() {
 </script>
 
 <template>
-    <div class="bg-white text-gray-900">
-      <!-- Navbar no 12 -->
-      <nav class="bg-white shadow-md fixed w-full top-0 z-50">
-    <div class="container mx-auto flex justify-between items-center py-4 px-6">
-        <!-- Logo -->
-        <div class="logo-container flex justify-center items-center">
-            <img src="../../../public/images/logo.jpg" alt="Logo da Empresa" class="w-16 md:w-20 h-auto" />
-        </div>
+    <div class="relative min-h-screen">
+  <!-- Navbar -->
+  <nav
+  :class="{
+    'bg-transparent': isAtTop,
+    'bg-white shadow-lg text-black': !isAtTop,
+    'text-white': isAtTop && !isMobile,
+    'text-red-500': !isAtTop 
+  }"
+  class="fixed w-full top-0 z-50 backdrop-blur-md transition-all duration-300"
+>
+  <div class="container mx-auto flex justify-between items-center py-4 px-6">
+    <!-- Logo -->
+    <div class="logo-container flex justify-center items-center">
+      <img src="/images/logo.jpg" alt="Logo da Empresa" class="w-16 md:w-20 h-auto" />
+    </div>
 
-        <!-- Botão de Menu (Mobile) -->
+    <!-- Botão de Menu (Mobile) -->
+    <button @click="showMenuMobile = !showMenuMobile" class="block md:hidden text-gray-900 focus:outline-none">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+  </svg>
+</button>
 
-        <button @click="showMenuMobile = !showMenu" class="block md:hidden text-gray-900 focus:outline-none">
-
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-            </svg>
-        </button>
-        
-
-    <!-- Lista de navegação que será controlada pelo showMenu -->
-    <ul :class="{'block': showMenu, 'hidden': !showMenu, 'md:flex': true} " class="space-x-6 text-lg">
+    <!-- Menu Desktop -->
+    <ul class="hidden md:flex space-x-12 text-lg font-bold">
       <li><a href="#home" @click="scrollToSection($event, 'home')" class="hover:text-red-600">Início</a></li>
       <li><a href="#sobre" @click="scrollToSection($event, 'sobre')" class="hover:text-red-600">Quem Somos</a></li>
       <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
       <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
-      <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas Frequentes</a></li>
+      <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas</a></li>
       <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
     </ul>
 
+      <!-- Menu Mobile -->
+      <transition name="fade">
+  <ul v-if="showMenuMobile" class="absolute left-0 top-full w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden">
+    <li><a href="#home" @click="scrollToSection($event, 'home'); showMenuMobile = false" class="hover:text-red-500">Início</a></li>
+    <li><a href="#sobre" @click="scrollToSection($event, 'sobre'); showMenuMobile = false" class="hover:text-red-500">Quem Somos</a></li>
+    <li><a href="#produtos" @click="scrollToSection($event, 'produtos'); showMenuMobile = false" class="hover:text-red-500">Produtos</a></li>
+    <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-500">Nossas Lojas</a></li>
+    <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-500">Dúvidas Frequentes</a></li>
+    <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-500">Muito Mais</a></li>
 
-        <!-- Botão Login -->
-        <a href="/login" class="hidden md:block bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">
-            Área Restrita
-        </a>
+    <a href="/login" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-900">Área Restrita</a>
+  </ul>
+</transition>
+
+      <!-- Botão Login -->
+      <a href="/login" class="hidden md:block bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700 flex items-center space-x-2">
+    <i class="fas fa-lock"></i>
+    <span>Área Restrita</span>
+</a>
     </div>
+  </nav>
 
-    <!-- Menu Mobile -->
-    <transition name="fade">
-
-        <ul v-if="showMenuMobile" class="absolute left-0 top-full w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden">
-            <li><a href="#home" @click="scrollToSection($event, 'home'); showMenuMobile = false" class="hover:text-red-600">Início</a></li>
-            <li><a href="#sobre" @click="scrollToSection($event, 'sobre'); showMenuMobile = false" class="hover:text-red-600">Quem Somos</a></li>
-            <li><a href="#produtos" @click="scrollToSection($event, 'produtos'); showMenuMobile = false" class="hover:text-red-600">Produtos</a></li>
-            <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-600">Nossas Lojas</a></li>
-            <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-600">Dúvidas Frequentes</a></li>
-            <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-600">Muito Mais</a></li>
-
-            <a href="/login" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Área Restrita</a>
+  <!-- Seção Home -->
+  <section
+    id="home"
+    class="relative flex flex-wrap items-center justify-center text-gray-900 overflow-hidden h-screen py-20 bg-cover bg-center"
+    :style="{ backgroundImage: 'url(/images/background.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }"
+  >
+    <div class="container mx-auto px-4 md:px-64 flex flex-col-reverse md:flex-row items-center gap-12 md:gap-16 max-w-[90%]">
+      <!-- Texto e Botão -->
+      <div class="text-center md:text-left w-full md:w-1/2 text-white">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-bold text-white">
+          PLACA MERCOSUL<br> É NA NOVA ERA!
+        </h1>
+        <br /><br />
+        <ul class="text-left text-lg sm:text-xl lg:text-3xl mb-6 space-y-2 ml-0">
+          <li class="font-bold"> <span class="text-green-500">✓</span>  MELHOR QUALIDADE </li>
+          <li class="font-bold"> <span class="text-green-500">✓</span>  MAIS AGILIDADE</li>
+          <li class="font-bold"> <span class="text-green-500">✓</span>  MAIOR SEGURANÇA </li>
+          <li class="font-bold"> <span class="text-green-500">✓</span>  MAIOR REDE DO BRASIL </li>
         </ul>
-    </transition>
-</nav>
-  
-      <!-- Inicial -->
-      <section id="home" class="relative flex flex-wrap items-center justify-center bg-white text-gray-900 overflow-hidden min-h-screen py-20">
-    <!-- Elementos decorativos animados -->
-    <div class="absolute top-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-red-500 opacity-50 rounded-full animate-pulse"></div>
-    <div class="absolute bottom-5 right-5 sm:bottom-10 sm:right-10 w-16 h-16 sm:w-24 sm:h-24 bg-red-500 opacity-50 rounded-full animate-bounce"></div>
-    <div class="absolute top-1/2 left-1/2 w-32 h-32 sm:w-48 sm:h-48 bg-red-300 opacity-30 rounded-full animate-spin-slow"></div>
-
-    <div class="container mx-auto px-4 md:px-6 flex flex-col-reverse md:flex-row items-center gap-12 md:gap-16 max-w-[90%]">
-        <!-- Texto e Botão -->
-        <div class="text-center md:text-left w-full md:w-1/2">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 text-red-600 max-w-[90%] leading-tight">
-                A evolução que seu veículo precisa!
-            </h1><br><br>
-            <ul class="text-centertext-lg sm:text-xl lg:text-4xl mb-6 text-gray-700 space-y-2">
-                <li>✅ Maior segurança </li>
-                <li>✅ Padrão internacional</li>
-                <li>✅ Estética moderna </li>
-                <li>✅ Material resistente </li>
-            </ul><br>
-            <p class="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-700">
-                📍 Entre em contato agora mesmo e garanta a sua placa Mercosul com quem entende do assunto!
-            </p>
-            <a href="https://wa.me/559884209099" 
-               target="_blank"
-               class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-110 block md:inline-block">
-               Fale Conosco no WhatsApp
-            </a>
-        </div>
-
-        <!-- Imagem -->
-        <div class="w-full md:w-1/2 flex justify-center">
-            <img src="../../../public/images/foto2.jpg" 
-                 alt="Pessoa" 
-                 class="w-96 h-96 object-cover rounded-full shadow-lg animate-zoom-in">
-        </div>
+        <br />
+        <p class="text-lg sm:text-xl lg:text-2xl mb-6 font-bold">
+          📍 Peça a sua placa Mercosul com quem entende do assunto!
+        </p>
+        <a
+          href="https://wa.me/559884209099"
+          target="_blank"
+          class="bg-green-600 font-bold hover:bg-green-900 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-110 block md:inline-block"
+        >
+          Fale Conosco no WhatsApp
+        </a>
+      </div>
     </div>
-    <div class="absolute bottom-[-10px] sm:bottom-[-10px] md:bottom-[-10px] left-0 w-screen z-0">
-        <CarAnimation />
+  </section>
+
+  </div>
+
+       <!-- Sobre -->
+       <section id="sobre" class="py-20 px-6 md:px-16 text-center fade-in bg-white-100 container mx-auto">
+  <h2 class="text-4xl font-bold mb-4">Sobre Nós</h2><br><br><br>
+
+  <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+    <!-- Imagem da esquerda mais para a esquerda -->
+    <div class="w-full md:w-1/3 flex justify-center">
+      <img src="../../../public/images/foto2.jpg" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-full shadow-lg object-contain">
     </div>
+
+    <!-- Texto + imagens abaixo centralizados -->
+    <div class="w-full md:w-3/5 lg:w-2/3 p-8 text-center md:text-left max-w-4xl mx-auto flex flex-col items-center">
+      <h2 class="text-2xl font-bold text-gray-800 text-center">Qualidade e Compromisso em Todo Lugar</h2>
+      <p class="mt-4 text-lg text-gray-600 font-bold text-xl">
+        Com mais de 25 anos de experiência, a Nova Era Placas se consolidou como referência em qualidade, compromisso e transparência no fornecimento de placas de identificação veicular.
+        Contamos com lojas espalhadas por todo o Maranhão e também fora do estado, garantindo que nossos clientes tenham acesso ao melhor em placas veiculares, onde quer que estejam.
+        Nossa equipe altamente capacitada oferece um atendimento ágil e personalizado.
+        Trabalhamos com responsabilidade para entregar soluções seguras e de alto padrão, sempre alinhadas às normas mais exigentes do setor.  
+      </p><br>
+
+      <h2 class="text-2xl font-bold text-gray-800 text-center">Excelência Garantida</h2>
+      <p class="mt-4 text-lg text-gray-600 font-bold text-xl">
+        Nossas placas são produzidas com matéria-prima de alto padrão. Possuímos o selo ISO 9001, certificação internacional que atesta excelência na gestão da qualidade. Além disso, seguimos rigorosamente a norma *ISO 7591*, que define os padrões para placas de veículos automotores e reboques, garantindo durabilidade, segurança e conformidade com as regulamentações vigentes.
+      </p><br>
+      
+      <!-- Imagens abaixo do texto -->
+      <div class="flex flex-col items-center py-10 bg-white-100">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+          <img src="../../../public/images/selo.png" alt="Imagem 1" class="h-80 w-80 object-contain sm:h-96 sm:w-96 md:h-64 md:w-64">
+          <img src="../../../public/images/iso.png" alt="Imagem 2" class="h-80 w-80 object-contain sm:h-96 sm:w-96 md:h-64 md:w-64">
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-      <!-- Sobre -->
-      <section id="sobre" class="py-20 px-6 text-center fade-in bg-white-100">
-  <h2 class="text-4xl font-semibold mb-4">Sobre Nós</h2>
-  
-  <div class="flex flex-col md:flex-row items-center justify-center gap-8">
-    <div class="w-full md:w-1/2 flex justify-center">
-      <img src="../../../public/images/foto.jpg" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-lg shadow-lg object-contain">
-    </div>
-    
-    <div class="w-full md:w-1/2 p-8 text-center md:text-left">
-      <h2 class="text-2xl font-bold text-gray-800 text-center">A Nova Era Placas</h2>
-      <p class="mt-4 text-lg text-gray-600">
-        É sinônimo de qualidade, compromisso e transparência. Nossa equipe altamente capacitada garante um atendimento ágil, personalizado e focado na satisfação do cliente. Trabalhamos com responsabilidade para entregar soluções seguras e de alta qualidade. Escolha a excelência. Escolha a Nova Era Placas!
-      </p>
-      <p class="mt-4 text-lg text-gray-600">
-       Nossos Blanks são feitos com matéria prima com alto padrão e possui O selo ISO 9001 que é um certificado de qualidade que atesta que uma empresa segue os requisitos de uma norma internacional para gestão de qualidade. 
-      </p>
-      <p class="mt-4 text-lg text-gray-600">
-        A ISO 7591 é uma norma internacional que especifica as características de placas de matrícula de veículos automotores e reboques. A norma foi publicada em 1982 e revisada e confirmada em 2022. 
-      </p><br>
-      <div class="flex flex-col items-center py-10 bg-gray-100">
-    
-        <div class="flex justify-between items-start">
-  <!-- Seção de Logos e Textos -->
-  <div class="flex flex-col space-y-4 text-red-600">
-    <div class="flex items-center text-3xl font-semibold">
-      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
-      <span>Qualidade</span>
-    </div>
-    <div class="flex items-center text-3xl font-semibold">
-      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
-      <span>Confiança</span>
-    </div>
-    <div class="flex items-center text-3xl font-semibold">
-      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
-      <span>Credibilidade</span>
-    </div>
-    <div class="flex items-center text-3xl font-semibold">
-      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
-      <span>Garantia</span>
-    </div>
-    <div class="flex items-center text-3xl font-semibold">
-      <img src="../../../public/images/seta.gif" alt="Logo" class="h-12 w-auto mr-4">
-      <span>Eficiência</span>
-    </div>
-  </div>
 
-  <!-- Seção de Imagens à Direita -->
-  <div class="flex flex-col items-center space-y-16">
-    <img src="../../../public/images/selo.png" alt="Imagem 1" class="h-48 w-48 object-contain">
-</div>
-<div class="flex flex-col items-center space-y-16">
-    <img src="../../../public/images/iso.png" alt="Imagem 2" class="h-48 w-48 object-contain">
-</div>
-</div>
-
-</div>
-    </div>
-  </div>
-        
-      </section>
   
       <!-- Produtos -->
       <section v-if="produtos.length > 0" id="produtos" class="py-20 bg-gray-100 px-6 text-center fade-in">
@@ -211,7 +186,7 @@ function handleImageError() {
       <!-- Lojas -->
       
     <section id="lojas" class="py-20 px-6 text-center fade-in">
-      <h2 class="text-3xl font-semibold">Onde Estamos</h2>
+      <h2 class="text-3xl font-bold">Onde Estamos</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         
         <div v-for="(loja, index) in estampadoras" :key="index" 
@@ -235,7 +210,7 @@ function handleImageError() {
      
     <!-- Cards de Dúvidas Frequentes -->
     <section id="duvidas" class="py-20 px-6 bg-gray-100">
-    <h2 class="text-3xl font-semibold text-center mb-8">Dúvidas Frequentes</h2>
+    <h2 class="text-3xl font-bold text-center mb-8">Dúvidas Frequentes</h2>
     <div class="flex flex-col items-center gap-6">
   <div v-for="(faq, index) in faqs" :key="index" class="w-full max-w-[100rem]">
     <div
@@ -268,8 +243,6 @@ function handleImageError() {
       <section id="links" class="py-20 bg-white-100 px-6 text-center fade-in">
         <LinksSection :links="meusLinks" />
         
-      
-
 <p class="mt-6 text-sm text-gray-600 text-center">
       <strong>Aviso de Isenção de Responsabilidade:</strong> Este site não possui qualquer vínculo com o Departamento Estadual de Trânsito (DETRAN) ou qualquer outro órgão governamental. Os links aqui disponibilizados são de fontes oficiais e têm o propósito de facilitar o acesso a informações públicas. Recomendamos sempre conferir diretamente nos sites oficiais para garantir a veracidade das informações.
     </p><br>
@@ -301,35 +274,24 @@ function handleImageError() {
       </div>
       </div>
       </footer>
-    </div>
+    
   </template>
   
   <script>
+
+
   export default {
-    components: { CarAnimation },
+    //components: { CarAnimation },
     components: { LinksSection },
   data() {
+
     return {
+      isAtTop: true,
+      isMobile: false,
       showMenuMobile: false,
-      lojas: [
-        { nome: "ACAILÂNDIA", cnpj:"50.483.492/0013-25", telefone: "(00) 0000-0001", imagem: "/images/ACAILANDIA.png", maps: "https://maps.app.goo.gl/EzL2ggDGavA3mQPi6", expandido: false },
-        { nome: "BACABAL", cnpj:"50.483.492/0009-49", telefone: "(00) 0000-0002", imagem: "/images/BACABAL.png", maps: "https://maps.app.goo.gl/m2ZHh3ccYwVnBiUX9", expandido: false },
-        { nome: "BALSAS", cnpj:"50.483.492/0002-72", telefone: "(99) 98154-8049", imagem: "/images/BALSAS.png", maps: "https://maps.app.goo.gl/SsGgcjiozWYYoy8P7", expandido: false },
-        { nome: "BARRA DO CORDA", cnpj:"50.483.492/0006-04", telefone: "(00) 0000-0004", imagem: "/images/BARRADOCORDA.png", maps: "https://maps.app.goo.gl/k5jwtG8JdYC3mLMj9", expandido: false },
-        { nome: "CAXIAS", cnpj:"50.483.492/0003-53", telefone: "(00) 0000-0005", imagem: "/images/CAXIAS.png", maps: "https://maps.app.goo.gl/MAw3YtHT3Qn9mRqu5", expandido: false },
-        { nome: "CHAPADINHA", cnpj:"50.483.492/0014-06", telefone: "(00) 0000-0006", imagem: "/images/CHAPADINHA.png", maps: "https://maps.app.goo.gl/bVQtD85wmCegQxGY8", expandido: false },
-        { nome: "CODÓ", cnpj:"50.483.492/0010-82", telefone: "(00) 0000-0007", imagem: "/images/CODO.png", maps: "https://maps.app.goo.gl/oo27TK1oWTgXWqXH6", expandido: false },
-        { nome: "GRAJAÚ", cnpj:"50.483.492/0015-97", telefone: "(00) 0000-0008", imagem: "/images/GRAJAU.png", maps: "https://maps.app.goo.gl/dRssdMnLZ7JjEsrJ9", expandido: false },
-        { nome: "IMPERATRIZ", cnpj:"50.483.492/0016-78", telefone: "(00) 0000-0001", imagem: "/images/IMPERATRIZ.png", maps: "https://maps.app.goo.gl/xmGvnpNUrR1yhovn6", expandido: false },
-        { nome: "PEDREIRAS", cnpj:"50.483.492/0008-68", telefone: "(00) 0000-0002", imagem: "/images/PEDREIRAS.png", maps: "https://maps.app.goo.gl/jEhrQfBDCnTwmxy4A", expandido: false },
-        { nome: "PINHEIRO", cnpj:"50.483.492/0011-63", telefone: "(00) 0000-0003", imagem: "/images/PINHEIRO.png", maps: "https://maps.app.goo.gl/WdYBYVsdzowiWJ2fA", expandido: false },
-        { nome: "PRESIDENTE DUTRA", cnpj:"50.483.492/0012-44", telefone: "(00) 0000-0004", imagem: "/images/PRESIDENTEDUTRA.png", maps: "https://maps.app.goo.gl/aqqdhyP48Q81d3x7A", expandido: false },
-        { nome: "SANTA INÊS", cnpj:"50.483.492/0004-34", telefone: "(00) 0000-0005", imagem: "/images/SANTAINES.png", maps: "https://maps.app.goo.gl/V7znx2rd95qPD8658", expandido: false },
-        { nome: "SÃO JOÃO DOS PATOS", cnpj:"50.483.492/0007-87", telefone: "(00) 0000-0006", imagem: "/images/SAOJOAODOSPATOS.png", maps: "https://maps.app.goo.gl/mkauzJnJHU3mZF6q8", expandido: false },
-        { nome: "SÃO LUÍS", cnpj:"50.483.492/0001-91", telefone: "(00) 0000-0007", imagem: "/images/SAOLUIS.png", maps: "https://maps.app.goo.gl/pnotcBGBqdpGFbeM6", expandido: false },
-        { nome: "TIMON", cnpj:"50.483.492/0005-15", telefone: "(00) 0000-0008", imagem: "/images/TIMON.png", maps: "https://maps.app.goo.gl/6bhtymL8vfMSeZtg8", expandido: false },
-      ],
+      
       faqs: [
+
         {
           question: "Como realizar a troca das placas antigas para o modelo padrão Mercosul?",
           answer: "Para trocar as placas, primeiro faça a vistoria em uma empresa credenciada pelo DETRAN/MA. Depois, solicite a mudança no DETRAN apresentando os documentos exigidos. Com a guia de emplacamento em mãos, vá até uma de nossas lojas para a estampagem e instalação, finalizando o processo com a emissão do CRLV."
@@ -363,6 +325,8 @@ function handleImageError() {
           answer: "Aceitamos cartão de débito, crédito (parcelado em até 3x sem juros), boleto bancário e PIX. De acordo com as portarias 618/2021 e 537/2023, os pagamentos devem ser rastreáveis, portanto, não aceitamos dinheiro em espécie."
         },
       ],
+
+
       meusLinks: [
         { label: "Emplacamento Digital", url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23611" },
         { label: "Portarias", url: "https://www.detran.ma.gov.br/inicio/paginas/Portarias.xhtml" },
@@ -379,7 +343,14 @@ function handleImageError() {
     };
   },
 
+
+  
   mounted() {
+
+    window.addEventListener('resize', this.checkDevice);
+    window.addEventListener('scroll', this.handleScroll);
+    this.checkDevice();
+
     // Código do IntersectionObserver
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -388,7 +359,9 @@ function handleImageError() {
         }
       });
     });
+
     document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
     //animação tela inicial
     setTimeout(() => {
       this.$refs.textBlock.classList.remove("opacity-0", "translate-y-10");
@@ -396,28 +369,69 @@ function handleImageError() {
     }, 300);
   },
 
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.checkScroll);
+  },
+
+  beforeDestroy() {
+    // Remove o evento de rolagem quando o componente for destruído
+    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('resize', this.checkDevice);
+  },
+
+
+
+
   methods: {
+
     toggleCard(index) {
       // Alterna a exibição do card
       this.lojas[index].expandido = !this.lojas[index].expandido;
     },
+
     openModal(faq) {
       this.selectedFaq = faq;
     },
+
     closeModal() {
       this.selectedFaq = null;
     },
-    scrollToSection(event, sectionId) {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+
+    scrollToSection(event, section) {
+      event.preventDefault();
+      const targetElement = document.getElementById(section);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth" });
       }
+
+      // Fecha o menu mobile após o clique (se estiver aberto)
+      if (this.showMenuMobile) {
+        this.showMenuMobile = false;
+      }
+
+    // Função para alternar a visibilidade do menu mobile
+    toggleMenuMobile(); {
+      this.showMenuMobile = !this.showMenuMobile;
+    }
+  
     },
+    checkScroll() {
+      this.isAtTop = window.scrollY < 50;
+    },
+
+    handleScroll() {
+      this.isAtTop = window.scrollY === 0;
+    },
+
+    checkDevice() {
+      this.isMobile = window.innerWidth <= 768;
+    }
   
   
   },
    
 };
+
 const formatarNumero = (numero) => {
   if (!numero) return "";
   return numero.replace(/\D/g, ""); // Remove tudo que não for número
@@ -425,6 +439,7 @@ const formatarNumero = (numero) => {
   
   </script>
   
+
   <style>
   @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");
   body {
