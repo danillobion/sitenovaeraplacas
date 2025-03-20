@@ -196,7 +196,7 @@ function handleImageError() {
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
             <h3 class="text-xl font-semibold text-red-600">{{ loja.nome }}</h3>
             <p class="text-sm text-gray-700 mt-2 dark:text-gray-400">CNPJ: {{ loja.cnpj_formatado }}</p>
-            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: <a :href="'https://wa.me/' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone_formatado }}</a></p>
+            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: <a :href="'https://wa.me/55' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone_formatado }}</a></p>
             <p class="text-sm text-gray-700 dark:text-gray-400">Localização: 
               <a :href="'https://www.google.com/maps?q=' + loja.endereco.latitude + ',' + loja.endereco.longitude" target="_blank" class="text-red-600 underline">Ver no Maps</a>
             </p>
