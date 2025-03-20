@@ -24,6 +24,9 @@ Route::get('/dashboard',[DashboardController::class, 'index'])->middleware(['aut
 
 Route::middleware('auth')->group(function () {
 
+    Route::middleware(['auth'])->get('/senatran', function () {
+        return Inertia::render('Admin/Consultar/Senatran/index');})->name('senatran.index');
+
     Route::get('/cep/{numero}', [EnderecoController::class, 'cep'])->name('endereco.cep');
     Route::get('/cnpj/{numero}', [CnpjController::class,'cnpj'])->name('consultar.cnpj');
 
