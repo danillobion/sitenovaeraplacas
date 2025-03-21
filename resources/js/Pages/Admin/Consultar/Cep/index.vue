@@ -66,14 +66,14 @@ const consultarCep = async () => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-start">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Consultar CEP</h2>
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">Consultar CEP</h2>
             </div>
         </template>
 
         <div class="py-1">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
                         <h2 class="mb-4 text-lg">Consulta</h2>
                         <!-- Campo de CEP e Botão -->
                         <div class="mt-4 flex flex-wrap gap-4 items-end">
@@ -91,7 +91,7 @@ const consultarCep = async () => {
                                 <InputError class="mt-2" />
                             </div>
                             <PrimaryButton
-                                class="mb-1"
+                                class="mb-1 mb-1 bg-blue-500 hover:bg-blue-700"
                                 :class="{ 'opacity-25': consulta_em_andamento }"
                                 :disabled="consulta_em_andamento"
                                 @click="consultarCep"
@@ -107,8 +107,8 @@ const consultarCep = async () => {
 
         <div class="py-1 pb-5" v-if="form.uf">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
                         <h2 class="mb-4 text-lg">Endereço</h2>
                         <!-- Campos de Retorno (UF, Cidade, etc.) -->
                         <div class="mt-6 grid md:grid-cols-2 gap-6">
@@ -143,3 +143,4 @@ const consultarCep = async () => {
         </div>
     </AuthenticatedLayout>
 </template>
+

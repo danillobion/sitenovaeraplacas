@@ -95,14 +95,14 @@ onMounted(() => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-start">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Consultar CNPJ</h2>
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">Consultar CNPJ</h2>
             </div>
         </template>
 
         <div class="py-1">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
                         <h2 class="mb-4 text-lg">Consulta</h2>
                         <!-- Campo de CNPJ e Botão -->
                         <div class="mt-4 flex flex-wrap gap-4 items-end">
@@ -120,7 +120,7 @@ onMounted(() => {
                                 <InputError class="mt-2" />
                             </div>
                             <PrimaryButton
-                                class="mb-1"
+                                 class="mb-1 bg-blue-500 hover:bg-blue-700"
                                 :class="{ 'opacity-25': consulta_em_andamento }"
                                 :disabled="consulta_em_andamento"
                                 @click="consultarCnpj"
@@ -137,8 +137,8 @@ onMounted(() => {
         <!-- Resultado da pesquisa -->
         <div class="py-1 pb-5" v-if="resultado.razao_social">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
                         <h2 class="mb-4 text-lg">Resultado</h2>
 
                         <!-- Exibição dos dados do CNPJ -->
@@ -180,8 +180,8 @@ onMounted(() => {
         <!-- Tabela de endereco -->
         <div class="py-1 pb-5" v-if="resultado.cep">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
                         <h3 class="text-lg font-semibold mb-4">Endereço</h3>
                         <div class="mt-6 grid md:grid-cols-2 gap-6">
                             <div class="mt-4">
@@ -220,12 +220,12 @@ onMounted(() => {
         <!-- Tabela de Sócios -->
         <div class="py-1 pb-5" v-if="resultado.socios">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
                         <h3 class="text-lg font-semibold mb-4">Sócios</h3>
                         <table class="min-w-full table-auto border-collapse">
                             <thead>
-                                <tr class="bg-gray-100 text-left dark:bg-gray-700">
+                                <tr class="bg-gray-100 text-left">
                                     <th class="px-4 py-2 border-b">Nome</th>
                                     <th class="px-4 py-2 border-b">CPF/CNPJ Sócio</th>
                                     <th class="px-4 py-2 border-b">CPF Representante</th>
@@ -257,3 +257,4 @@ onMounted(() => {
 
     </AuthenticatedLayout>
 </template>
+

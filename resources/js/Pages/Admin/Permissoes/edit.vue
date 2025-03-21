@@ -50,17 +50,17 @@ onMounted(() => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Editar permissões</h2>
+      <h2 class="text-xl font-semibold leading-tight text-gray-800">Editar permissões</h2>
     </template>
 
     <div class="py-1">
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-          <div class="p-6 text-gray-900 dark:text-gray-100">
+        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+          <div class="p-6 text-gray-900">
             <!-- tabela -->
             <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">Nome e Descrição</th>
                             <th scope="col" class="px-6 py-3">Vinculado</th>
@@ -68,8 +68,8 @@ onMounted(() => {
                     </thead>
                     <tbody>
                         <tr v-if="permissoes.length > 0" v-for="permissao in permissoes" :key="permissao.id"
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="bg-white border-b border-gray-200">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                               <p>
                                 {{ permissao.nome }}
                               </p>  
@@ -94,7 +94,7 @@ onMounted(() => {
                             </td>
                         </tr>
                         <tr v-if="permissoes.length === 0"
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                            class="bg-white border-b border-gray-200">
                             <td class="px-6 py-4 text-center" colspan="4">
                                 Nenhuma permissão cadastrada
                             </td>
@@ -109,3 +109,4 @@ onMounted(() => {
     </div>
   </AuthenticatedLayout>
 </template>
+

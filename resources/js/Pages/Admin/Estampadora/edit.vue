@@ -188,40 +188,40 @@ onMounted(() => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Editar estampadora</h2>
+      <h2 class="text-xl font-semibold leading-tight text-gray-800">Editar estampadora</h2>
     </template>
 
     <div class="py-1">
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-          <div class="p-6 text-gray-900 dark:text-gray-100">
+        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-black-500">
+          <div class="p-6 text-gray-900">
             <form @submit.prevent="submit" enctype="multipart/form-data">
-              <h2 class="mb-4 text-lg">Informações</h2>
+              <h2 class="mb-4 text-lg text-red-600">Informações</h2>
                 <img v-if="imagePreview" :src="imagePreview || `/${form.imagem}`" 
                   alt="Imagem da Estampadora" 
-                  class="mt-4 w-40 h-40 object-cover rounded-lg shadow-md">              
-                  
+                  class="mt-4 w-40 h-40 object-cover rounded-lg shadow-md border border-black-500">              
+
               <div class="grid md:grid-cols-2 md:gap-6">
                 <div class="mt-4">
-                  <InputLabel for="imagem" value="Imagem da Estampadora" />
+                  <InputLabel for="imagem" value="Imagem da Estampadora" class="text-black-600" />
                   <input
                     id="imagem"
                     type="file"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full border border-gray-300 bg-white text-gray-900"
                     @change="handleImageUpload"
                     accept="image/*"
                   />
                   <InputError class="mt-2" :message="form.errors.imagem" />
                 </div>
                 <div></div>
-                <!-- Campo CNPJ com Botão ao Lado -->
+
                 <div class="flex items-center space-x-2">
                   <div class="w-full">
-                    <InputLabel for="cnpj" value="CNPJ" />
+                    <InputLabel for="cnpj" value="CNPJ" class="text-red-600" />
                     <TextInput
                       id="cnpj"
                       type="text"
-                      class="mt-1 block w-full"
+                      class="mt-1 block w-full border border-gray-300 bg-white text-gray-900"
                       v-model="form.cnpj"
                       required
                       autocomplete="cnpj"
@@ -229,16 +229,16 @@ onMounted(() => {
                     />
                     <InputError class="mt-2" :message="form.errors.cnpj" />
                   </div>
-                  <PrimaryButton @click.prevent="consultarCNPJ" class="mt-6">
+                  <PrimaryButton @click.prevent="consultarCNPJ" class="mt-6 bg-red-600 hover:bg-red-700">
                     Localizar
                   </PrimaryButton>
                 </div>
                 <div>
-                  <InputLabel for="nome" value="Razão social" />
+                  <InputLabel for="nome" value="Razão social" class="text-red-600" />
                   <TextInput
                     id="nome"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full border border-gray-300 bg-white text-gray-900"
                     v-model="form.nome"
                     required
                     autofocus
@@ -248,35 +248,33 @@ onMounted(() => {
                 </div>
               </div>
 
-              <h2 class="mt-4 text-lg">Endereço</h2>
+              <h2 class="mt-4 text-lg text-red-600">Endereço</h2>
 
               <div class="mt-4 grid md:grid-cols-2 md:gap-6">
-                <!-- Campo CEP com Botão ao Lado -->
                 <div class="flex items-center space-x-2">
                   <div class="w-full">
-                    <InputLabel for="cep" value="CEP" />
+                    <InputLabel for="cep" value="CEP" class="text-red-600" />
                     <TextInput
                       id="cep"
                       type="text"
-                      class="mt-1 block w-full"
+                      class="mt-1 block w-full border border-gray-300 bg-white text-gray-900"
                       v-model="form.cep"
                       required
                       autocomplete="cep"
                     />
                     <InputError class="mt-2" :message="form.errors.cep" />
                   </div>
-                  <PrimaryButton @click.prevent="consultarCep" class="mt-6">
+                  <PrimaryButton @click.prevent="consultarCep" class="mt-6 bg-red-600 hover:bg-red-700">
                     Localizar
                   </PrimaryButton>
                 </div>
 
-                <!-- Outros Campos do Endereço -->
                 <div v-for="field in enderecoFields.slice(1)" :key="field.id">
-                  <InputLabel :for="field.id" :value="field.label" />
+                  <InputLabel :for="field.id" :value="field.label" class="text-red-600" />
                   <TextInput
                     :id="field.id"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full border border-gray-300 bg-white text-gray-900"
                     v-model="form[field.model]"
                     required
                     :autocomplete="field.id"
@@ -285,14 +283,14 @@ onMounted(() => {
                 </div>
               </div>
 
-              <h2 class="mt-4 text-lg">Contato</h2>
+              <h2 class="mt-4 text-lg text-red-600">Contato</h2>
               <div class="mt-4 grid md:grid-cols-2 md:gap-6">
                 <div>
-                  <InputLabel for="telefone" value="Telefone" />
+                  <InputLabel for="telefone" value="Telefone" class="text-red-600" />
                   <TextInput
                     id="telefone"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full border border-gray-300 bg-white text-gray-900"
                     v-model="form.telefone"
                     required
                     autofocus
@@ -302,14 +300,14 @@ onMounted(() => {
                 </div>
               </div>
 
-              <h2 class="mt-4 text-lg">Horários</h2>
+              <h2 class="mt-4 text-lg text-red-600">Horários</h2>
               <div class="mt-4 grid md:grid-cols-2 md:gap-6">
                 <div>
-                  <InputLabel for="horario_funcionamento" value="Horário de funcionamento" />
+                  <InputLabel for="horario_funcionamento" value="Horário de funcionamento" class="text-red-600" />
                   <textarea
                     id="horario_funcionamento"
                     type="text"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600"
+                    class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     rows="3"
                     v-model="form.horario_funcionamento"
                     required
@@ -323,7 +321,7 @@ onMounted(() => {
 
               <div class="mt-4 flex items-center justify-end">
                 <PrimaryButton
-                  class="ms-4"
+                  class="ms-4 bg-blue-600 hover:bg-blue-700"
                   :class="{ 'opacity-25': form.processing }"
                   :disabled="form.processing"
                 >

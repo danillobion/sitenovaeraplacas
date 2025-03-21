@@ -41,11 +41,11 @@ const closeModal = () => {
 <template>
     <section class="space-y-6">
         <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+            <h2 class="text-lg font-medium text-gray-900">
                 Excluir conta
             </h2>
 
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p class="mt-1 text-sm text-gray-600">
                 Depois que sua conta for excluída, todos os seus recursos e dados serão permanentemente excluídos. Antes de excluir sua conta, por favor baixe quaisquer dados ou informações que você deseja reter.
             </p>
         </header>
@@ -54,13 +54,11 @@ const closeModal = () => {
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
             <div class="p-6">
-                <h2
-                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
-                >
-                Tem certeza de que deseja excluir sua conta?
+                <h2 class="text-lg font-medium text-gray-900">
+                    Tem certeza de que deseja excluir sua conta?
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                <p class="mt-1 text-sm text-gray-600">
                     Depois que sua conta for excluída, todos os seus recursos e dados serão excluídos permanentemente. Insira sua senha para confirmar que você deseja excluir sua conta permanentemente.
                 </p>
 
