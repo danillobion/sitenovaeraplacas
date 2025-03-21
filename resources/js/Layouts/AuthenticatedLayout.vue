@@ -87,7 +87,7 @@ const userHasPermission = (permission) => {
                                     CNPJ
                                 </NavLink>
                                 <NavLink
-                                    
+                                    v-if="userHasPermission('tela-senatran')"
                                     :href="route('senatran.index')"
                                     :active="route().current('senatran.index')"
                                 >

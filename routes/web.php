@@ -24,9 +24,6 @@ Route::get('/dashboard',[DashboardController::class, 'index'])->middleware(['aut
 
 Route::middleware('auth')->group(function () {
 
-    Route::middleware(['auth'])->get('/senatran', function () {
-        return Inertia::render('Admin/Consultar/Senatran/index');})->name('senatran.index');
-
     Route::get('/cep/{numero}', [EnderecoController::class, 'cep'])->name('endereco.cep');
     Route::get('/cnpj/{numero}', [CnpjController::class,'cnpj'])->name('consultar.cnpj');
 
@@ -78,6 +75,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/consultar/cnpj', [CnpjController::class, 'index'])->name('consultar.cnpj.index');
         Route::get('/consultar/cnpj/{numero}', [CnpjController::class, 'consultarCnpj'])->name('tela.consultar.cnpj');
     });
+
+    Route::middleware(['auth', 'permission:tela-senatran'])->get('/senatran', function () {
+        return Inertia::render('Admin/Consultar/Senatran/index');
+    })->name('senatran.index');
+    
 });
 
 require __DIR__.'/auth.php';
