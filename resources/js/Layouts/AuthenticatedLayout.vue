@@ -117,7 +117,17 @@ const userHasPermission = (permission) => {
                             >
                                 CNPJ
                             </NavLink>
-
+                            <NavLink
+                                    v-if="userHasPermission('tela-senatran')"
+                                    :href="route('senatran.index')"
+                                    :active="route().current('senatran.index')"
+                                    :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('consultar.cnpj.index'),
+                                    'text-red-600 hover:text-blue-800': !route().current('consultar.cnpj.index')
+                                }"
+                                >
+                                    SENATRAN
+                                </NavLink>
                             </div>
                         </div>
 
@@ -273,6 +283,13 @@ const userHasPermission = (permission) => {
                             class="text-red-600 hover:text-blue-800"
                         >
                             CNPJ
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            v-if="userHasPermission('tela-senatran')"
+                            :href="route('senatran.index')"
+                            :active="route().current('senatran.index')"
+                        >
+                            SENATRAN
                         </ResponsiveNavLink>
                     </div>
 
