@@ -21,7 +21,7 @@ const deletarUsuario = (produto_id) => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Usuários</h2>
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">Usuários</h2>
                 <Link
                     :href="route('usuario.editar', { id: null })"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -33,12 +33,12 @@ const deletarUsuario = (produto_id) => {
 
         <div class="py-1">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
                         <!-- tabela -->
                         <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">Nome</th>
                                         <th scope="col" class="px-6 py-3">E-mail</th>
@@ -48,8 +48,8 @@ const deletarUsuario = (produto_id) => {
                                 </thead>
                                 <tbody>
                                     <tr v-if="usuarios.length > 0" v-for="usuario in usuarios" :key="usuario.id"
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        class="bg-white border-b border-gray-200">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                             {{ usuario.nome }}
                                         </th>
                                         <td class="px-6 py-4">
@@ -59,7 +59,7 @@ const deletarUsuario = (produto_id) => {
                                             <p>
                                                 {{ usuario.tipo.nome }}
                                             </p>
-                                            <p class="text-gray-400 dark:text-white">
+                                            <p class="text-gray-400">
                                                 {{ usuario.tipo.descricao }}
                                             </p>
                                         </td>
@@ -70,16 +70,10 @@ const deletarUsuario = (produto_id) => {
                                             >
                                                 Editar
                                             </Link>
-                                            <!-- <button
-                                                @click="deletarUsuario(usuario.id)"
-                                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                            >
-                                                Deletar
-                                            </button> -->
                                         </td>
                                     </tr>
                                     <tr v-if="usuarios.length === 0"
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                        class="bg-white border-b border-gray-200">
                                         <td class="px-6 py-4 text-center" colspan="4">
                                             Nenhum usuário cadastrado
                                         </td>
@@ -94,3 +88,4 @@ const deletarUsuario = (produto_id) => {
         </div>
     </AuthenticatedLayout>
 </template>
+

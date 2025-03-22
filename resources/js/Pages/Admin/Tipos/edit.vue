@@ -56,13 +56,13 @@ onMounted(() => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Editar tipo</h2>
+      <h2 class="text-xl font-semibold leading-tight text-gray-800">Editar tipo</h2>
     </template>
 
     <div class="py-1">
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-          <div class="p-6 text-gray-900 dark:text-gray-100">
+        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+          <div class="p-6 text-gray-900">
             <form @submit.prevent="submit" enctype="multipart/form-data">
               <h2 class="mb-4 text-lg">Informações</h2>          
               <div class="mt-4 grid md:grid-cols-2 md:gap-6">
@@ -110,3 +110,4 @@ onMounted(() => {
     </div>
   </AuthenticatedLayout>
 </template>
+

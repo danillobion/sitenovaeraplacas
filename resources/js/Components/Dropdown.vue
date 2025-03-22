@@ -11,9 +11,9 @@ const props = defineProps({
         default: '48',
     },
     contentClasses: {
-        type: String,
-        default: 'py-1 bg-white dark:bg-gray-700',
-    },
+  type: String,
+  default: 'py-1 bg-white',
+},
 });
 
 const closeOnEscape = (e) => {

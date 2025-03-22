@@ -45,8 +45,13 @@ function handleImageError() {
   <div class="container mx-auto flex justify-between items-center py-4 px-6">
     <!-- Logo -->
     <div class="logo-container flex justify-center items-center">
-      <img src="/images/logo.jpg" alt="Logo da Empresa" class="w-16 md:w-20 h-auto" />
-    </div>
+    <img 
+        src="/images/logo.jpg" 
+        alt="Logo da Empresa" 
+        class="w-16 md:w-20 h-auto rounded-lg shadow-md" 
+    />
+</div>
+
 
     <!-- Botão de Menu (Mobile) -->
     <button @click="showMenuMobile = !showMenuMobile" class="block md:hidden text-gray-900 focus:outline-none">
@@ -195,9 +200,10 @@ function handleImageError() {
           <img :src="loja.imagem" alt="Loja" class="w-full h-auto object-contain rounded-t-lg">
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
             <h3 class="text-xl font-semibold text-red-600">{{ loja.nome }}</h3>
-            <p class="text-sm text-gray-700 mt-2 dark:text-gray-400">CNPJ: {{ loja.cnpj_formatado }}</p>
-            <p class="text-sm text-gray-700 dark:text-gray-400">Telefone: <a :href="'https://wa.me/55' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone_formatado }}</a></p>
-            <p class="text-sm text-gray-700 dark:text-gray-400">Localização: 
+            <p class="text-sm text-gray-700 mt-2 text-gray-400">CNPJ: {{ loja.cnpj_formatado }}</p>
+            <p class="text-sm text-gray-700 text-gray-400">Telefone: <a :href="'https://wa.me/55' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone_formatado }}</a></p>
+            <p class="text-sm text-gray-700 text-gray-400">Localização: 
+
               <a :href="'https://www.google.com/maps?q=' + loja.endereco.latitude + ',' + loja.endereco.longitude" target="_blank" class="text-red-600 underline">Ver no Maps</a>
             </p>
           </div>

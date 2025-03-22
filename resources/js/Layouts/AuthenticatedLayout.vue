@@ -17,79 +17,114 @@ const userHasPermission = (permission) => {
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <nav
-                class="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
-            >
-                <!-- Primary Navigation Menu -->
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 justify-between">
-                        <div class="flex">
-                            <!-- Logo -->
-                            <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
-                                    />
-                                </Link>
+        <div class="min-h-screen bg-gray-100">
+            <nav class="border-b border-red-500 bg-white shadow-md">
+            <!-- Primary Navigation Menu -->
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 justify-between">
+                    <div class="flex">
+                        <!-- Logo -->
+                        <div class="flex shrink-0 items-center">
+                        <div class="logo-container flex justify-center items-center">
+                            <img src="/images/logo.jpg" alt="Logo da Empresa" class="w-16 md:w-20 h-auto rounded-lg shadow-md" :key="route().current()"/>
                             </div>
+                         </div>
+
 
                             <!-- Navigation Links -->
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
-                                <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                >
-                                    Dashboard
-                                </NavLink>
-                                <NavLink
-                                    v-if="userHasPermission('tela-listagem-estampadoras')"
-                                    :href="route('estampadora.index')"
-                                    :active="route().current('estampadora.index')"
-                                >
-                                    Estampadoras
-                                </NavLink>
-                                <NavLink
-                                    v-if="userHasPermission('tela-listagem-produtos')"
-                                    :href="route('produtos.index')"
-                                    :active="route().current('produtos.index')"
-                                >
-                                    Produtos
-                                </NavLink>
-                                <NavLink
-                                    v-if="userHasPermission('tela-listagem-usuarios')"
-                                    :href="route('usuarios.index')"
-                                    :active="route().current('usuarios.index')"
-                                >
-                                    Usuários
-                                </NavLink>
-                                <NavLink
-                                    v-if="userHasPermission('tela-tipos-usuarios')"
-                                    :href="route('tipos.index')"
-                                    :active="route().current('tipos.index')"
-                                >
-                                    Tipos de usuários
-                                </NavLink>
-                                <NavLink
-                                    v-if="userHasPermission('tela-consultar-cep')"
-                                    :href="route('consultar.cep.index')"
-                                    :active="route().current('consultar.cep.index')"
-                                >
-                                    CEP
-                                </NavLink>
-                                <NavLink
-                                    v-if="userHasPermission('tela-consultar-cnpj')"
-                                    :href="route('consultar.cnpj.index')"
-                                    :active="route().current('consultar.cnpj.index')"
-                                >
-                                    CNPJ
-                                </NavLink>
-                                <NavLink
+                            <NavLink
+                                :href="route('dashboard')"
+                                :active="route().current('dashboard')"
+                                :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('dashboard'),
+                                    'text-red-500 hover:text-blue-800': !route().current('dashboard')
+                                }"
+                            >
+                                Dashboard
+                            </NavLink>
+
+                            <NavLink
+                                v-if="userHasPermission('tela-listagem-estampadoras')"
+                                :href="route('estampadora.index')"
+                                :active="route().current('estampadora.index')"
+                                :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('estampadora.index'),
+                                    'text-red-500 hover:text-blue-800': !route().current('estampadora.index')
+                                }"
+                            >
+                                Estampadoras
+                            </NavLink>
+
+                            <NavLink
+                                v-if="userHasPermission('tela-listagem-produtos')"
+                                :href="route('produtos.index')"
+                                :active="route().current('produtos.index')"
+                                :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('produtos.index'),
+                                    'text-red-500 hover:text-blue-800': !route().current('produtos.index')
+                                }"
+                            >
+                                Produtos
+                            </NavLink>
+
+                            <NavLink
+                                v-if="userHasPermission('tela-listagem-usuarios')"
+                                :href="route('usuarios.index')"
+                                :active="route().current('usuarios.index')"
+                                :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('usuarios.index'),
+                                    'text-red-500 hover:text-blue-800': !route().current('usuarios.index')
+                                }"
+                            >
+                                Usuários
+                            </NavLink>
+
+                            <NavLink
+                                v-if="userHasPermission('tela-tipos-usuarios')"
+                                :href="route('tipos.index')"
+                                :active="route().current('tipos.index')"
+                                :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('tipos.index'),
+                                    'text-red-500 hover:text-blue-800': !route().current('tipos.index')
+                                }"
+                            >
+                                Tipos de usuários
+                            </NavLink>
+
+                            <NavLink
+                                v-if="userHasPermission('tela-consultar-cep')"
+                                :href="route('consultar.cep.index')"
+                                :active="route().current('consultar.cep.index')"
+                                :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('consultar.cep.index'),
+                                    'text-red-500 hover:text-blue-800': !route().current('consultar.cep.index')
+                                }"
+                            >
+                                CEP
+                            </NavLink>
+
+                            <NavLink
+                                v-if="userHasPermission('tela-consultar-cnpj')"
+                                :href="route('consultar.cnpj.index')"
+                                :active="route().current('consultar.cnpj.index')"
+                                :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('consultar.cnpj.index'),
+                                    'text-red-600 hover:text-blue-800': !route().current('consultar.cnpj.index')
+                                }"
+                            >
+                                CNPJ
+                            </NavLink>
+                            <NavLink
                                     v-if="userHasPermission('tela-senatran')"
                                     :href="route('senatran.index')"
                                     :active="route().current('senatran.index')"
+                                    :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('consultar.cnpj.index'),
+                                    'text-red-600 hover:text-blue-800': !route().current('consultar.cnpj.index')
+                                }"
                                 >
                                     SENATRAN
                                 </NavLink>
@@ -104,7 +139,7 @@ const userHasPermission = (permission) => {
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
+                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-red-600 hover:text-red-800 transition duration-150 ease-in-out focus:outline-none"
                                             >
                                                 {{ $page.props.auth.user.nome }}
 
@@ -149,7 +184,7 @@ const userHasPermission = (permission) => {
                                     showingNavigationDropdown =
                                         !showingNavigationDropdown
                                 "
-                                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none dark:text-gray-500 dark:hover:bg-gray-900 dark:hover:text-gray-400 dark:focus:bg-gray-900 dark:focus:text-gray-400"
+                               class="inline-flex items-center justify-center rounded-md p-2 text-red-600 hover:text-blue-800 transition duration-150 ease-in-out focus:outline-none"
                             >
                                 <svg
                                     class="h-6 w-6"
@@ -197,6 +232,7 @@ const userHasPermission = (permission) => {
                         <ResponsiveNavLink
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
+                            class="text-red-600 hover:text-blue-800"
                         >
                             Dashboard
                         </ResponsiveNavLink>
@@ -204,6 +240,7 @@ const userHasPermission = (permission) => {
                             v-if="userHasPermission('tela-listagem-estampadoras')"
                             :href="route('estampadora.index')"
                             :active="route().current('estampadora.index')"
+                            class="text-red-600 hover:text-blue-800"
                         >
                             Estampadora
                         </ResponsiveNavLink>
@@ -211,6 +248,7 @@ const userHasPermission = (permission) => {
                             v-if="userHasPermission('tela-listagem-produtos')"
                             :href="route('produtos.index')"
                             :active="route().current('produtos.index')"
+                            class="text-red-600 hover:text-blue-800"
                         >
                             Produtos
                         </ResponsiveNavLink>
@@ -218,6 +256,7 @@ const userHasPermission = (permission) => {
                             v-if="userHasPermission('tela-listagem-usuarios')"
                             :href="route('usuarios.index')"
                             :active="route().current('usuarios.index')"
+                            class="text-red-600 hover:text-blue-800"
                         >
                             Usuários
                         </ResponsiveNavLink>
@@ -225,6 +264,7 @@ const userHasPermission = (permission) => {
                             v-if="userHasPermission('tela-tipos-usuarios')"
                             :href="route('tipos.index')"
                             :active="route().current('tipos.index')"
+                            class="text-red-600 hover:text-blue-800"
                         >
                             Tipos de usuários
                         </ResponsiveNavLink>
@@ -232,6 +272,7 @@ const userHasPermission = (permission) => {
                             v-if="userHasPermission('tela-consultar-cep')"
                             :href="route('consultar.cep.index')"
                             :active="route().current('consultar.cep.index')"
+                            class="text-red-600 hover:text-blue-800"
                         >
                             CEP
                         </ResponsiveNavLink>
@@ -239,6 +280,7 @@ const userHasPermission = (permission) => {
                             v-if="userHasPermission('tela-consultar-cnpj')"
                             :href="route('consultar.cnpj.index')"
                             :active="route().current('consultar.cnpj.index')"
+                            class="text-red-600 hover:text-blue-800"
                         >
                             CNPJ
                         </ResponsiveNavLink>
@@ -253,15 +295,15 @@ const userHasPermission = (permission) => {
 
                     <!-- Responsive Settings Options -->
                     <div
-                        class="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600"
+                        class="border-t border-red-200 pb-1 pt-4 white:border-blue-600"
                     >
                         <div class="px-4">
                             <div
-                                class="text-base font-medium text-gray-800 dark:text-gray-200"
+                                class="text-base font-medium text-red-800 white:text-blue-200"
                             >
                                 {{ $page.props.auth.user.nome }}
                             </div>
-                            <div class="text-sm font-medium text-gray-500">
+                            <div class="text-sm font-medium text-blue-500">
                                 {{ $page.props.auth.user.email }}
                             </div>
                         </div>
@@ -283,10 +325,7 @@ const userHasPermission = (permission) => {
             </nav>
 
             <!-- Page Heading -->
-            <header
-                class=""
-                v-if="$slots.header"
-            >
+            <header v-if="$slots.header">
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>

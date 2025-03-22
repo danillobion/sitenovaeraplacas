@@ -62,46 +62,46 @@ onMounted(() => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Editar usuário</h2>
+      <h2 class="text-xl font-semibold leading-tight text-gray-800">Editar usuário</h2>
     </template>
 
     <div class="py-1">
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-          <div class="p-6 text-gray-900 dark:text-gray-100">
+        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+          <div class="p-6 text-gray-900">
             <form @submit.prevent="submit" enctype="multipart/form-data">
               <h2 class="mb-4 text-lg">Informações</h2>          
               <div class="mt-4 grid md:grid-cols-2 md:gap-6">
                 <div class="mt-4">
                   <InputLabel for="nome" value="Nome" />
                   <TextInput
-                  id="nome"
-                  type="text"
-                  class="mt-1 block w-full"
-                  v-model="form.nome"
-                  required
-                  autocomplete="name"
-                  placeholder="Digite o nome do usuário"
+                    id="nome"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.nome"
+                    required
+                    autocomplete="name"
+                    placeholder="Digite o nome do usuário"
                   />
                   <InputError class="mt-2" />
                 </div>
                 <div class="mt-4">
                   <InputLabel for="email" value="E-mail" />
                   <TextInput
-                  id="email"
-                  type="email"
-                  class="mt-1 block w-full"
-                  v-model="form.email"
-                  required
-                  autocomplete="email"
-                  placeholder="Digite o e-mail do usuário"
+                    id="email"
+                    type="email"
+                    class="mt-1 block w-full"
+                    v-model="form.email"
+                    required
+                    autocomplete="email"
+                    placeholder="Digite o e-mail do usuário"
                   />
                   <InputError class="mt-2" />
                 </div>
                 <div class="mt-4">
                   <InputLabel for="tipo_id" value="Tipo" />
                   <select id="tipo_id"
-                    class="mt-1 w-full block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600"
+                    class="mt-1 w-full block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     v-model="form.tipo_id"
                   >
                     <option value="">Selecione o tipo de usuário</option>
