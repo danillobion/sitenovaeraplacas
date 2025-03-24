@@ -43,6 +43,7 @@ const deletarUsuario = (produto_id) => {
                                         <th scope="col" class="px-6 py-3">Nome</th>
                                         <th scope="col" class="px-6 py-3">E-mail</th>
                                         <th scope="col" class="px-6 py-3">Tipo de usuário</th>
+                                        <th scope="col" class="px-6 py-3">Nº total Requisições</th>
                                         <th scope="col" class="px-6 py-3">Ações</th>
                                     </tr>
                                 </thead>
@@ -62,6 +63,9 @@ const deletarUsuario = (produto_id) => {
                                             <p class="text-gray-400">
                                                 {{ usuario.tipo.descricao }}
                                             </p>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ usuario.quantidade_total_requisicoes }}
                                         </td>
                                         <td class="px-6 py-4 flex inline-flex space-x-2">
                                             <Link
