@@ -34,6 +34,10 @@ class Usuario extends Authenticatable
         'password',
         'remember_token',
     ];
+        
+    protected $appends = [
+        'quantidade_total_requisicoes',
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -46,7 +50,7 @@ class Usuario extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }    
+    }  
 
     public function tipo(){
         return $this->belongsTo(Tipo::class);
@@ -61,6 +65,12 @@ class Usuario extends Authenticatable
 
         return in_array($permission, $nomesPermissoes);
 
+    }
+
+    // Quantidade total de requisições
+    public function getQuantidadeTotalRequisicoesAttribute(){
+        $quantidade = LogConsulta::where('usuario_id', $this->id)->count();
+        return $quantidade;
     }
 
 }
