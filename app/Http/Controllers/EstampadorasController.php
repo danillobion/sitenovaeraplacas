@@ -71,7 +71,7 @@ class EstampadorasController extends Controller
             }
     
             $extensao = $request->file('imagem')->getClientOriginalExtension();
-            $nomeArquivo = 'estampadora_' . $estampadora->id . '.' . $extensao;
+            $nomeArquivo = 'estampadora_' . uniqid() . '.' . $extensao;
     
             $caminho = $request->file('imagem')->storeAs('estampadoras', $nomeArquivo, 'public');   
 
