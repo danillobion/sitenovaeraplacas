@@ -3,6 +3,8 @@ import { Head, Link } from '@inertiajs/vue3';
 import { onMounted } from "vue";
 import CarAnimation from '@/Components/CarAnimation.vue';
 import LinksSection from "@/Components/LinksSection.vue";
+import ChatButton from '@/Components/ChatButton.vue';
+
 
 const scrollToSection = (event, sectionId) => {
   event.preventDefault(); // Evita o comportamento padrão do link
@@ -31,6 +33,7 @@ function handleImageError() {
 </script>
 
 <template>
+  
     <div class="relative min-h-screen">
   <!-- Navbar -->
   <nav
@@ -48,8 +51,9 @@ function handleImageError() {
     <img 
         src="/images/logo.jpg" 
         alt="Logo da Empresa" 
-        class="w-16 md:w-20 h-auto rounded-lg shadow-md" 
+        class="w-16 md:w-40 h-auto rounded-lg shadow-md" 
     />
+    
 </div>
 
 
@@ -279,6 +283,7 @@ function handleImageError() {
         </a>
       </div>
       </div>
+      <ChatButton />
       </footer>
     
   </template>
