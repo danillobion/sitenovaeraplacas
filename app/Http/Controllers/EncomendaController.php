@@ -30,18 +30,18 @@ class EncomendaController extends Controller
 
         $resultado = EncomendaService::consultar($dados);
 
-        $this->registrarLog($request->all(), $resultado);
+        $this->registrarLog($dadosFiltrados, $resultado);
 
         return response()->json($resultado);
     }
 
-    private function registrarLog($numero, $resultado)
+    private function registrarLog($entrada, $saida)
     {
         $log = new LogConsulta();
         $log->usuario_id = auth()->user()->id;
-        $log->tipo = "CNP";
-        $log->json_envio = json_encode(["cnpj" => $numero]);
-        $log->json_retorno = json_encode($resultado);
+        $log->tipo = "ENC";
+        $log->json_envio = json_encode($entrada);
+        $log->json_retorno = json_encode($saida);
         $log->save();
     }
 
