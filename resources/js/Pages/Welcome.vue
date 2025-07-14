@@ -4,6 +4,8 @@ import { onMounted } from "vue";
 import CarAnimation from '@/Components/CarAnimation.vue';
 import LinksSection from "@/Components/LinksSection.vue";
 import ChatButton from '@/Components/ChatButton.vue';
+import { ref } from 'vue';
+import VideoGallery from "@/Components/VideoGallery.vue";
 
 
 const scrollToSection = (event, sectionId) => {
@@ -13,6 +15,29 @@ const scrollToSection = (event, sectionId) => {
   if (section) {
     section.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+};
+const selectedFaq = ref(null);
+const modalVisible = ref(false);
+const modalOrigin = ref({ x: 0, y: 0 });
+const transformOrigin = ref('center center');
+
+const openModal = (faq, event) => {
+  selectedFaq.value = faq;
+  modalVisible.value = true;
+
+  // Captura posição do clique
+  const x = event.clientX;
+  const y = event.clientY;
+
+  modalOrigin.value = { x, y };
+  transformOrigin.value = `${x}px ${y}px`;
+};
+
+const closeModal = () => {
+  modalVisible.value = false;
+  setTimeout(() => {
+    selectedFaq.value = null;
+  }, 300); // tempo igual ao da animação
 };
 
 defineProps({
@@ -71,7 +96,9 @@ function handleImageError() {
       <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
       <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
       <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas</a></li>
+      <li><a href="#midia" @click="scrollToSection($event, 'midia')" class="hover:text-red-600">Galeria</a></li>
       <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
+      
     </ul>
 
       <!-- Menu Mobile -->
@@ -82,7 +109,9 @@ function handleImageError() {
     <li><a href="#produtos" @click="scrollToSection($event, 'produtos'); showMenuMobile = false" class="hover:text-red-500">Produtos</a></li>
     <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-500">Nossas Lojas</a></li>
     <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-500">Dúvidas Frequentes</a></li>
+    <li><a href="#midia" @click="scrollToSection($event, 'midia'); showMenuMobile = false" class="hover:text-red-500">Galeria</a></li>
     <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-500">Muito Mais</a></li>
+    
 
     <a href="/login" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-900">Área Restrita</a>
   </ul>
@@ -219,35 +248,72 @@ function handleImageError() {
   
      
     <!-- Cards de Dúvidas Frequentes -->
-    <section id="duvidas" class="py-20 px-6 bg-gray-100">
-    <h2 class="text-3xl font-bold text-center mb-8">Dúvidas Frequentes</h2>
-    <div class="flex flex-col items-center gap-6">
-  <div v-for="(faq, index) in faqs" :key="index" class="w-full max-w-[100rem]">
+<section
+  id="duvidas"
+  class="py-20 px-6 bg-cover bg-center bg-no-repeat"
+  style="background-image: url('/images/fundo2.png')"
+>
+  <h2 class="text-3xl font-bold text-white text-center mb-12 drop-shadow-md">
+    Dúvidas Frequentes
+  </h2>
+
+  <div class="flex justify-start">
+  <div class="flex flex-col gap-6 w-full max-w-md md:max-w-lg lg:max-w-xl p-4 rounded-lg">
     <div
-      class="bg-white shadow-lg rounded-lg p-6 cursor-pointer hover:scale-105 hover:shadow-2xl"
-      @click="openModal(faq)"
+      v-for="(faq, index) in faqs"
+      :key="index"
+      class="bg-white shadow-lg rounded-lg p-4 cursor-pointer hover:scale-105 hover:shadow-2xl transition-transform"
+      @click="openModal(faq, $event)"
     >
-      <h3 class="text-xl text-center font-semibold text-gray-800">{{ faq.question }}</h3>
+      <h3 class="text-md font-semibold text-gray-800">
+        {{ faq.question }}
+      </h3>
     </div>
   </div>
 </div>
 
-    <!-- Modal (janela de FAQ expandido) -->
-    <transition name="modal">
-      <div v-if="selectedFaq" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-[600px]">
-          <h3 class="text-2xl font-semibold text-gray-800 mb-4">{{ selectedFaq.question }}</h3>
-          <p class="text-lg text-gray-700 mb-4">{{ selectedFaq.answer }}</p>
-          <button
-            @click="closeModal"
-            class="mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700"
-          >
-            Fechar
-          </button>
-        </div>
-      </div>
-      </transition>
-      </section>
+
+  <!-- Modal -->
+  <transition
+  enter-active-class="duration-300 ease-out"
+  enter-from-class="opacity-0 scale-50"
+  enter-to-class="opacity-100 scale-100"
+  leave-active-class="duration-300 ease-in"
+  leave-from-class="opacity-100 scale-100"
+  leave-to-class="opacity-0 scale-50"
+>
+  <div
+    v-if="modalVisible"
+    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+  >
+    <div
+      class="bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-[600px] transition-transform duration-300"
+      :style="`transform-origin: ${transformOrigin}`"
+    >
+      <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+        {{ selectedFaq?.question }}
+      </h3>
+      <p class="text-lg text-gray-700 mb-4">{{ selectedFaq?.answer }}</p>
+      <button
+        @click="closeModal"
+        class="mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700"
+      >
+        Fechar
+      </button>
+    </div>
+  </div>
+</transition>
+</section>
+
+<section id="midia" class="py-20 bg-white-100 px-6 text-center fade-in">
+  <div>
+    <!-- Outras seções -->
+
+    <VideoGallery />
+    
+  </div>
+</section>
+
   
       <!-- Links -->
       <section id="links" class="py-20 bg-white-100 px-6 text-center fade-in">
@@ -294,6 +360,7 @@ function handleImageError() {
   export default {
     //components: { CarAnimation },
     components: { LinksSection },
+    components: { VideoGallery },
   data() {
 
     return {
@@ -339,15 +406,51 @@ function handleImageError() {
 
 
       meusLinks: [
-        { label: "Emplacamento Digital", url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23611" },
-        { label: "Portarias", url: "https://www.detran.ma.gov.br/inicio/paginas/Portarias.xhtml" },
-        { label: "Parcelamento de débitos", url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=22878" },
-        { label: "Vistoria", url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23581" },
-        { label: "Credenciados", url: "https://www.detran.ma.gov.br/inicio/paginas/Credenciado.xhtml" },
-        { label: "Ciretrans", url: "https://www.detran.ma.gov.br/inicio/paginas/ListarCiretrans.xhtml" },
-        { label: "Multas PRF", url: "https://nadaconsta.prf.gov.br/nada_consta/index.jsf" },
-        { label: "Multas DNIT", url: "https://servicos.dnit.gov.br/multas/" },
-        { label: "CEP dos Municípios", url: "https://buscacepinter.correios.com.br/app/endereco/index.php" },
+  {
+    label: "Emplacamento Digital",
+    url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23611",
+    icon: "fas fa-car"
+  },
+  {
+    label: "Portarias",
+    url: "https://www.detran.ma.gov.br/inicio/paginas/Portarias.xhtml",
+    icon: "fas fa-file-alt"
+  },
+  {
+    label: "Parcelamento de débitos",
+    url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=22878",
+    icon: "fas fa-coins"
+  },
+  {
+    label: "Vistoria",
+    url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23581",
+    icon: "fas fa-search"
+  },
+  {
+    label: "Credenciados",
+    url: "https://www.detran.ma.gov.br/inicio/paginas/Credenciado.xhtml",
+    icon: "fas fa-id-badge"
+  },
+  {
+    label: "Ciretrans",
+    url: "https://www.detran.ma.gov.br/inicio/paginas/ListarCiretrans.xhtml",
+    icon: "fas fa-building"
+  },
+  {
+    label: "Multas PRF",
+    url: "https://nadaconsta.prf.gov.br/nada_consta/index.jsf",
+    icon: "fas fa-ticket-alt"
+  },
+  {
+    label: "Multas DNIT",
+    url: "https://servicos.dnit.gov.br/multas/",
+    icon: "fas fa-gavel"
+  },
+  {
+    label: "CEP dos Municípios",
+    url: "https://buscacepinter.correios.com.br/app/endereco/index.php",
+    icon: "fas fa-map-marker-alt"
+  }
 
       ],
       selectedFaq: null
