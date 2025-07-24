@@ -2,6 +2,7 @@
   <div>
     <!-- Botão flutuante com balão -->
     <div class="fixed bottom-20 right-6 flex items-center space-x-4 z-50">
+
       <!-- Balão de fala -->
       <div
         v-if="!isOpen"
@@ -17,14 +18,19 @@
         ></div>
       </div>
 
-      <!-- Botão -->
-      <button
-        @click="toggleChat"
-        class="bg-red-600 hover:bg-red-700 text-white p-5 rounded-full shadow-lg flex items-center justify-center"
-      >
-        <i v-if="!isOpen" class="fas fa-comment-dots text-2xl"></i>
-        <i v-else class="fas fa-times text-2xl"></i>
-      </button>
+      <!-- Botão de chat com efeito pulsante -->
+  <button
+    @click="toggleChat"
+    class="relative bg-red-600 hover:bg-red-700 text-white p-5 rounded-full shadow-lg flex items-center justify-center transition transform hover:scale-105"
+  >
+    <i v-if="!isOpen" class="fas fa-comment-dots text-2xl"></i>
+    <i v-else class="fas fa-times text-2xl"></i>
+
+    <!-- Animação de pulso -->
+    <span
+      class="absolute inset-0 rounded-full bg-red-500 opacity-50 animate-ping z-[-1]"
+    ></span>
+  </button>
     </div>
 
     <!-- Chat -->
