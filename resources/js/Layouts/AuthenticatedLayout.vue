@@ -127,7 +127,18 @@ const userHasPermission = (permission) => {
                                 }"
                                 >
                                     SENATRAN
-                                </NavLink>
+                            </NavLink>
+                            <NavLink
+                                    v-if="userHasPermission('tela-encomenda')"
+                                    :href="route('encomenda.index')"
+                                    :active="route().current('encomenda.index')"
+                                    :class="{
+                                    'text-blue-600 border-b-2 border-blue-500': route().current('encomenda.index'),
+                                    'text-red-600 hover:text-blue-800': !route().current('encomenda.index')
+                                }"
+                                >
+                                    Encomenda
+                            </NavLink>
                             </div>
                         </div>
 

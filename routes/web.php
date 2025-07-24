@@ -17,6 +17,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PermissoesController;
 use App\Http\Controllers\ApresentacaoController;
 use App\Http\Controllers\EstampadorasController;
+use App\Http\Controllers\EncomendaController;
 
 Route::get('/', [ApresentacaoController::class, 'index'])->name('apresentacao.index');
 
@@ -79,6 +80,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', 'permission:tela-senatran'])->get('/senatran', function () {
         return Inertia::render('Admin/Consultar/Senatran/index');
     })->name('senatran.index');
+
+    Route::middleware(['auth', 'permission:tela-encomenda'])->group(function () {
+        Route::get('/consultar/encomenda', [EncomendaController::class, 'index'])->name('encomenda.index');
+        Route::post('/consultar/encomenda', [EncomendaController::class, 'consultar'])->name('encomenda.consultar');
+    });
     
 });
 
