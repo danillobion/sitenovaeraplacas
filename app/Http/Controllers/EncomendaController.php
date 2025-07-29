@@ -16,6 +16,7 @@ class EncomendaController extends Controller
     public function consultar(Request $request)
     {
         $dados = $request->validate([
+            'placa' => 'nullable|string|size:7',
             'cnpj_estampadora' => 'nullable|string|size:14',
             'situacao' => 'nullable|in:ABE,FIN,CAN',
             'situacao_pagamento' => 'nullable|in:PAG,EMT,PEN,CAN',

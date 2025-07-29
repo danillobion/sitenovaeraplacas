@@ -8,6 +8,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { ref } from 'vue';
 
 const form = useForm({
+    placa: '',
     cnpj_estampadora: '',
     situacao: '',
     situacao_pagamento: '',
@@ -123,6 +124,16 @@ const formatarCNPJ = (cnpj) => {
                                 v-model="form.id" 
                                 class="mt-1 block w-full"
                                 placeholder="Digite o ID"
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel for="placa" value="Placa" />
+                            <TextInput id="placa" 
+                                v-model="form.placa" 
+                                class="mt-1 block w-full"
+                                @input="form.placa"
+                                placeholder="Digite a placa"
                             />
                         </div>
 
