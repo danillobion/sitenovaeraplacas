@@ -1,6 +1,6 @@
 <template>
   <section class="w-full py-16 bg-gradient-to-b from-gray-200 to-white">
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="max-w-[1800px] mx-auto px-4">
       <!-- Título -->
       <h2 class="text-3xl font-bold text-center text-black-700 mb-10">
         Galeria de Vídeos
@@ -32,27 +32,41 @@
       </div>
 
       <!-- Botões de navegação -->
-      <div class="flex justify-center mt-6 gap-4">
-        <!-- Botão Esquerda -->
-        <button
-          @click="scrollLeft"
-          class="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition flex items-center justify-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M13.707 15.707a1 1 0 01-1.414 0L5.586 10l6.707-5.707a1 1 0 111.414 1.414L8.414 10l5.293 4.293a1 1 0 010 1.414z" />
-          </svg>
-        </button>
+<div class="flex justify-center mt-6 gap-6">
+  <!-- Botão Esquerda -->
+  <!-- Botão Esquerda -->
+<button
+  @click="scrollLeft"
+  class="group relative flex items-center justify-center w-12 h-12 rounded-full
+         bg-white/20 backdrop-blur-md border border-white/30
+         shadow-2xl shadow-black/70 hover:shadow-3xl hover:shadow-black/80
+         transition-all duration-300 ease-out
+         hover:-translate-x-1 active:scale-95"
+>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="h-6 w-6 text-red-600 transition-transform duration-300 group-hover:-translate-x-1"
+       fill="currentColor" viewBox="0 0 20 20">
+    <path d="M13.707 15.707a1 1 0 01-1.414 0L5.586 10l6.707-5.707a1 1 0 111.414 1.414L8.414 10l5.293 4.293a1 1 0 010 1.414z" />
+  </svg>
+</button>
 
-        <!-- Botão Direita -->
-        <button
-          @click="scrollRight"
-          class="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition flex items-center justify-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M6.293 4.293a1 1 0 011.414 0L14.414 10l-6.707 5.707a1 1 0 01-1.414-1.414L11.586 10 6.293 5.707a1 1 0 010-1.414z" />
-          </svg>
-        </button>
-      </div>
+<!-- Botão Direita -->
+<button
+  @click="scrollRight"
+  class="group relative flex items-center justify-center w-12 h-12 rounded-full
+         bg-white/20 backdrop-blur-md border border-white/30
+         shadow-2xl shadow-black/70 hover:shadow-3xl hover:shadow-black/80
+         transition-all duration-300 ease-out
+         hover:translate-x-1 active:scale-95"
+>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="h-6 w-6 text-red-600 transition-transform duration-300 group-hover:translate-x-1"
+       fill="currentColor" viewBox="0 0 20 20">
+    <path d="M6.293 4.293a1 1 0 011.414 0L14.414 10l-6.707 5.707a1 1 0 01-1.414-1.414L11.586 10 6.293 5.707a1 1 0 010-1.414z" />
+  </svg>
+</button>
+
+</div>
     </div>
   </section>
 </template>

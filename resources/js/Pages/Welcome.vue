@@ -6,6 +6,7 @@ import LinksSection from "@/Components/LinksSection.vue";
 import ChatButton from '@/Components/ChatButton.vue';
 import { ref } from 'vue';
 import VideoGallery from "@/Components/VideoGallery.vue";
+import FerrisWheelGallery3D from '@/Components/FerrisWheelGallery3D.vue'
 
 
 const scrollToSection = (event, sectionId) => {
@@ -97,6 +98,7 @@ function handleImageError() {
       <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
       <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas</a></li>
       <li><a href="#midia" @click="scrollToSection($event, 'midia')" class="hover:text-red-600">Galeria</a></li>
+      <li><a href="#galeria" @click="scrollToSection($event, 'galeria')" class="hover:text-red-600">Eventos</a></li>
       <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
       
     </ul>
@@ -110,6 +112,7 @@ function handleImageError() {
     <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-500">Nossas Lojas</a></li>
     <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-500">Dúvidas Frequentes</a></li>
     <li><a href="#midia" @click="scrollToSection($event, 'midia'); showMenuMobile = false" class="hover:text-red-500">Galeria</a></li>
+    <li><a href="#galeria" @click="scrollToSection($event, 'galeria'); showMenuMobile = false" class="hover:text-red-500">Eventos</a></li>
     <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-500">Muito Mais</a></li>
     
 
@@ -258,61 +261,74 @@ function handleImageError() {
   </h2>
 
   <div class="flex justify-start">
-  <div class="flex flex-col gap-6 w-full max-w-md md:max-w-lg lg:max-w-xl p-4 rounded-lg">
-    <div
-      v-for="(faq, index) in faqs"
-      :key="index"
-      class="bg-white shadow-lg rounded-lg p-4 cursor-pointer hover:scale-105 hover:shadow-2xl transition-transform"
-      @click="openModal(faq, $event)"
-    >
-      <h3 class="text-md font-semibold text-gray-800">
-        {{ faq.question }}
-      </h3>
+    <div class="flex flex-col gap-6 w-full max-w-md md:max-w-lg lg:max-w-xl p-4 rounded-lg">
+      <div
+        v-for="(faq, index) in faqs"
+        :key="index"
+        class="relative overflow-hidden bg-white shadow-lg rounded-lg p-4 cursor-pointer transition-transform hover:scale-105 hover:shadow-2xl group"
+        @click="openModal(faq, $event)"
+      >
+        <!-- Fundo vermelho animado -->
+        <span
+          class="absolute inset-0 bg-red-500 rounded-lg transform scale-y-0 origin-bottom transition-transform duration-500 ease-in-out group-hover:scale-y-100"
+        ></span>
+
+        <!-- Conteúdo na frente -->
+        <h3
+          class="relative z-10 text-md font-semibold text-gray-800 transition-colors duration-500 group-hover:text-white"
+        >
+          {{ faq.question }}
+        </h3>
+      </div>
     </div>
   </div>
-</div>
 
-
-  <!-- Modal -->
+  <!-- Modal (mantida intacta) -->
   <transition
-  enter-active-class="duration-300 ease-out"
-  enter-from-class="opacity-0 scale-50"
-  enter-to-class="opacity-100 scale-100"
-  leave-active-class="duration-300 ease-in"
-  leave-from-class="opacity-100 scale-100"
-  leave-to-class="opacity-0 scale-50"
->
-  <div
-    v-if="modalVisible"
-    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    enter-active-class="duration-300 ease-out"
+    enter-from-class="opacity-0 scale-50"
+    enter-to-class="opacity-100 scale-100"
+    leave-active-class="duration-300 ease-in"
+    leave-from-class="opacity-100 scale-100"
+    leave-to-class="opacity-0 scale-50"
   >
     <div
-      class="bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-[600px] transition-transform duration-300"
-      :style="`transform-origin: ${transformOrigin}`"
+      v-if="modalVisible"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
     >
-      <h3 class="text-2xl font-semibold text-gray-800 mb-4">
-        {{ selectedFaq?.question }}
-      </h3>
-      <p class="text-lg text-gray-700 mb-4">{{ selectedFaq?.answer }}</p>
-      <button
-        @click="closeModal"
-        class="mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700"
+      <div
+        class="bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-[600px] transition-transform duration-300"
+        :style="`transform-origin: ${transformOrigin}`"
       >
-        Fechar
-      </button>
+        <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+          {{ selectedFaq?.question }}
+        </h3>
+        <p class="text-lg text-gray-700 mb-4">{{ selectedFaq?.answer }}</p>
+        <button
+          @click="closeModal"
+          class="mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700"
+        >
+          Fechar
+        </button>
+      </div>
     </div>
-  </div>
-</transition>
+  </transition>
 </section>
 
-<section id="midia" class="py-20 bg-white-100 px-6 text-center fade-in">
+
+
+ <!-- Galeria de vídeo -->
+<section id="midia" class="py-12 bg-white px-6 text-center fade-in">
   <div>
-    <!-- Outras seções -->
-
     <VideoGallery />
-    
   </div>
 </section>
+
+<!-- Galeria de Fotos -->
+<section id="galeria" class="py-12 fade-in">
+  <FerrisWheelGallery3D />
+</section>
+
 
   
       <!-- Links -->
