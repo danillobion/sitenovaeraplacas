@@ -90,12 +90,13 @@ Route::middleware('auth')->group(function () {
 
 
     
-    Route::middleware(['auth', 'permission:tela-informativo'])->group(function () {
+    Route::middleware(['auth', 'permission:tela-informativo'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/informativo', [InformativoController::class, 'index'])->name('informativo.index');
     Route::post('/informativo', [InformativoController::class, 'store'])->name('informativo.store');
 });
 
 Route::get('/informativo/ativo', [InformativoController::class, 'ativo'])->name('informativo.ativo');
+
 
 
 
