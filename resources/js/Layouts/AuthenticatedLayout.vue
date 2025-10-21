@@ -139,10 +139,22 @@ const userHasPermission = (permission) => {
                                 >
                                     Encomenda
                             </NavLink>
+
+                            <NavLink
+                                 v-if="userHasPermission('tela-informativo')"
+                                 :href="route('admin.informativo.index')"
+                                 :active="route().current('admin.informativo.index')"
+                                 :class="{
+                                 'text-blue-600 border-b-2 border-blue-500': route().current('admin.informativo.index'),
+                                 'text-red-600 hover:text-blue-800': !route().current('admin.informativo.index')
+                                   }"
+                                    >
+                                 Informativo
+                            </NavLink>
                             </div>
                         </div>
 
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
+                        <div class="inline-flex items-center px-1 pt-1 text-sm font-medium">
                             <!-- Settings Dropdown -->
                             <div class="relative ms-3">
                                 <Dropdown align="right" width="48">

@@ -7,7 +7,29 @@ import ChatButton from '@/Components/ChatButton.vue';
 import { ref } from 'vue';
 import VideoGallery from "@/Components/VideoGallery.vue";
 import FerrisWheelGallery3D from '@/Components/FerrisWheelGallery3D.vue'
+import axios from 'axios'
 
+
+
+const informativo = ref(null)
+const showModal = ref(false)
+
+onMounted(async () => {
+  try {
+    const { data } = await axios.get('/informativo/ativo')
+
+    // Se vier vazio ou desabilitado, não abre nada
+    if (data && data.habilitado && data.titulo) {
+      informativo.value = data
+      showModal.value = true
+    } else {
+      showModal.value = false
+    }
+  } catch (error) {
+    console.error('Erro ao carregar informativo:', error)
+    showModal.value = false
+  }
+})
 
 const scrollToSection = (event, sectionId) => {
   event.preventDefault(); // Evita o comportamento padrão do link
@@ -59,7 +81,8 @@ function handleImageError() {
 </script>
 
 <template>
-  
+
+
     <div class="relative min-h-screen">
   <!-- Navbar -->
   <nav
@@ -128,6 +151,35 @@ function handleImageError() {
     </div>
   </nav>
 
+
+ <!-- Modal do Informativo -->
+  <div
+    v-if="showModal && informativo"
+    class="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50"
+  >
+    <div class="bg-white rounded-2xl p-6 max-w-lg w-full relative z-[10000]">
+      <button
+        @click="showModal = false"
+        class="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold"
+      >
+        ×
+      </button>
+
+      <h2 class="text-xl font-semibold mb-3">{{ informativo.titulo }}</h2>
+
+      <img
+        v-if="informativo.imagem"
+        :src="`/storage/${informativo.imagem}`"
+        class="rounded-lg shadow-md"
+      />
+    </div>
+  </div>
+
+
+
+
+
+  
   <!-- Seção Home -->
   <section
     id="home"

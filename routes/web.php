@@ -18,6 +18,8 @@ use App\Http\Controllers\PermissoesController;
 use App\Http\Controllers\ApresentacaoController;
 use App\Http\Controllers\EstampadorasController;
 use App\Http\Controllers\EncomendaController;
+use App\Http\Controllers\Admin\InformativoController;
+
 
 Route::get('/', [ApresentacaoController::class, 'index'])->name('apresentacao.index');
 
@@ -85,7 +87,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/consultar/encomenda', [EncomendaController::class, 'index'])->name('encomenda.index');
         Route::post('/consultar/encomenda', [EncomendaController::class, 'consultar'])->name('encomenda.consultar');
     });
+
+
     
+    Route::middleware(['auth', 'permission:tela-informativo'])->group(function () {
+    Route::get('/informativo', [InformativoController::class, 'index'])->name('informativo.index');
+    Route::post('/informativo', [InformativoController::class, 'store'])->name('informativo.store');
+});
+
+Route::get('/informativo/ativo', [InformativoController::class, 'ativo'])->name('informativo.ativo');
+
+
+
+
 });
 
 require __DIR__.'/auth.php';
