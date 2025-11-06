@@ -18,7 +18,7 @@ use App\Http\Controllers\PermissoesController;
 use App\Http\Controllers\ApresentacaoController;
 use App\Http\Controllers\EstampadorasController;
 use App\Http\Controllers\EncomendaController;
-use App\Http\Controllers\Admin\InformativoController;
+use App\Http\Controllers\InformativoController;
 
 
 Route::get('/', [ApresentacaoController::class, 'index'])->name('apresentacao.index');
@@ -90,12 +90,14 @@ Route::middleware('auth')->group(function () {
 
 
     
-    Route::middleware(['auth', 'permission:tela-informativo'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/informativo', [InformativoController::class, 'index'])->name('informativo.index');
-    Route::post('/informativo', [InformativoController::class, 'store'])->name('informativo.store');
-});
+    Route::middleware(['auth', 'permission:tela-informativo'])->group(function () {
+    Route::get('/informativos', [InformativoController::class, 'index'])->name('informativos.index');
+    Route::get('/informativo/editar/{id?}', [InformativoController::class, 'editar'])->name('informativo.editar');
+    Route::post('/informativo/salvar', [InformativoController::class, 'salvar'])->name('informativo.salvar');
+    });
 
-Route::get('/informativo/ativo', [InformativoController::class, 'ativo'])->name('informativo.ativo');
+    Route::get('/informativo/ativo', [InformativoController::class, 'ativo'])->name('informativo.ativo');
+
 
 
 

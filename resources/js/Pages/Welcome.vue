@@ -377,7 +377,7 @@ function handleImageError() {
 </section>
 
 <!-- Galeria de Fotos -->
-<section id="galeria" class="py-12 fade-in">
+<section id="galeria" class="py-20 bg-white-100 px-6 text-center fade-in">
   <FerrisWheelGallery3D />
 </section>
 
