@@ -19,6 +19,8 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "lucide-vue-next": "^0.483.0",
+        "sweetalert2": "^11.17.2",
         "v-mask": "^2.3.0"
     }
 }

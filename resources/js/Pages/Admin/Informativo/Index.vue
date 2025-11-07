@@ -51,7 +51,7 @@
               :src="`/storage/${informativo.imagem}`"
               class="w-72 rounded-2xl shadow-lg border border-gray-200 hover:scale-105 transition"
             />
-          </div>
+          </div> 
 
         </div>
 
