@@ -22,6 +22,7 @@ use App\Http\Controllers\InformativoController;
 
 
 Route::get('/', [ApresentacaoController::class, 'index'])->name('apresentacao.index');
+Route::get('/informativo/ativo', [InformativoController::class, 'ativo'])->name('informativo.ativo');
 
 Route::get('/dashboard',[DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -95,13 +96,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/informativo/editar/{id?}', [InformativoController::class, 'editar'])->name('informativo.editar');
     Route::post('/informativo/salvar', [InformativoController::class, 'salvar'])->name('informativo.salvar');
     });
-
-    Route::get('/informativo/ativo', [InformativoController::class, 'ativo'])->name('informativo.ativo');
-
-
-
-
-
 
 });
 

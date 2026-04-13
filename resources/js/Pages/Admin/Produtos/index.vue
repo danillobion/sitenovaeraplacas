@@ -1,6 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Plus } from 'lucide-vue-next';
+import { confirmDeleteAlert } from '@/lib/sweetAlert';
 
 const props = defineProps({
     produtos: Array,
@@ -8,8 +10,14 @@ const props = defineProps({
 
 const form = useForm({});
 
-const deletarProduto = (produto_id) => {
-    if (confirm("Tem certeza que deseja excluir este produto?")) {
+const deletarProduto = async (produto_id) => {
+    const confirmado = await confirmDeleteAlert({
+        title: 'Excluir produto?',
+        text: 'Esse produto será removido do catálogo.',
+        confirmButtonText: 'Sim, excluir',
+    });
+
+    if (confirmado) {
         form.delete(route('produto.deletar', { produto_id: produto_id }));
     }
 };
@@ -20,13 +28,18 @@ const deletarProduto = (produto_id) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Produtos</h2>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2>Produtos</h2>
+                    <p>Atualize o catálogo com mais clareza e destaque os itens disponíveis.</p>
+                </div>
+
                 <Link
                     :href="route('produto.editar', { id: null })"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    class="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
                 >
-                    Adicionar
+                    <Plus class="h-4 w-4" />
+                    Adicionar produto
                 </Link>
             </div>
         </template>
@@ -93,4 +106,3 @@ const deletarProduto = (produto_id) => {
         </div>
     </AuthenticatedLayout>
 </template>
-

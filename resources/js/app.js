@@ -1,12 +1,18 @@
 import '../css/app.css';
 import './bootstrap';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { showFlashAlert } from './lib/sweetAlert';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+router.on('success', (event) => {
+    showFlashAlert(event.detail.page.props.flash);
+});
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -16,6 +22,8 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
+        showFlashAlert(props.initialPage.props.flash);
+
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
