@@ -8,17 +8,35 @@ class EncomendaService
 {
     private static $endpoint = 'https://www.emplaca.ai/api/v1/encomendas';
 
+    public static function configurado(): bool
+    {
+        return filled(trim((string) env('ENCOMENDA_API_TOKEN')));
+    }
+
     public static function consultar(array $filtros = [])
     {
-        $token = env('ENCOMENDA_API_TOKEN');
+        $token = trim((string) env('ENCOMENDA_API_TOKEN'));
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->get(self::$endpoint, $filtros);
+        if ($token === '') {
+            return [
+                'error' => true,
+                'message' => 'A API de encomendas nao esta configurada neste ambiente.',
+                'status' => 500,
+            ];
+        }
+
+        $response = Http::acceptJson()
+            ->timeout(20)
+            ->withToken($token)
+            ->get(self::$endpoint, $filtros);
 
         if ($response->failed()) {
             $errorData = $response->json();
-            $message = $errorData['errors']['default'] ?? $message;
+
+            $message = data_get($errorData, 'errors.default')
+                ?? data_get($errorData, 'message')
+                ?? 'Nao foi possivel consultar as encomendas no momento.';
+
             return [
                 'error' => true,
                 'message' => $message,

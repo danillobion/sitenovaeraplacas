@@ -1,18 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+import { Plus } from 'lucide-vue-next';
 
 const props = defineProps({
     tipos: Array,
 });
-
-const form = useForm({});
-
-const deletarTipo = (produto_id) => {
-    if (confirm("Tem certeza que deseja excluir este tipo?")) {
-        form.delete(route('tipo.deletar', { tipo_id: tipo_id }));
-    }
-};
 </script>
 
 <template>
@@ -20,13 +13,18 @@ const deletarTipo = (produto_id) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Tipos de usuários</h2>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2>Tipos de usuários</h2>
+                    <p>Organize os perfis do sistema e mantenha as permissões bem estruturadas.</p>
+                </div>
+
                 <Link
                     :href="route('tipo.editar', { id: null })"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    class="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
                 >
-                    Adicionar
+                    <Plus class="h-4 w-4" />
+                    Adicionar tipo
                 </Link>
             </div>
         </template>

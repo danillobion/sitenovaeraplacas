@@ -1,18 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+import { Plus } from 'lucide-vue-next';
 
 const props = defineProps({
     usuarios: Array,
 });
-
-const form = useForm({});
-
-const deletarUsuario = (produto_id) => {
-    if (confirm("Tem certeza que deseja excluir este usuários?")) {
-        form.delete(route('usuario.deletar', { usuario_id: usuario_id }));
-    }
-};
 </script>
 
 <template>
@@ -20,13 +13,18 @@ const deletarUsuario = (produto_id) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Usuários</h2>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2>Usuários</h2>
+                    <p>Cadastre pessoas, perfis e acessos sem misturar a ação principal com o título.</p>
+                </div>
+
                 <Link
                     :href="route('usuario.editar', { id: null })"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    class="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
                 >
-                    Adicionar
+                    <Plus class="h-4 w-4" />
+                    Adicionar usuário
                 </Link>
             </div>
         </template>
@@ -92,4 +90,3 @@ const deletarUsuario = (produto_id) => {
         </div>
     </AuthenticatedLayout>
 </template>
-

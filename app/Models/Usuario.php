@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Permissao;
 use App\Models\TipoPermissao;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,14 +57,33 @@ class Usuario extends Authenticatable
         return $this->belongsTo(Tipo::class);
     }
 
-    public function hasPermission(string $permission): bool {
+    public function isRoot(): bool
+    {
+        return $this->tipo()->where('nome', 'root')->exists();
+    }
 
-        $tipo_permissao = TipoPermissao::with('permissoes')->where('tipo_id', $this->tipo_id)->get();
-        $nomesPermissoes = $tipo_permissao->map(function ($item) {
-            return $item['permissoes']['nome'] ?? null; 
-        })->filter()->toArray();
+    public function permissionNames(): array
+    {
+        if ($this->isRoot()) {
+            return Permissao::pluck('nome')->all();
+        }
 
-        return in_array($permission, $nomesPermissoes);
+        $tipo_permissao = TipoPermissao::with('permissoes')
+            ->where('tipo_id', $this->tipo_id)
+            ->get();
+
+        return $tipo_permissao->map(function ($item) {
+            return $item['permissoes']['nome'] ?? null;
+        })->filter()->values()->all();
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->isRoot()) {
+            return true;
+        }
+
+        return in_array($permission, $this->permissionNames(), true);
 
     }
 

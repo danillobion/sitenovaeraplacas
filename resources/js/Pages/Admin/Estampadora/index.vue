@@ -1,14 +1,22 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head,Link,useForm } from '@inertiajs/vue3';
+import { Plus } from 'lucide-vue-next';
+import { confirmDeleteAlert } from '@/lib/sweetAlert';
 
 const props = defineProps({
     estampadoras: Object,
 });
 
 const form = useForm({});
-const deletarEstampadora = (estampadora_id) => {
-    if (confirm("Tem certeza que deseja excluir esta estampadora?")) {
+const deletarEstampadora = async (estampadora_id) => {
+    const confirmado = await confirmDeleteAlert({
+        title: 'Excluir estampadora?',
+        text: 'Essa estampadora será removida do cadastro.',
+        confirmButtonText: 'Sim, excluir',
+    });
+
+    if (confirmado) {
         form.delete(route('estampadora.deletar', { estampadora_id: estampadora_id }));
     }
 };
@@ -19,9 +27,19 @@ const deletarEstampadora = (estampadora_id) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Estampadoras</h2>
-                <a href="/estampadoras/edit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Adicionar</a>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2>Estampadoras</h2>
+                    <p>Gerencie as unidades e mantenha a operação organizada em um só lugar.</p>
+                </div>
+
+                <Link
+                    :href="route('estampadora.editar', { id: null })"
+                    class="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+                >
+                    <Plus class="h-4 w-4" />
+                    Adicionar estampadora
+                </Link>
             </div>
         </template>
 
@@ -91,4 +109,3 @@ const deletarEstampadora = (estampadora_id) => {
         </div>
     </AuthenticatedLayout>
 </template>
-

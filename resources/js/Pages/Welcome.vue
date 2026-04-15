@@ -1,35 +1,10 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import { onMounted } from "vue";
-import CarAnimation from '@/Components/CarAnimation.vue';
+import { Head } from '@inertiajs/vue3';
 import LinksSection from "@/Components/LinksSection.vue";
 import ChatButton from '@/Components/ChatButton.vue';
 import { ref } from 'vue';
 import VideoGallery from "@/Components/VideoGallery.vue";
-import FerrisWheelGallery3D from '@/Components/FerrisWheelGallery3D.vue'
-import axios from 'axios'
-
-
-
-const informativo = ref(null)
-const showModal = ref(false)
-
-onMounted(async () => {
-  try {
-    const { data } = await axios.get('/informativo/ativo')
-
-    // Se vier vazio ou desabilitado, não abre nada
-    if (data && data.habilitado && data.titulo) {
-      informativo.value = data
-      showModal.value = true
-    } else {
-      showModal.value = false
-    }
-  } catch (error) {
-    console.error('Erro ao carregar informativo:', error)
-    showModal.value = false
-  }
-})
+import MovingEventGallery from '@/Components/MovingEventGallery.vue'
 
 const scrollToSection = (event, sectionId) => {
   event.preventDefault(); // Evita o comportamento padrão do link
@@ -63,14 +38,21 @@ const closeModal = () => {
   }, 300); // tempo igual ao da animação
 };
 
-defineProps({
+const props = defineProps({
     estampadoras: {
         type: Array,
     },
     produtos: {
         type: Array,
     },
+    informativoAtivo: {
+        type: Object,
+        default: null,
+    },
 });
+
+const informativo = ref(props.informativoAtivo)
+const showModal = ref(!!(props.informativoAtivo?.habilitado && props.informativoAtivo?.titulo))
 
 function handleImageError() {
     document.getElementById('screenshot-container')?.classList.add('!hidden');
@@ -78,6 +60,24 @@ function handleImageError() {
     document.getElementById('docs-card-content')?.classList.add('!flex-row');
     document.getElementById('background')?.classList.add('!hidden');
 }
+
+const toggleCard = (index) => {
+    const loja = props.estampadoras?.[index];
+
+    if (!loja) {
+        return;
+    }
+
+    loja.expandido = !loja.expandido;
+};
+
+const formatarNumero = (numero) => {
+    if (!numero) {
+        return "";
+    }
+
+    return numero.replace(/\D/g, "");
+};
 </script>
 
 <template>
@@ -217,17 +217,21 @@ function handleImageError() {
   </div>
 
        <!-- Sobre -->
-       <section id="sobre" class="py-20 px-6 md:px-16 text-center fade-in bg-white-100 container mx-auto">
+       <section
+        id="sobre"
+        class="py-20 px-6 md:px-16 text-center fade-in bg-white-100 container mx-auto"
+        data-reveal="up"
+       >
   <h2 class="text-4xl font-bold mb-4">Sobre Nós</h2><br><br><br>
 
   <div class="flex flex-col md:flex-row items-center justify-center gap-12">
     <!-- Imagem da esquerda mais para a esquerda -->
-    <div class="w-full md:w-1/3 flex justify-center">
+    <div class="w-full md:w-1/3 flex justify-center fade-in" data-reveal="left" style="--reveal-delay: 120ms">
       <img src="../../../public/images/foto2.jpg" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-full shadow-lg object-contain">
     </div>
 
     <!-- Texto + imagens abaixo centralizados -->
-    <div class="w-full md:w-3/5 lg:w-2/3 p-8 text-center md:text-left max-w-4xl mx-auto flex flex-col items-center">
+    <div class="w-full md:w-3/5 lg:w-2/3 p-8 text-center md:text-left max-w-4xl mx-auto flex flex-col items-center fade-in" data-reveal="right" style="--reveal-delay: 180ms">
       <h2 class="text-2xl font-bold text-gray-800 text-center">Qualidade e Compromisso em Todo Lugar</h2>
       <p class="mt-4 text-lg text-gray-600 font-bold text-xl">
         Com mais de 25 anos de experiência, a Nova Era Placas se consolidou como referência em qualidade, compromisso e transparência no fornecimento de placas de identificação veicular.
@@ -242,7 +246,7 @@ function handleImageError() {
       </p><br>
       
       <!-- Imagens abaixo do texto -->
-      <div class="flex flex-col items-center py-10 bg-white-100">
+      <div class="flex flex-col items-center py-10 bg-white-100 fade-in" data-reveal="zoom" style="--reveal-delay: 260ms">
         <div class="flex flex-col md:flex-row items-center justify-center gap-8">
           <img src="../../../public/images/selo.png" alt="Imagem 1" class="h-80 w-80 object-contain sm:h-96 sm:w-96 md:h-64 md:w-64">
           <img src="../../../public/images/iso.png" alt="Imagem 2" class="h-80 w-80 object-contain sm:h-96 sm:w-96 md:h-64 md:w-64">
@@ -255,7 +259,12 @@ function handleImageError() {
 
   
       <!-- Produtos -->
-      <section v-if="produtos.length > 0" id="produtos" class="py-20 bg-gray-100 px-6 text-center fade-in">
+      <section
+        v-if="produtos.length > 0"
+        id="produtos"
+        class="py-20 bg-gray-100 px-6 text-center fade-in"
+        data-reveal="up"
+      >
         <div class="container mx-auto px-6">
         <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Nossos Produtos</h2>
 
@@ -263,7 +272,9 @@ function handleImageError() {
           <div 
             v-for="(produto, index) in produtos" 
             :key="index" 
-            class="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl"
+            class="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl fade-in"
+            data-reveal="zoom"
+            :style="{ '--reveal-delay': `${(index % 3) * 120}ms` }"
           >
             <img :src="produto.imagem" :alt="produto.nome" class="w-full">
             <div class="p-4 text-left">
@@ -278,12 +289,14 @@ function handleImageError() {
   
       <!-- Lojas -->
       
-    <section id="lojas" class="py-20 px-6 text-center fade-in">
+    <section id="lojas" class="py-20 px-6 text-center fade-in" data-reveal="up">
       <h2 class="text-3xl font-bold">Onde Estamos</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         
         <div v-for="(loja, index) in estampadoras" :key="index" 
-             class="relative bg-white p-4 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300" 
+             class="relative bg-white p-4 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 fade-in" 
+             data-reveal="up"
+             :style="{ '--reveal-delay': `${(index % 4) * 90}ms` }"
              @click="toggleCard(index)">
           <img :src="loja.imagem" alt="Loja" class="w-full h-auto object-contain rounded-t-lg">
           <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
@@ -305,7 +318,8 @@ function handleImageError() {
     <!-- Cards de Dúvidas Frequentes -->
 <section
   id="duvidas"
-  class="py-20 px-6 bg-cover bg-center bg-no-repeat"
+  class="py-20 px-6 bg-cover bg-center bg-no-repeat fade-in"
+  data-reveal="up"
   style="background-image: url('/images/fundo2.png')"
 >
   <h2 class="text-3xl font-bold text-white text-center mb-12 drop-shadow-md">
@@ -317,7 +331,9 @@ function handleImageError() {
       <div
         v-for="(faq, index) in faqs"
         :key="index"
-        class="relative overflow-hidden bg-white shadow-lg rounded-lg p-4 cursor-pointer transition-transform hover:scale-105 hover:shadow-2xl group"
+        class="relative overflow-hidden bg-white shadow-lg rounded-lg p-4 cursor-pointer transition-transform hover:scale-105 hover:shadow-2xl group fade-in"
+        data-reveal="left"
+        :style="{ '--reveal-delay': `${index * 90}ms` }"
         @click="openModal(faq, $event)"
       >
         <!-- Fundo vermelho animado -->
@@ -370,22 +386,26 @@ function handleImageError() {
 
 
  <!-- Galeria de vídeo -->
-<section id="midia" class="py-12 bg-white px-6 text-center fade-in">
-  <div>
+<section id="midia" class="py-12 bg-white px-6 text-center fade-in" data-reveal="up">
+  <div class="fade-in" data-reveal="zoom" style="--reveal-delay: 120ms">
     <VideoGallery />
   </div>
 </section>
 
 <!-- Galeria de Fotos -->
-<section id="galeria" class="py-20 bg-white-100 px-6 text-center fade-in">
-  <FerrisWheelGallery3D />
+<section id="galeria" class="py-20 bg-white-100 px-6 text-center fade-in" data-reveal="up">
+  <div class="fade-in" data-reveal="zoom" style="--reveal-delay: 140ms">
+    <MovingEventGallery />
+  </div>
 </section>
 
 
   
       <!-- Links -->
-      <section id="links" class="py-20 bg-white-100 px-6 text-center fade-in">
-        <LinksSection :links="meusLinks" />
+      <section id="links" class="py-20 bg-white-100 px-6 text-center fade-in" data-reveal="up">
+        <div class="fade-in" data-reveal="up" style="--reveal-delay: 120ms">
+          <LinksSection :links="meusLinks" />
+        </div>
         
 <p class="mt-6 text-sm text-gray-600 text-center">
       <strong>Aviso de Isenção de Responsabilidade:</strong> Este site não possui qualquer vínculo com o Departamento Estadual de Trânsito (DETRAN) ou qualquer outro órgão governamental. Os links aqui disponibilizados são de fontes oficiais e têm o propósito de facilitar o acesso a informações públicas. Recomendamos sempre conferir diretamente nos sites oficiais para garantir a veracidade das informações.
@@ -426,15 +446,13 @@ function handleImageError() {
 
 
   export default {
-    //components: { CarAnimation },
-    components: { LinksSection },
-    components: { VideoGallery },
   data() {
 
     return {
       isAtTop: true,
       isMobile: false,
       showMenuMobile: false,
+      sectionObserver: null,
       
       faqs: [
 
@@ -532,74 +550,40 @@ function handleImageError() {
     window.addEventListener('resize', this.checkDevice);
     window.addEventListener('scroll', this.handleScroll);
     this.checkDevice();
+    this.handleScroll();
 
-    // Código do IntersectionObserver
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("fade-in-visible");
-        }
+    this.sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-in-visible");
+            this.sectionObserver?.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.16,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    this.$nextTick(() => {
+      document.querySelectorAll(".fade-in").forEach((element) => {
+        this.sectionObserver?.observe(element);
       });
     });
-
-    document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
-
-    //animação tela inicial
-    setTimeout(() => {
-      this.$refs.textBlock.classList.remove("opacity-0", "translate-y-10");
-      this.$refs.imageBlock.classList.remove("opacity-0", "translate-x-10");
-    }, 300);
   },
 
   beforeUnmount() {
-    window.removeEventListener("scroll", this.checkScroll);
-  },
-
-  beforeDestroy() {
-    // Remove o evento de rolagem quando o componente for destruído
     window.removeEventListener('scroll', this.handleScroll);
     window.removeEventListener('resize', this.checkDevice);
+    this.sectionObserver?.disconnect();
   },
 
 
 
 
   methods: {
-
-    toggleCard(index) {
-      // Alterna a exibição do card
-      this.lojas[index].expandido = !this.lojas[index].expandido;
-    },
-
-    openModal(faq) {
-      this.selectedFaq = faq;
-    },
-
-    closeModal() {
-      this.selectedFaq = null;
-    },
-
-    scrollToSection(event, section) {
-      event.preventDefault();
-      const targetElement = document.getElementById(section);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: "smooth" });
-      }
-
-      // Fecha o menu mobile após o clique (se estiver aberto)
-      if (this.showMenuMobile) {
-        this.showMenuMobile = false;
-      }
-
-    // Função para alternar a visibilidade do menu mobile
-    toggleMenuMobile(); {
-      this.showMenuMobile = !this.showMenuMobile;
-    }
-  
-    },
-    checkScroll() {
-      this.isAtTop = window.scrollY < 50;
-    },
 
     handleScroll() {
       this.isAtTop = window.scrollY === 0;
@@ -613,11 +597,6 @@ function handleImageError() {
   },
    
 };
-
-const formatarNumero = (numero) => {
-  if (!numero) return "";
-  return numero.replace(/\D/g, ""); // Remove tudo que não for número
-};
   
   </script>
   
@@ -629,29 +608,40 @@ const formatarNumero = (numero) => {
 }
 .fade-in {
   opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  filter: blur(14px);
+  transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 58px), 0) scale(var(--reveal-scale, 0.97));
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: transform, opacity, filter;
 }
 .fade-in-visible {
   opacity: 1;
-  transform: translateY(0);
+  filter: blur(0);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+.fade-in[data-reveal="left"] {
+  --reveal-x: -72px;
+  --reveal-y: 12px;
+}
+.fade-in[data-reveal="right"] {
+  --reveal-x: 72px;
+  --reveal-y: 12px;
+}
+.fade-in[data-reveal="up"] {
+  --reveal-y: 72px;
+}
+.fade-in[data-reveal="zoom"] {
+  --reveal-y: 28px;
+  --reveal-scale: 0.9;
 }
 nav ul li a {
   transition: color 0.3s;
 }
 nav ul li a:hover {
   color: #e60000;
-}
-
-.fade-in {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.fade-in-visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* Efeito de aumentar o card quando o mouse passa sobre ele */

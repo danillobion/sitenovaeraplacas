@@ -10,11 +10,23 @@ use App\Services\EncomendaService;
 class EncomendaController extends Controller
 {
     public function index(){
-        return Inertia::render('Admin/Consultar/Encomenda/index');
+        return Inertia::render('Admin/Consultar/Encomenda/index', [
+            'apiDisponivel' => EncomendaService::configurado(),
+            'quantidadeMinima' => 10,
+        ]);
     }
 
     public function consultar(Request $request)
     {
+        $request->merge([
+            'placa' => $request->filled('placa')
+                ? strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $request->input('placa')))
+                : null,
+            'cnpj_estampadora' => $request->filled('cnpj_estampadora')
+                ? preg_replace('/\D/', '', (string) $request->input('cnpj_estampadora'))
+                : null,
+        ]);
+
         $dados = $request->validate([
             'placa' => 'nullable|string|size:7',
             'cnpj_estampadora' => 'nullable|string|size:14',
@@ -25,11 +37,14 @@ class EncomendaController extends Controller
             'id' => 'nullable|integer',
             'data_inicio_abertura' => 'nullable|date',
             'data_fim_abertura' => 'nullable|date',
+            'quantidade' => 'nullable|integer|min:10|max:100',
         ]);
+
+        $dados['quantidade'] = max((int) ($dados['quantidade'] ?? 10), 10);
 
         $dadosFiltrados = array_filter($dados, fn ($valor) => !is_null($valor) && $valor !== '');
 
-        $resultado = EncomendaService::consultar($dados);
+        $resultado = EncomendaService::consultar($dadosFiltrados);
 
         $this->registrarLog($dadosFiltrados, $resultado);
 
