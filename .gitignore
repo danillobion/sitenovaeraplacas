@@ -20,6 +20,7 @@ storage/framework/sessions/
 storage/framework/views/
 
 public/build/
+public/hot
 
 # Banco de dados SQLite (caso esteja usando)
 database/*.sqlite
@@ -29,5 +30,5 @@ database/*.sqlite
 .idea/
 *.swp
 *.swo
-
+.DS_Store
 
