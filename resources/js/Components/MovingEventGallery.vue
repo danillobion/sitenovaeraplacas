@@ -1,14 +1,13 @@
 <script setup>
+import { ChevronLeft, ChevronRight, Images, Pause, Play } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { ArrowUpRight, Sparkles } from 'lucide-vue-next';
 
-const buildGalleryImages = (names) => {
-    return names.map((name) => ({
+const buildGalleryImages = (names) =>
+    names.map((name) => ({
         id: name,
         spotlight: `/images/gallery/spotlight/${name}.jpg`,
         thumb: `/images/gallery/thumbs/${name}.jpg`,
     }));
-};
 
 const eventCollections = [
     {
@@ -33,8 +32,8 @@ const eventCollections = [
     {
         id: 'teresina-pi',
         eyebrow: 'Novo evento',
-        title: 'A nova era Teresina - PI',
-        description: 'Momentos marcantes, bastidores e a energia contagiante da equipe durante o evento em Teresina.',
+        title: 'A Nova Era em Teresina - PI',
+        description: 'Momentos marcantes, bastidores e a energia da equipe durante o evento realizado em Teresina.',
         images: buildGalleryImages([
             'eventonovo1',
             'eventonovo2',
@@ -66,230 +65,221 @@ const eventCollections = [
     },
 ];
 
+const galleryRoot = ref(null);
 const activeEventIndex = ref(1);
 const activeIndex = ref(0);
+const pausado = ref(false);
+const estaVisivel = ref(false);
 let autoplayId = null;
+let visibilityObserver = null;
 
-const activeEvent = computed(() => eventCollections[activeEventIndex.value] ?? eventCollections[0]);
+const activeEvent = computed(() => eventCollections[activeEventIndex.value]);
 const images = computed(() => activeEvent.value.images);
-const activeImage = computed(() => images.value[activeIndex.value] ?? images.value[0] ?? null);
-const repeatedForward = computed(() => [...images.value, ...images.value]);
-const repeatedReverse = computed(() => {
-    const reversed = [...images.value].reverse();
+const activeImage = computed(() => images.value[activeIndex.value]);
+const thumbsVisiveis = computed(() => {
+    const quantidade = Math.min(images.value.length, 8);
 
-    return [...reversed, ...reversed];
-});
-
-const cardsEmDestaque = computed(() => {
-    const limit = Math.min(3, images.value.length);
-
-    return Array.from({ length: limit }, (_, offset) => {
+    return Array.from({ length: quantidade }, (_, offset) => {
         const index = (activeIndex.value + offset) % images.value.length;
 
         return {
             index,
             image: images.value[index],
-            label: `Imagem ${String(index + 1).padStart(2, '0')}`,
         };
     });
 });
 
-const iniciarAutoplay = () => {
+const pararAutoplay = () => {
     window.clearInterval(autoplayId);
+    autoplayId = null;
+};
+
+const iniciarAutoplay = () => {
+    pararAutoplay();
+
+    if (pausado.value || !estaVisivel.value || images.value.length < 2) {
+        return;
+    }
 
     autoplayId = window.setInterval(() => {
         activeIndex.value = (activeIndex.value + 1) % images.value.length;
-    }, 3400);
-};
-
-const resetarAutoplay = () => {
-    iniciarAutoplay();
+    }, 3800);
 };
 
 const selecionarImagem = (index) => {
     activeIndex.value = index;
-    resetarAutoplay();
+    iniciarAutoplay();
 };
 
 const selecionarEvento = (index) => {
     activeEventIndex.value = index;
 };
 
+const imagemAnterior = () => {
+    activeIndex.value = (activeIndex.value - 1 + images.value.length) % images.value.length;
+    iniciarAutoplay();
+};
+
+const proximaImagem = () => {
+    activeIndex.value = (activeIndex.value + 1) % images.value.length;
+    iniciarAutoplay();
+};
+
+const alternarAutoplay = () => {
+    pausado.value = !pausado.value;
+    iniciarAutoplay();
+};
+
 watch(activeEventIndex, () => {
     activeIndex.value = 0;
-    resetarAutoplay();
-});
-
-onMounted(() => {
     iniciarAutoplay();
 });
 
+onMounted(() => {
+    visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+            estaVisivel.value = entry.isIntersecting;
+            iniciarAutoplay();
+        },
+        { threshold: 0.2 },
+    );
+
+    if (galleryRoot.value) {
+        visibilityObserver.observe(galleryRoot.value);
+    }
+});
+
 onBeforeUnmount(() => {
-    window.clearInterval(autoplayId);
+    pararAutoplay();
+    visibilityObserver?.disconnect();
 });
 </script>
 
 <template>
-    <section
-        class="relative overflow-hidden rounded-[34px] border border-slate-200 bg-[#fffaf7] px-6 py-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] lg:px-8"
-    >
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(232,75,67,0.12),_transparent_42%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.14),_transparent_38%)]" />
-
-        <div class="relative grid gap-8 lg:grid-cols-[0.92fr,1.08fr] lg:items-center">
-            <div class="max-w-xl">
-                <div class="inline-flex items-center gap-2 rounded-full border border-red-100 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.26em] text-red-500">
-                    <Sparkles class="h-4 w-4" />
-                    Eventos
-                </div>
-
-                <h3 class="mt-5 font-display text-4xl font-extrabold tracking-tight text-slate-900">
-                    Eventos que a Nova Era esteve presente
-                </h3>
-
-                <p class="mt-4 text-sm leading-7 text-slate-600">
-                    {{ activeEvent.description }}
+    <div ref="galleryRoot" class="mx-auto max-w-[1320px]">
+        <div class="grid gap-8 lg:grid-cols-[0.72fr,1.28fr] lg:items-end">
+            <div>
+                <p class="text-[11px] font-extrabold uppercase tracking-[0.24em] text-red-600">
+                    Eventos Nova Era
                 </p>
+                <h2 class="site-heading mt-4 text-3xl font-semibold leading-tight tracking-[-0.02em] text-slate-950 sm:text-4xl">
+                    Registros que contam a nossa história.
+                </h2>
+            </div>
+            <p class="max-w-xl text-sm leading-7 text-slate-500 lg:justify-self-end">
+                Acompanhe os encontros, bastidores e momentos importantes da equipe. As imagens avançam automaticamente sem sobrecarregar a página.
+            </p>
+        </div>
 
-                <div class="mt-6 grid gap-3">
-                    <button
-                        v-for="(eventItem, index) in eventCollections"
-                        :key="eventItem.id"
-                        type="button"
-                        :class="index === activeEventIndex
-                            ? 'border-red-200 bg-white shadow-lg ring-2 ring-red-100'
-                            : 'border-slate-200 bg-white/80 hover:border-red-200 hover:bg-white'"
-                        class="flex items-center justify-between gap-4 rounded-[22px] border px-4 py-4 text-left transition duration-300"
-                        @click="selecionarEvento(index)"
-                    >
-                        <div class="min-w-0">
+        <div class="mt-12 grid gap-5 lg:grid-cols-[310px,minmax(0,1fr)]">
+            <div class="space-y-3">
+                <button
+                    v-for="(eventItem, index) in eventCollections"
+                    :key="eventItem.id"
+                    type="button"
+                    :class="index === activeEventIndex
+                        ? 'border-red-300 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.08)]'
+                        : 'border-slate-200 bg-white/60 hover:bg-white'"
+                    class="w-full rounded-lg border p-4 text-left transition"
+                    @click="selecionarEvento(index)"
+                >
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
                             <p
-                                :class="index === activeEventIndex ? 'text-red-500' : 'text-slate-400'"
-                                class="text-[11px] font-bold uppercase tracking-[0.24em]"
+                                :class="index === activeEventIndex ? 'text-red-600' : 'text-slate-400'"
+                                class="text-[10px] font-bold uppercase tracking-[0.2em]"
                             >
                                 {{ eventItem.eyebrow }}
                             </p>
-                            <p class="mt-1 truncate text-sm font-bold text-slate-900">
+                            <p class="mt-2 text-sm font-extrabold leading-5 text-slate-900">
                                 {{ eventItem.title }}
                             </p>
                         </div>
-
-                        <span
-                            :class="index === activeEventIndex ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-500'"
-                            class="inline-flex shrink-0 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.18em]"
-                        >
-                            {{ eventItem.images.length }} fotos
+                        <span class="inline-flex shrink-0 items-center gap-1 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500">
+                            <Images class="h-3 w-3" /> {{ eventItem.images.length }}
                         </span>
-                    </button>
-                </div>
+                    </div>
+                </button>
 
-                <div class="mt-8 grid gap-3 sm:grid-cols-3">
-                    <button
-                        v-for="card in cardsEmDestaque"
-                        :key="`${activeEvent.id}-${card.label}`"
-                        type="button"
-                        class="group rounded-[22px] border border-slate-200 bg-white p-3 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-red-200 hover:shadow-lg"
-                        @click="selecionarImagem(card.index)"
-                    >
-                        <div class="overflow-hidden rounded-[16px]">
-                            <img
-                                :src="card.image.thumb"
-                                :alt="`${activeEvent.title} - ${card.label}`"
-                                class="h-28 w-full object-cover transition duration-500 group-hover:scale-105"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        </div>
-
-                        <div class="mt-3 flex items-center justify-between gap-3">
-                            <span class="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
-                                {{ card.label }}
-                            </span>
-                            <ArrowUpRight class="h-4 w-4 text-slate-400 transition group-hover:text-red-500" />
-                        </div>
-                    </button>
+                <div class="rounded-lg border border-slate-200 bg-white p-4">
+                    <p class="text-xs leading-6 text-slate-600">{{ activeEvent.description }}</p>
+                    <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                            {{ activeIndex + 1 }} de {{ images.length }}
+                        </span>
+                        <button
+                            type="button"
+                            class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-50"
+                            :aria-label="pausado ? 'Reproduzir galeria' : 'Pausar galeria'"
+                            @click="alternarAutoplay"
+                        >
+                            <Play v-if="pausado" class="h-4 w-4 fill-current" />
+                            <Pause v-else class="h-4 w-4 fill-current" />
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="relative overflow-hidden rounded-[28px] border border-slate-200 bg-slate-950 p-3 shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.12),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(232,75,67,0.22),_transparent_36%)]" />
-
-                <transition name="spotlight-fade" mode="out-in">
-                    <div
-                        v-if="activeImage"
-                        :key="activeImage.spotlight"
-                        class="relative aspect-[4/3] overflow-hidden rounded-[22px]"
-                    >
+            <div class="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-950 p-3 shadow-[0_24px_60px_rgba(15,23,42,0.14)]">
+                <div class="group relative aspect-[16/10] overflow-hidden rounded-md bg-slate-900">
+                    <transition name="gallery-fade" mode="out-in">
                         <img
+                            :key="activeImage.spotlight"
                             :src="activeImage.spotlight"
-                            :alt="activeEvent.title"
-                            class="h-full w-full object-cover"
+                            :alt="`${activeEvent.title}, imagem ${activeIndex + 1}`"
+                            class="absolute inset-0 h-full w-full object-cover"
                             decoding="async"
-                            fetchpriority="high"
                         />
+                    </transition>
 
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/15 to-transparent" />
-
-                        <div class="absolute inset-x-0 bottom-0 p-6 text-white">
-                            <p class="text-[11px] font-bold uppercase tracking-[0.3em] text-white/60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-slate-950/10" />
+                    <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-5 p-5 text-white sm:p-7">
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-[0.24em] text-red-300">
                                 {{ activeEvent.eyebrow }}
                             </p>
-
-                            <div class="mt-3 flex flex-wrap items-end justify-between gap-4">
-                                <div>
-                                    <h4 class="text-2xl font-black tracking-tight">
-                                        {{ activeEvent.title }}
-                                    </h4>
-                                    <p class="mt-2 text-sm text-white/70">
-                                        Imagem {{ activeIndex + 1 }} de {{ images.length }}
-                                    </p>
-                                </div>
-
-                                <span class="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-white/80">
-                                    Galeria viva
-                                </span>
-                            </div>
+                            <h3 class="site-heading mt-2 text-lg font-semibold sm:text-xl">
+                                {{ activeEvent.title }}
+                            </h3>
+                        </div>
+                        <div class="hidden gap-2 sm:flex">
+                            <button
+                                type="button"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/20 bg-slate-950/30 text-white backdrop-blur hover:bg-white/15"
+                                aria-label="Imagem anterior"
+                                @click="imagemAnterior"
+                            >
+                                <ChevronLeft class="h-5 w-5" />
+                            </button>
+                            <button
+                                type="button"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/20 bg-slate-950/30 text-white backdrop-blur hover:bg-white/15"
+                                aria-label="Próxima imagem"
+                                @click="proximaImagem"
+                            >
+                                <ChevronRight class="h-5 w-5" />
+                            </button>
                         </div>
                     </div>
-                </transition>
-            </div>
-        </div>
 
-        <div class="relative mt-10 space-y-4">
-            <div class="gallery-marquee">
-                <div class="gallery-track">
-                    <button
-                        v-for="(image, index) in repeatedForward"
-                        :key="`forward-${activeEvent.id}-${index}`"
-                        type="button"
-                        class="gallery-card"
-                        :class="{ 'is-active': index % images.length === activeIndex }"
-                        @click="selecionarImagem(index % images.length)"
-                    >
-                        <img
-                            :src="image.thumb"
-                            :alt="`${activeEvent.title} ${index + 1}`"
-                            class="h-36 w-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                    </button>
+                    <div v-if="!pausado" :key="`${activeEvent.id}-${activeIndex}`" class="gallery-progress absolute inset-x-0 bottom-0 h-1 bg-red-500" />
                 </div>
-            </div>
 
-            <div class="gallery-marquee">
-                <div class="gallery-track gallery-track-reverse">
+                <div class="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-8">
                     <button
-                        v-for="(image, index) in repeatedReverse"
-                        :key="`reverse-${activeEvent.id}-${index}`"
+                        v-for="thumb in thumbsVisiveis"
+                        :key="`${activeEvent.id}-${thumb.image.id}`"
                         type="button"
-                        class="gallery-card gallery-card-sm"
-                        :class="{ 'is-active': index % images.length === activeIndex }"
-                        @click="selecionarImagem((images.length - 1 - (index % images.length) + images.length) % images.length)"
+                        :class="thumb.index === activeIndex
+                            ? 'border-red-500 opacity-100'
+                            : 'border-transparent opacity-55 hover:opacity-100'"
+                        class="overflow-hidden rounded-md border-2 bg-slate-800 transition"
+                        @click="selecionarImagem(thumb.index)"
                     >
                         <img
-                            :src="image.thumb"
-                            :alt="`${activeEvent.title} alternativo ${index + 1}`"
-                            class="h-28 w-full object-cover"
+                            :src="thumb.image.thumb"
+                            :alt="`${activeEvent.title}, miniatura ${thumb.index + 1}`"
+                            class="aspect-square w-full object-cover"
                             loading="lazy"
                             decoding="async"
                         />
@@ -297,99 +287,47 @@ onBeforeUnmount(() => {
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </template>
 
 <style scoped>
-.gallery-marquee {
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+.gallery-fade-enter-active,
+.gallery-fade-leave-active {
+    transition: opacity 420ms ease, transform 420ms ease;
 }
 
-.gallery-track {
-    display: flex;
-    width: max-content;
-    gap: 1rem;
-    animation: marquee-left 42s linear infinite;
-    will-change: transform;
-}
-
-.gallery-track-reverse {
-    animation-name: marquee-right;
-    animation-duration: 48s;
-}
-
-.gallery-marquee:hover .gallery-track {
-    animation-play-state: paused;
-}
-
-.gallery-card {
-    width: 15rem;
-    flex: none;
-    overflow: hidden;
-    border-radius: 1.35rem;
-    border: 1px solid rgba(148, 163, 184, 0.22);
-    background: rgba(255, 255, 255, 0.88);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    transition:
-        transform 300ms ease,
-        border-color 300ms ease,
-        box-shadow 300ms ease;
-}
-
-.gallery-card-sm {
-    width: 13rem;
-}
-
-.gallery-card:hover,
-.gallery-card.is-active {
-    transform: translateY(-6px);
-    border-color: rgba(232, 75, 67, 0.35);
-    box-shadow: 0 20px 42px rgba(232, 75, 67, 0.16);
-}
-
-.spotlight-fade-enter-active,
-.spotlight-fade-leave-active {
-    transition:
-        opacity 420ms ease,
-        transform 420ms ease;
-}
-
-.spotlight-fade-enter-from,
-.spotlight-fade-leave-to {
+.gallery-fade-enter-from {
     opacity: 0;
-    transform: scale(0.97);
+    transform: scale(1.025);
 }
 
-@keyframes marquee-left {
+.gallery-fade-leave-to {
+    opacity: 0;
+    transform: scale(0.985);
+}
+
+.gallery-progress {
+    transform-origin: left;
+    animation: gallery-progress 3.8s linear forwards;
+}
+
+@keyframes gallery-progress {
     from {
-        transform: translate3d(0, 0, 0);
+        transform: scaleX(0);
     }
 
     to {
-        transform: translate3d(-50%, 0, 0);
-    }
-}
-
-@keyframes marquee-right {
-    from {
-        transform: translate3d(-50%, 0, 0);
-    }
-
-    to {
-        transform: translate3d(0, 0, 0);
+        transform: scaleX(1);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .gallery-track {
+    .gallery-progress {
         animation: none;
     }
 
-    .spotlight-fade-enter-active,
-    .spotlight-fade-leave-active,
-    .gallery-card {
+    .gallery-fade-enter-active,
+    .gallery-fade-leave-active {
         transition: none;
     }
 }

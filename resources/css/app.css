@@ -4,11 +4,13 @@
 
 @layer base {
     :root {
-        --nova-red: #e84b43;
-        --nova-red-deep: #af231e;
+        --nova-red: #dc2626;
+        --nova-red-deep: #991b1b;
         --nova-orange: #f59e0b;
-        --nova-ink: #1f2937;
-        --nova-warm: #fff8f4;
+        --nova-blue: #2563eb;
+        --nova-ink: #172033;
+        --nova-surface: #ffffff;
+        --nova-muted: #f5f6f8;
     }
 
     html {
@@ -17,13 +19,72 @@
 
     body {
         min-height: 100vh;
-        background-color: #f7f2ee;
+        background-color: var(--nova-muted);
         color: var(--nova-ink);
         text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
     }
 
     ::selection {
         background: rgba(232, 75, 67, 0.18);
         color: var(--nova-ink);
     }
+}
+
+@layer components {
+    .site-heading {
+        font-family: 'IBM Plex Sans', Manrope, sans-serif;
+        font-variation-settings: normal;
+    }
+
+    .admin-workspace {
+        position: relative;
+        background-color: #f5f6f8;
+        background-image:
+            radial-gradient(circle at 12% 0%, rgba(220, 38, 38, 0.035), transparent 24rem),
+            linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+        background-size: auto, 36px 36px, 36px 36px;
+        background-position: center, -1px -1px, -1px -1px;
+    }
+
+    .admin-sidebar-scroll {
+        scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+        scrollbar-width: thin;
+    }
+
+    .admin-sidebar-scroll::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .admin-sidebar-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .admin-sidebar-scroll::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.45);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* The authenticated area uses restrained corners; fully circular badges remain unchanged. */
+.admin-workspace :where(.rounded-xl, .rounded-2xl, .rounded-3xl),
+.admin-workspace [class*='rounded-['] {
+    border-radius: 0.5rem;
+}
+
+.admin-workspace :where(.rounded-t-xl, .rounded-t-2xl) {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
 }

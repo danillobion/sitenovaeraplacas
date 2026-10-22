@@ -1,122 +1,146 @@
-<template>
-  <section class="w-full py-16 bg-gradient-to-b from-gray-200 to-white">
-    <div class="max-w-[1800px] mx-auto px-4">
-      <!-- Título -->
-      <h2 class="text-3xl font-bold text-center text-black-700 mb-10">
-        Galeria de Vídeos
-      </h2>
+<script setup>
+import { ArrowUpRight, ChevronLeft, ChevronRight, Play, Video } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
-      <!-- Container da galeria -->
-      <div
-        ref="scrollContainer"
-        class="flex space-x-6 overflow-x-auto scroll-smooth scrollbar-hide py-4 px-2"
-      >
-        <div
-          v-for="(video, index) in videos"
-          :key="index"
-          class="min-w-[500px] md:min-w-[600px] bg-white rounded-xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 ease-in-out"
-        >
-          <!-- iframe do YouTube -->
-          <iframe
-            :src="video.src"
-            frameborder="0"
-            allowfullscreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            class="w-full h-[300px] md:h-[350px] rounded-md"
-          ></iframe>
-          
-          <p class="mt-4 text-center text-gray-700 font-medium text-lg">
-            {{ video.description }}
-          </p>
-        </div>
-      </div>
-
-      <!-- Botões de navegação -->
-<div class="flex justify-center mt-6 gap-6">
-  <!-- Botão Esquerda -->
-  <!-- Botão Esquerda -->
-<button
-  @click="scrollLeft"
-  class="group relative flex items-center justify-center w-12 h-12 rounded-full
-         bg-white/20 backdrop-blur-md border border-white/30
-         shadow-2xl shadow-black/70 hover:shadow-3xl hover:shadow-black/80
-         transition-all duration-300 ease-out
-         hover:-translate-x-1 active:scale-95"
->
-  <svg xmlns="http://www.w3.org/2000/svg"
-       class="h-6 w-6 text-red-600 transition-transform duration-300 group-hover:-translate-x-1"
-       fill="currentColor" viewBox="0 0 20 20">
-    <path d="M13.707 15.707a1 1 0 01-1.414 0L5.586 10l6.707-5.707a1 1 0 111.414 1.414L8.414 10l5.293 4.293a1 1 0 010 1.414z" />
-  </svg>
-</button>
-
-<!-- Botão Direita -->
-<button
-  @click="scrollRight"
-  class="group relative flex items-center justify-center w-12 h-12 rounded-full
-         bg-white/20 backdrop-blur-md border border-white/30
-         shadow-2xl shadow-black/70 hover:shadow-3xl hover:shadow-black/80
-         transition-all duration-300 ease-out
-         hover:translate-x-1 active:scale-95"
->
-  <svg xmlns="http://www.w3.org/2000/svg"
-       class="h-6 w-6 text-red-600 transition-transform duration-300 group-hover:translate-x-1"
-       fill="currentColor" viewBox="0 0 20 20">
-    <path d="M6.293 4.293a1 1 0 011.414 0L14.414 10l-6.707 5.707a1 1 0 01-1.414-1.414L11.586 10 6.293 5.707a1 1 0 010-1.414z" />
-  </svg>
-</button>
-
-</div>
-    </div>
-  </section>
-</template>
-
-<script>
-export default {
-  name: "VideoGallery",
-  data() {
-    return {
-        videos: [
+const videos = [
     {
-      src: "https://www.youtube.com/embed/8_FPRSKYb2A",
-      description: "Nova Era Placas"
+        id: '8_FPRSKYb2A',
+        title: 'Nova Era Placas',
+        description: 'Conheça a estrutura, a experiência e o compromisso da Nova Era.',
     },
     {
-      src: "https://www.youtube.com/embed/P2aDG0vUY4g",
-      description: "Atendimento Automatizado"
+        id: 'P2aDG0vUY4g',
+        title: 'Atendimento Automatizado',
+        description: 'Tecnologia para tornar o atendimento mais rápido e organizado.',
     },
     {
-      src: "https://www.youtube.com/embed/H2hYe1UToDM",
-      description: "Segurança e Qualidade"
+        id: 'H2hYe1UToDM',
+        title: 'Segurança e Qualidade',
+        description: 'Processos pensados para proteger cada etapa do emplacamento.',
     },
     {
-      src: "https://www.youtube.com/embed/-1TxSz1iOQA",
-      description: "Onde Estamos?"
+        id: '-1TxSz1iOQA',
+        title: 'Onde Estamos?',
+        description: 'Uma rede de unidades preparada para atender você.',
     },
     {
-      src: "https://www.youtube.com/embed/_9tjph-zce0",
-      description: "Mais do que uma placa"
-    }
-  ]
-    };
-  },
-  methods: {
-    scrollLeft() {
-      this.$refs.scrollContainer.scrollBy({ left: -400, behavior: "smooth" });
+        id: '_9tjph-zce0',
+        title: 'Mais do que uma placa',
+        description: 'Atendimento próximo, procedência e confiança.',
     },
-    scrollRight() {
-      this.$refs.scrollContainer.scrollBy({ left: 400, behavior: "smooth" });
-    },
-  },
+];
+
+const activeIndex = ref(0);
+const activeVideo = computed(() => videos[activeIndex.value]);
+
+const selecionarAnterior = () => {
+    activeIndex.value = (activeIndex.value - 1 + videos.length) % videos.length;
+};
+
+const selecionarProximo = () => {
+    activeIndex.value = (activeIndex.value + 1) % videos.length;
 };
 </script>
 
-<style scoped>
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-</style>
+<template>
+    <div class="mx-auto max-w-[1320px]">
+        <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div class="max-w-2xl">
+                <p class="text-[11px] font-extrabold uppercase tracking-[0.24em] text-red-600">
+                    Conteúdo Nova Era
+                </p>
+                <h2 class="site-heading mt-4 text-3xl font-semibold leading-tight tracking-[-0.02em] text-slate-950 sm:text-4xl">
+                    Informação que aproxima e orienta.
+                </h2>
+            </div>
+            <p class="max-w-md text-sm leading-7 text-slate-500">
+                Assista aos conteúdos sobre nossa empresa, processos, segurança e unidades.
+            </p>
+        </div>
+
+        <div class="mt-12 grid overflow-hidden rounded-lg border border-slate-200 bg-slate-950 shadow-[0_24px_60px_rgba(15,23,42,0.13)] lg:grid-cols-[1.45fr,0.55fr]">
+            <div class="relative min-w-0 border-b border-white/10 lg:border-b-0 lg:border-r">
+                <div class="aspect-video bg-black">
+                    <iframe
+                        :key="activeVideo.id"
+                        :src="`https://www.youtube-nocookie.com/embed/${activeVideo.id}`"
+                        :title="activeVideo.title"
+                        class="h-full w-full"
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+
+                <div class="flex flex-col gap-4 border-t border-white/10 px-5 py-5 text-white sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
+                            Vídeo {{ activeIndex + 1 }} de {{ videos.length }}
+                        </p>
+                        <h3 class="site-heading mt-1 text-lg font-semibold">{{ activeVideo.title }}</h3>
+                        <p class="mt-1 text-xs leading-5 text-white/55">{{ activeVideo.description }}</p>
+                    </div>
+
+                    <div class="flex shrink-0 gap-2">
+                        <button
+                            type="button"
+                            class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 hover:bg-white/10 hover:text-white"
+                            aria-label="Vídeo anterior"
+                            @click="selecionarAnterior"
+                        >
+                            <ChevronLeft class="h-5 w-5" />
+                        </button>
+                        <button
+                            type="button"
+                            class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 hover:bg-white/10 hover:text-white"
+                            aria-label="Próximo vídeo"
+                            @click="selecionarProximo"
+                        >
+                            <ChevronRight class="h-5 w-5" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#111827] p-3">
+                <div class="flex items-center gap-2 px-2 py-3 text-white/45">
+                    <Video class="h-4 w-4" />
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Selecione um vídeo</span>
+                </div>
+
+                <div class="grid gap-2">
+                    <button
+                        v-for="(video, index) in videos"
+                        :key="video.id"
+                        type="button"
+                        :class="index === activeIndex
+                            ? 'border-red-500/50 bg-red-500/12 text-white'
+                            : 'border-transparent text-white/58 hover:bg-white/5 hover:text-white'"
+                        class="group flex items-center gap-3 rounded-md border p-2 text-left transition"
+                        @click="activeIndex = index"
+                    >
+                        <div class="relative h-16 w-24 shrink-0 overflow-hidden rounded-md bg-slate-800">
+                            <img
+                                :src="`https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`"
+                                :alt="video.title"
+                                class="h-full w-full object-cover opacity-80 transition group-hover:opacity-100"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <span class="absolute inset-0 flex items-center justify-center bg-slate-950/25">
+                                <Play class="h-5 w-5 fill-current" />
+                            </span>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="line-clamp-2 text-xs font-bold leading-5">{{ video.title }}</p>
+                            <p class="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
+                                {{ String(index + 1).padStart(2, '0') }} / {{ String(videos.length).padStart(2, '0') }}
+                            </p>
+                        </div>
+                        <ArrowUpRight class="h-4 w-4 shrink-0 opacity-30" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
