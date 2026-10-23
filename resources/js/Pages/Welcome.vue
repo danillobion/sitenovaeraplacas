@@ -1,49 +1,40 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
-import LinksSection from "@/Components/LinksSection.vue";
 import ChatButton from '@/Components/ChatButton.vue';
-import { ref } from 'vue';
-import VideoGallery from "@/Components/VideoGallery.vue";
-import MovingEventGallery from '@/Components/MovingEventGallery.vue'
-
-const scrollToSection = (event, sectionId) => {
-  event.preventDefault(); // Evita o comportamento padrão do link
-
-  const section = document.getElementById(sectionId);
-  if (section) {
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-};
-const selectedFaq = ref(null);
-const modalVisible = ref(false);
-const modalOrigin = ref({ x: 0, y: 0 });
-const transformOrigin = ref('center center');
-
-const openModal = (faq, event) => {
-  selectedFaq.value = faq;
-  modalVisible.value = true;
-
-  // Captura posição do clique
-  const x = event.clientX;
-  const y = event.clientY;
-
-  modalOrigin.value = { x, y };
-  transformOrigin.value = `${x}px ${y}px`;
-};
-
-const closeModal = () => {
-  modalVisible.value = false;
-  setTimeout(() => {
-    selectedFaq.value = null;
-  }, 300); // tempo igual ao da animação
-};
+import LinksSection from '@/Components/LinksSection.vue';
+import MovingEventGallery from '@/Components/MovingEventGallery.vue';
+import VideoGallery from '@/Components/VideoGallery.vue';
+import { Head } from '@inertiajs/vue3';
+import {
+    ArrowRight,
+    Award,
+    Building2,
+    Check,
+    ChevronDown,
+    Clock3,
+    Facebook,
+    Instagram,
+    LockKeyhole,
+    Mail,
+    MapPin,
+    Menu,
+    MessageCircle,
+    Phone,
+    Search,
+    ShieldCheck,
+    Sparkles,
+    X,
+    Zap,
+} from 'lucide-vue-next';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 const props = defineProps({
     estampadoras: {
         type: Array,
+        default: () => [],
     },
     produtos: {
         type: Array,
+        default: () => [],
     },
     informativoAtivo: {
         type: Object,
@@ -51,676 +42,888 @@ const props = defineProps({
     },
 });
 
-const informativo = ref(props.informativoAtivo)
-const showModal = ref(!!(props.informativoAtivo?.habilitado && props.informativoAtivo?.titulo))
+const menuAberto = ref(false);
+const paginaNoTopo = ref(true);
+const faqAberta = ref(0);
+const buscaLoja = ref('');
+const showInformativo = ref(
+    Boolean(props.informativoAtivo?.habilitado && props.informativoAtivo?.titulo),
+);
+let sectionObserver = null;
 
-function handleImageError() {
-    document.getElementById('screenshot-container')?.classList.add('!hidden');
-    document.getElementById('docs-card')?.classList.add('!row-span-1');
-    document.getElementById('docs-card-content')?.classList.add('!flex-row');
-    document.getElementById('background')?.classList.add('!hidden');
-}
+const navItems = [
+    { label: 'Início', id: 'home' },
+    { label: 'Empresa', id: 'sobre' },
+    { label: 'Produtos', id: 'produtos' },
+    { label: 'Unidades', id: 'lojas' },
+    { label: 'Dúvidas', id: 'duvidas' },
+    { label: 'Conteúdo', id: 'midia' },
+];
 
-const toggleCard = (index) => {
-    const loja = props.estampadoras?.[index];
+const indicadores = [
+    { value: '25+', label: 'anos de experiência', icon: Clock3 },
+    { value: 'ISO 9001', label: 'qualidade certificada', icon: Award },
+    { value: 'Mercosul', label: 'padrão e conformidade', icon: ShieldCheck },
+    { value: 'Ágil', label: 'atendimento especializado', icon: Zap },
+];
 
-    if (!loja) {
-        return;
+const diferenciais = [
+    'Matéria-prima de alto padrão e procedência.',
+    'Equipe preparada para um atendimento rápido e seguro.',
+    'Produção alinhada às normas vigentes do setor.',
+];
+
+const faqs = [
+    {
+        question: 'Como realizar a troca das placas antigas para o padrão Mercosul?',
+        answer: 'Primeiro, faça a vistoria em uma empresa credenciada pelo DETRAN/MA. Depois, solicite a mudança apresentando os documentos exigidos. Com a guia de emplacamento, procure uma de nossas unidades para realizar a estampagem e a instalação.',
+    },
+    {
+        question: 'Perdi uma das placas. Como solicito outra?',
+        answer: 'Faça a vistoria em uma empresa credenciada e solicite a substituição no DETRAN. Após o pagamento da taxa e a emissão da guia, procure uma de nossas lojas para a confecção e instalação da nova placa.',
+    },
+    {
+        question: 'Como funciona o primeiro emplacamento?',
+        answer: 'O primeiro emplacamento deve ser iniciado pelo site de emplacamento digital. Tenha em mãos a nota fiscal do veículo e os documentos do proprietário para realizar as etapas de validação.',
+    },
+    {
+        question: 'Posso instalar a placa em casa?',
+        answer: 'Não. A instalação deve ser realizada por um profissional credenciado, pois o processo exige validações de segurança antes da emissão do CRLV.',
+    },
+    {
+        question: 'Apenas o proprietário pode solicitar uma nova placa?',
+        answer: 'Não necessariamente. O proprietário pode ser representado por procuração, desde que o documento atenda às exigências vigentes e descreva corretamente o veículo e o serviço solicitado.',
+    },
+    {
+        question: 'Ainda é possível obter placas cinzas?',
+        answer: 'Não. A fabricação e a estampagem das placas antigas foram encerradas com a adoção do padrão Mercosul. Veículos com placas cinzas em bom estado só precisam substituí-las nos casos previstos pela regulamentação.',
+    },
+    {
+        question: 'A placa é entregue na hora?',
+        answer: 'A estampagem e a instalação são rápidas, mas dependem da emissão da Guia de Emplacamento e das autorizações necessárias pelo DETRAN/MA.',
+    },
+    {
+        question: 'Quais formas de pagamento são aceitas?',
+        answer: 'Aceitamos cartão de débito, crédito, boleto bancário e PIX. Os pagamentos precisam ser rastreáveis, conforme as regras aplicáveis ao setor.',
+    },
+];
+
+const linksUteis = [
+    {
+        label: 'Emplacamento Digital',
+        description: 'Inicie seu processo de emplacamento.',
+        url: 'https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23611',
+        icon: 'car',
+    },
+    {
+        label: 'Portarias',
+        description: 'Consulte normas e regulamentações.',
+        url: 'https://www.detran.ma.gov.br/inicio/paginas/Portarias.xhtml',
+        icon: 'file',
+    },
+    {
+        label: 'Parcelamento de débitos',
+        description: 'Veja opções oficiais de parcelamento.',
+        url: 'https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=22878',
+        icon: 'wallet',
+    },
+    {
+        label: 'Vistoria',
+        description: 'Informações sobre vistoria veicular.',
+        url: 'https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23581',
+        icon: 'search',
+    },
+    {
+        label: 'Credenciados',
+        description: 'Consulte empresas credenciadas.',
+        url: 'https://www.detran.ma.gov.br/inicio/paginas/Credenciado.xhtml',
+        icon: 'badge',
+    },
+    {
+        label: 'Ciretrans',
+        description: 'Localize uma unidade de atendimento.',
+        url: 'https://www.detran.ma.gov.br/inicio/paginas/ListarCiretrans.xhtml',
+        icon: 'building',
+    },
+    {
+        label: 'Multas PRF',
+        description: 'Acesse a consulta oficial da PRF.',
+        url: 'https://nadaconsta.prf.gov.br/nada_consta/index.jsf',
+        icon: 'ticket',
+    },
+    {
+        label: 'Multas DNIT',
+        description: 'Consulte infrações no portal do DNIT.',
+        url: 'https://servicos.dnit.gov.br/multas/',
+        icon: 'gavel',
+    },
+    {
+        label: 'CEP dos Municípios',
+        description: 'Pesquise endereços nos Correios.',
+        url: 'https://buscacepinter.correios.com.br/app/endereco/index.php',
+        icon: 'map',
+    },
+];
+
+const normalizarTexto = (value) =>
+    String(value ?? '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+
+const lojasFiltradas = computed(() => {
+    const termo = normalizarTexto(buscaLoja.value.trim());
+
+    if (!termo) {
+        return props.estampadoras;
     }
 
-    loja.expandido = !loja.expandido;
+    return props.estampadoras.filter((loja) => {
+        const endereco = loja.endereco ?? {};
+        const conteudo = [
+            loja.nome,
+            endereco.cidade,
+            endereco.bairro,
+            endereco.uf,
+            endereco.logradouro,
+        ]
+            .map(normalizarTexto)
+            .join(' ');
+
+        return conteudo.includes(termo);
+    });
+});
+
+const formatarNumero = (numero) => String(numero ?? '').replace(/\D/g, '');
+
+const enderecoLoja = (loja) => {
+    const endereco = loja?.endereco ?? {};
+
+    return [
+        endereco.logradouro,
+        endereco.numero,
+        endereco.bairro,
+        [endereco.cidade, endereco.uf].filter(Boolean).join(' - '),
+    ]
+        .filter(Boolean)
+        .join(', ');
 };
 
-const formatarNumero = (numero) => {
-    if (!numero) {
-        return "";
+const mapsUrl = (loja) => {
+    const endereco = loja?.endereco ?? {};
+
+    if (endereco.latitude && endereco.longitude) {
+        return `https://www.google.com/maps?q=${endereco.latitude},${endereco.longitude}`;
     }
 
-    return numero.replace(/\D/g, "");
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoLoja(loja))}`;
 };
+
+const scrollToSection = (sectionId) => {
+    menuAberto.value = false;
+    document.getElementById(sectionId)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+    });
+};
+
+const handleScroll = () => {
+    paginaNoTopo.value = window.scrollY < 24;
+};
+
+const handleKeydown = (event) => {
+    if (event.key === 'Escape') {
+        menuAberto.value = false;
+        showInformativo.value = false;
+    }
+};
+
+onMounted(() => {
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('keydown', handleKeydown);
+
+    sectionObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    sectionObserver?.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12,
+            rootMargin: '0px 0px -8% 0px',
+        },
+    );
+
+    document.querySelectorAll('[data-reveal]').forEach((element) => {
+        sectionObserver?.observe(element);
+    });
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('keydown', handleKeydown);
+    sectionObserver?.disconnect();
+});
 </script>
 
 <template>
+    <Head title="Início">
+        <meta
+            name="description"
+            content="Placas veiculares Mercosul com qualidade, segurança e atendimento especializado. Encontre a unidade Nova Era mais próxima."
+        />
+    </Head>
 
-
-    <div class="relative min-h-screen">
-  <!-- Navbar -->
-  <nav
-  :class="{
-    'bg-transparent': isAtTop,
-    'bg-white shadow-lg text-black': !isAtTop,
-    'text-white': isAtTop && !isMobile,
-    'text-red-500': !isAtTop 
-  }"
-  class="fixed w-full top-0 z-50 backdrop-blur-md transition-all duration-300"
->
-  <div class="container mx-auto flex justify-between items-center py-4 px-6">
-    <!-- Logo -->
-    <div class="logo-container flex justify-center items-center">
-    <img 
-        src="/images/logo.jpg" 
-        alt="Logo da Empresa" 
-        class="w-16 md:w-40 h-auto rounded-lg shadow-md" 
-    />
-    
-</div>
-
-
-    <!-- Botão de Menu (Mobile) -->
-    <button @click="showMenuMobile = !showMenuMobile" class="block md:hidden text-gray-900 focus:outline-none">
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-  </svg>
-</button>
-
-    <!-- Menu Desktop -->
-    <ul class="hidden md:flex space-x-12 text-lg font-bold">
-      <li><a href="#home" @click="scrollToSection($event, 'home')" class="hover:text-red-600">Início</a></li>
-      <li><a href="#sobre" @click="scrollToSection($event, 'sobre')" class="hover:text-red-600">Quem Somos</a></li>
-      <li><a href="#produtos" @click="scrollToSection($event, 'produtos')" class="hover:text-red-600">Produtos</a></li>
-      <li><a href="#lojas" @click="scrollToSection($event, 'lojas')" class="hover:text-red-600">Nossas Lojas</a></li>
-      <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas')" class="hover:text-red-600">Dúvidas</a></li>
-      <li><a href="#midia" @click="scrollToSection($event, 'midia')" class="hover:text-red-600">Galeria</a></li>
-      <li><a href="#galeria" @click="scrollToSection($event, 'galeria')" class="hover:text-red-600">Eventos</a></li>
-      <li><a href="#links" @click="scrollToSection($event, 'links')" class="hover:text-red-600">Muito Mais</a></li>
-      
-    </ul>
-
-      <!-- Menu Mobile -->
-      <transition name="fade">
-  <ul v-if="showMenuMobile" class="absolute left-0 top-full w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden">
-    <li><a href="#home" @click="scrollToSection($event, 'home'); showMenuMobile = false" class="hover:text-red-500">Início</a></li>
-    <li><a href="#sobre" @click="scrollToSection($event, 'sobre'); showMenuMobile = false" class="hover:text-red-500">Quem Somos</a></li>
-    <li><a href="#produtos" @click="scrollToSection($event, 'produtos'); showMenuMobile = false" class="hover:text-red-500">Produtos</a></li>
-    <li><a href="#lojas" @click="scrollToSection($event, 'lojas'); showMenuMobile = false" class="hover:text-red-500">Nossas Lojas</a></li>
-    <li><a href="#duvidas" @click="scrollToSection($event, 'duvidas'); showMenuMobile = false" class="hover:text-red-500">Dúvidas Frequentes</a></li>
-    <li><a href="#midia" @click="scrollToSection($event, 'midia'); showMenuMobile = false" class="hover:text-red-500">Galeria</a></li>
-    <li><a href="#galeria" @click="scrollToSection($event, 'galeria'); showMenuMobile = false" class="hover:text-red-500">Eventos</a></li>
-    <li><a href="#links" @click="scrollToSection($event, 'links'); showMenuMobile = false" class="hover:text-red-500">Muito Mais</a></li>
-    
-
-    <a href="/login" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-900">Área Restrita</a>
-  </ul>
-</transition>
-
-      <!-- Botão Login -->
-      <a href="/login" class="hidden md:block bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700 flex items-center space-x-2">
-    <i class="fas fa-lock"></i>
-    <span>Área Restrita</span>
-</a>
-    </div>
-  </nav>
-
-
- <!-- Modal do Informativo -->
-  <div
-    v-if="showModal && informativo"
-    class="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50"
-  >
-    <div class="bg-white rounded-2xl p-6 max-w-lg w-full relative z-[10000]">
-      <button
-        @click="showModal = false"
-        class="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold"
-      >
-        ×
-      </button>
-
-      <h2 class="text-xl font-semibold mb-3">{{ informativo.titulo }}</h2>
-
-      <img
-        v-if="informativo.imagem"
-        :src="`/storage/${informativo.imagem}`"
-        class="rounded-lg shadow-md"
-      />
-    </div>
-  </div>
-
-
-
-
-
-  
-  <!-- Seção Home -->
-  <section
-    id="home"
-    class="relative flex flex-wrap items-center justify-center text-gray-900 overflow-hidden h-screen py-20 bg-cover bg-center"
-    :style="{ backgroundImage: 'url(/images/background.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }"
-  >
-    <div class="container mx-auto px-4 md:px-64 flex flex-col-reverse md:flex-row items-center gap-12 md:gap-16 max-w-[90%]">
-      <!-- Texto e Botão -->
-      <div class="text-center md:text-left w-full md:w-1/2 text-white">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-bold text-white">
-          PLACA MERCOSUL<br> É NA NOVA ERA!
-        </h1>
-        <br /><br />
-        <ul class="text-left text-lg sm:text-xl lg:text-3xl mb-6 space-y-2 ml-0">
-          <li class="font-bold"> <span class="text-green-500">✓</span>  MELHOR QUALIDADE </li>
-          <li class="font-bold"> <span class="text-green-500">✓</span>  MAIS AGILIDADE</li>
-          <li class="font-bold"> <span class="text-green-500">✓</span>  MAIOR SEGURANÇA </li>
-          <li class="font-bold"> <span class="text-green-500">✓</span>  MAIOR REDE DO BRASIL </li>
-        </ul>
-        <br />
-        <p class="text-lg sm:text-xl lg:text-2xl mb-6 font-bold">
-          📍 Peça a sua placa Mercosul com quem entende do assunto!
-        </p>
-        <a
-          href="https://wa.me/559884209099"
-          target="_blank"
-          class="bg-green-600 font-bold hover:bg-green-900 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-110 block md:inline-block"
+    <div class="landing-page min-h-screen overflow-x-hidden bg-[#f7f7f5] text-slate-900">
+        <header
+            :class="paginaNoTopo
+                ? 'border-transparent bg-slate-950/10 text-white'
+                : 'border-slate-200 bg-white/95 text-slate-900 shadow-[0_8px_30px_rgba(15,23,42,0.08)]'"
+            class="fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 backdrop-blur-xl"
         >
-          Fale Conosco no WhatsApp
-        </a>
-      </div>
-    </div>
-  </section>
+            <div class="mx-auto flex h-[76px] max-w-[1480px] items-center justify-between gap-6 px-5 lg:px-8">
+                <button
+                    type="button"
+                    class="flex shrink-0 items-center gap-3 text-left"
+                    aria-label="Voltar ao início"
+                    @click="scrollToSection('home')"
+                >
+                    <img
+                        src="/images/logo.jpg"
+                        alt="Nova Era Placas"
+                        class="h-12 w-auto rounded-md border border-white/20 bg-white object-contain shadow-sm"
+                    />
+                    <span class="hidden xl:block">
+                        <strong class="block font-sans text-sm tracking-[0.16em]">NOVA ERA</strong>
+                        <span
+                            :class="paginaNoTopo ? 'text-white/65' : 'text-slate-500'"
+                            class="block text-[10px] font-semibold uppercase tracking-[0.18em]"
+                        >
+                            Placas veiculares
+                        </span>
+                    </span>
+                </button>
 
-  </div>
+                <nav class="hidden items-center gap-1 lg:flex" aria-label="Navegação principal">
+                    <button
+                        v-for="item in navItems"
+                        :key="item.id"
+                        type="button"
+                        :class="paginaNoTopo
+                            ? 'text-white/80 hover:bg-white/10 hover:text-white'
+                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'"
+                        class="rounded-md px-3 py-2 text-sm font-bold transition"
+                        @click="scrollToSection(item.id)"
+                    >
+                        {{ item.label }}
+                    </button>
+                </nav>
 
-       <!-- Sobre -->
-       <section
-        id="sobre"
-        class="py-20 px-6 md:px-16 text-center fade-in bg-white-100 container mx-auto"
-        data-reveal="up"
-       >
-  <h2 class="text-4xl font-bold mb-4">Sobre Nós</h2><br><br><br>
+                <div class="flex items-center gap-2">
+                    <a
+                        href="/login"
+                        class="hidden items-center gap-2 rounded-md bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(220,38,38,0.25)] transition hover:bg-red-700 sm:inline-flex"
+                    >
+                        <LockKeyhole class="h-4 w-4" />
+                        Área Restrita
+                    </a>
 
-  <div class="flex flex-col md:flex-row items-center justify-center gap-12">
-    <!-- Imagem da esquerda mais para a esquerda -->
-    <div class="w-full md:w-1/3 flex justify-center fade-in" data-reveal="left" style="--reveal-delay: 120ms">
-      <img src="../../../public/images/foto2.jpg" alt="Imagem" class="w-3/4 max-w-md h-auto rounded-full shadow-lg object-contain">
-    </div>
-
-    <!-- Texto + imagens abaixo centralizados -->
-    <div class="w-full md:w-3/5 lg:w-2/3 p-8 text-center md:text-left max-w-4xl mx-auto flex flex-col items-center fade-in" data-reveal="right" style="--reveal-delay: 180ms">
-      <h2 class="text-2xl font-bold text-gray-800 text-center">Qualidade e Compromisso em Todo Lugar</h2>
-      <p class="mt-4 text-lg text-gray-600 font-bold text-xl">
-        Com mais de 25 anos de experiência, a Nova Era Placas se consolidou como referência em qualidade, compromisso e transparência no fornecimento de placas de identificação veicular.
-        Contamos com lojas espalhadas por todo o Maranhão e também fora do estado, garantindo que nossos clientes tenham acesso ao melhor em placas veiculares, onde quer que estejam.
-        Nossa equipe altamente capacitada oferece um atendimento ágil e personalizado.
-        Trabalhamos com responsabilidade para entregar soluções seguras e de alto padrão, sempre alinhadas às normas mais exigentes do setor.  
-      </p><br>
-
-      <h2 class="text-2xl font-bold text-gray-800 text-center">Excelência Garantida</h2>
-      <p class="mt-4 text-lg text-gray-600 font-bold text-xl">
-        Nossas placas são produzidas com matéria-prima de alto padrão. Possuímos o selo ISO 9001, certificação internacional que atesta excelência na gestão da qualidade. Além disso, seguimos rigorosamente a norma *ISO 7591*, que define os padrões para placas de veículos automotores e reboques, garantindo durabilidade, segurança e conformidade com as regulamentações vigentes.
-      </p><br>
-      
-      <!-- Imagens abaixo do texto -->
-      <div class="flex flex-col items-center py-10 bg-white-100 fade-in" data-reveal="zoom" style="--reveal-delay: 260ms">
-        <div class="flex flex-col md:flex-row items-center justify-center gap-8">
-          <img src="../../../public/images/selo.png" alt="Imagem 1" class="h-80 w-80 object-contain sm:h-96 sm:w-96 md:h-64 md:w-64">
-          <img src="../../../public/images/iso.png" alt="Imagem 2" class="h-80 w-80 object-contain sm:h-96 sm:w-96 md:h-64 md:w-64">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-  
-      <!-- Produtos -->
-      <section
-        v-if="produtos.length > 0"
-        id="produtos"
-        class="py-20 bg-gray-100 px-6 text-center fade-in"
-        data-reveal="up"
-      >
-        <div class="container mx-auto px-6">
-        <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Nossos Produtos</h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div 
-            v-for="(produto, index) in produtos" 
-            :key="index" 
-            class="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl fade-in"
-            data-reveal="zoom"
-            :style="{ '--reveal-delay': `${(index % 3) * 120}ms` }"
-          >
-            <img :src="produto.imagem" :alt="produto.nome" class="w-full">
-            <div class="p-4 text-left">
-              <h2 class="font-semibold text-gray-800" style="font-size: 25px;">{{ produto.nome }}</h2>
-              <p class="text-gray-600 mt-2">{{ produto.descricao }}</p>
-              <p v-if="produto.exibir_valor" class="text-lg font-bold text-blue-600 mt-2">{{ produto.valor }}</p>
+                    <button
+                        type="button"
+                        :class="paginaNoTopo
+                            ? 'border-white/20 bg-white/10 text-white'
+                            : 'border-slate-200 bg-white text-slate-700'"
+                        class="inline-flex h-10 w-10 items-center justify-center rounded-md border lg:hidden"
+                        :aria-expanded="menuAberto"
+                        aria-label="Abrir menu"
+                        @click="menuAberto = !menuAberto"
+                    >
+                        <X v-if="menuAberto" class="h-5 w-5" />
+                        <Menu v-else class="h-5 w-5" />
+                    </button>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      </section>
-  
-      <!-- Lojas -->
-      
-    <section id="lojas" class="py-20 px-6 text-center fade-in" data-reveal="up">
-      <h2 class="text-3xl font-bold">Onde Estamos</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        
-        <div v-for="(loja, index) in estampadoras" :key="index" 
-             class="relative bg-white p-4 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-all duration-300 fade-in" 
-             data-reveal="up"
-             :style="{ '--reveal-delay': `${(index % 4) * 90}ms` }"
-             @click="toggleCard(index)">
-          <img :src="loja.imagem" alt="Loja" class="w-full h-auto object-contain rounded-t-lg">
-          <div class="p-4" :class="{'h-32': !loja.expandido, 'h-auto': loja.expandido}">
-            <h3 class="text-xl font-semibold text-red-600">{{ loja.nome }}</h3>
-            <p class="text-sm text-gray-700 mt-2 text-gray-400">CNPJ: {{ loja.cnpj_formatado }}</p>
-            <p class="text-sm text-gray-700 text-gray-400">Telefone: <a :href="'https://wa.me/55' + formatarNumero(loja.telefone)" target="_blank" class="text-red-600 underline" >{{ loja.telefone_formatado }}</a></p>
-            <p class="text-sm text-gray-700 text-gray-400">Localização: 
 
-              <a :href="'https://www.google.com/maps?q=' + loja.endereco.latitude + ',' + loja.endereco.longitude" target="_blank" class="text-red-600 underline">Ver no Maps</a>
-            </p>
-          </div>
-        </div>
-        
-      </div>
-    </section>
-  
-  
-     
-    <!-- Cards de Dúvidas Frequentes -->
-<section
-  id="duvidas"
-  class="py-20 px-6 bg-cover bg-center bg-no-repeat fade-in"
-  data-reveal="up"
-  style="background-image: url('/images/fundo2.png')"
->
-  <h2 class="text-3xl font-bold text-white text-center mb-12 drop-shadow-md">
-    Dúvidas Frequentes
-  </h2>
+            <transition name="mobile-menu">
+                <div
+                    v-if="menuAberto"
+                    class="border-t border-slate-200 bg-white px-5 py-4 text-slate-900 shadow-xl lg:hidden"
+                >
+                    <nav class="mx-auto grid max-w-[1480px] gap-1" aria-label="Navegação mobile">
+                        <button
+                            v-for="item in navItems"
+                            :key="`mobile-${item.id}`"
+                            type="button"
+                            class="rounded-md px-3 py-3 text-left text-sm font-bold hover:bg-slate-100"
+                            @click="scrollToSection(item.id)"
+                        >
+                            {{ item.label }}
+                        </button>
+                        <a
+                            href="/login"
+                            class="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-red-600 px-4 py-3 text-sm font-bold text-white sm:hidden"
+                        >
+                            <LockKeyhole class="h-4 w-4" />
+                            Área Restrita
+                        </a>
+                    </nav>
+                </div>
+            </transition>
+        </header>
 
-  <div class="flex justify-start">
-    <div class="flex flex-col gap-6 w-full max-w-md md:max-w-lg lg:max-w-xl p-4 rounded-lg">
-      <div
-        v-for="(faq, index) in faqs"
-        :key="index"
-        class="relative overflow-hidden bg-white shadow-lg rounded-lg p-4 cursor-pointer transition-transform hover:scale-105 hover:shadow-2xl group fade-in"
-        data-reveal="left"
-        :style="{ '--reveal-delay': `${index * 90}ms` }"
-        @click="openModal(faq, $event)"
-      >
-        <!-- Fundo vermelho animado -->
-        <span
-          class="absolute inset-0 bg-red-500 rounded-lg transform scale-y-0 origin-bottom transition-transform duration-500 ease-in-out group-hover:scale-y-100"
-        ></span>
-
-        <!-- Conteúdo na frente -->
-        <h3
-          class="relative z-10 text-md font-semibold text-gray-800 transition-colors duration-500 group-hover:text-white"
+        <div
+            v-if="showInformativo && informativoAtivo"
+            class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            :aria-label="informativoAtivo.titulo"
+            @click.self="showInformativo = false"
         >
-          {{ faq.question }}
-        </h3>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal (mantida intacta) -->
-  <transition
-    enter-active-class="duration-300 ease-out"
-    enter-from-class="opacity-0 scale-50"
-    enter-to-class="opacity-100 scale-100"
-    leave-active-class="duration-300 ease-in"
-    leave-from-class="opacity-100 scale-100"
-    leave-to-class="opacity-0 scale-50"
-  >
-    <div
-      v-if="modalVisible"
-      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-    >
-      <div
-        class="bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-[600px] transition-transform duration-300"
-        :style="`transform-origin: ${transformOrigin}`"
-      >
-        <h3 class="text-2xl font-semibold text-gray-800 mb-4">
-          {{ selectedFaq?.question }}
-        </h3>
-        <p class="text-lg text-gray-700 mb-4">{{ selectedFaq?.answer }}</p>
-        <button
-          @click="closeModal"
-          class="mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700"
-        >
-          Fechar
-        </button>
-      </div>
-    </div>
-  </transition>
-</section>
-
-
-
- <!-- Galeria de vídeo -->
-<section id="midia" class="py-12 bg-white px-6 text-center fade-in" data-reveal="up">
-  <div class="fade-in" data-reveal="zoom" style="--reveal-delay: 120ms">
-    <VideoGallery />
-  </div>
-</section>
-
-<!-- Galeria de Fotos -->
-<section id="galeria" class="py-20 bg-white-100 px-6 text-center fade-in" data-reveal="up">
-  <div class="fade-in" data-reveal="zoom" style="--reveal-delay: 140ms">
-    <MovingEventGallery />
-  </div>
-</section>
-
-
-  
-      <!-- Links -->
-      <section id="links" class="py-20 bg-white-100 px-6 text-center fade-in" data-reveal="up">
-        <div class="fade-in" data-reveal="up" style="--reveal-delay: 120ms">
-          <LinksSection :links="meusLinks" />
+            <div class="relative w-full max-w-2xl overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl">
+                <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4">
+                    <div class="border-l-2 border-red-500 pl-3">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
+                            Comunicado
+                        </p>
+                        <h2 class="mt-1 font-sans text-lg font-bold text-slate-900">
+                            {{ informativoAtivo.titulo }}
+                        </h2>
+                    </div>
+                    <button
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-50"
+                        aria-label="Fechar comunicado"
+                        @click="showInformativo = false"
+                    >
+                        <X class="h-5 w-5" />
+                    </button>
+                </div>
+                <img
+                    v-if="informativoAtivo.imagem"
+                    :src="`/storage/${informativoAtivo.imagem}`"
+                    :alt="informativoAtivo.titulo"
+                    class="max-h-[70vh] w-full object-contain"
+                />
+            </div>
         </div>
-        
-<p class="mt-6 text-sm text-gray-600 text-center">
-      <strong>Aviso de Isenção de Responsabilidade:</strong> Este site não possui qualquer vínculo com o Departamento Estadual de Trânsito (DETRAN) ou qualquer outro órgão governamental. Os links aqui disponibilizados são de fontes oficiais e têm o propósito de facilitar o acesso a informações públicas. Recomendamos sempre conferir diretamente nos sites oficiais para garantir a veracidade das informações.
-    </p><br>
-    <p>Para acessar o site oficial do Detran, <a href="https://www.detran.ma.gov.br/inicio/paginas/Home.xhtml" target="_blank" rel="noopener noreferrer" class="text-red-500 hover:underline">Clique Aqui</a>.</p>
-</section>
-  
-      <!-- Rodapé -->
-      <footer class="bg-red-600 text-white py-6">
-      <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-      <!-- Direitos Autorais -->
-      <p class="text-sm text-center md:text-left">
-        © {{ new Date().getFullYear() }} Nova Era Placas - Todos os direitos reservados.
-      </p>
 
-      <!-- Redes Sociais -->
-      <div class="flex space-x-4 mt-4 md:mt-0">
-        <a href="https://www.instagram.com/novaera.placass/" target="_blank" class="hover:text-gray-300">
-          <i class="fab fa-instagram text-2xl"></i>
-        </a>
-        <a href="https://www.facebook.com/people/Nova-Era-Placas/61559921292385/" target="_blank" class="hover:text-gray-300">
-          <i class="fab fa-facebook text-2xl"></i>
-        </a>
-        <a href="https://wa.me/559884209099" target="_blank" class="hover:text-gray-300">
-          <i class="fab fa-whatsapp text-2xl"></i>
-        </a>
-        <a href="mailto:novaeraplacas@yahoo.com" class="hover:text-gray-300">
-          <i class="fas fa-envelope text-2xl"></i>
-        </a>
-      </div>
-      </div>
-      <ChatButton />
-      </footer>
-    
-  </template>
-  
-  <script>
+        <main>
+            <section
+                id="home"
+                class="relative flex min-h-[760px] scroll-mt-20 items-center overflow-hidden bg-slate-950 pt-28 text-white"
+            >
+                <img
+                    src="/images/background.jpg"
+                    alt="Veículo com placa padrão Mercosul"
+                    class="absolute inset-0 h-full w-full object-cover object-center"
+                    fetchpriority="high"
+                />
+                <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(9,14,27,0.95)_0%,rgba(9,14,27,0.82)_42%,rgba(9,14,27,0.28)_78%,rgba(9,14,27,0.54)_100%)]" />
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_78%_24%,rgba(220,38,38,0.28),transparent_28%)]" />
+                <div class="absolute inset-0 hero-grid opacity-20" />
 
+                <div class="relative mx-auto w-full max-w-[1480px] px-5 pb-32 lg:px-8">
+                    <div class="max-w-3xl" data-reveal>
+                        <div class="inline-flex items-center gap-2 border-l-2 border-red-500 pl-3 text-xs font-bold uppercase tracking-[0.25em] text-white/75">
+                            <Sparkles class="h-4 w-4 text-red-400" />
+                            Experiência, segurança e procedência
+                        </div>
 
-  export default {
-  data() {
+                        <h1 class="site-heading mt-7 text-4xl font-bold leading-[1.04] tracking-[-0.025em] sm:text-5xl lg:text-6xl">
+                            Placa Mercosul<br />
+                            <span class="text-red-500">é na Nova Era.</span>
+                        </h1>
 
-    return {
-      isAtTop: true,
-      isMobile: false,
-      showMenuMobile: false,
-      sectionObserver: null,
-      
-      faqs: [
+                        <p class="mt-6 max-w-2xl text-base font-medium leading-8 text-white/70 sm:text-lg">
+                            Atendimento especializado, produção de alto padrão e uma rede preparada
+                            para cuidar do seu emplacamento com rapidez e segurança.
+                        </p>
 
-        {
-          question: "Como realizar a troca das placas antigas para o modelo padrão Mercosul?",
-          answer: "Para trocar as placas, primeiro faça a vistoria em uma empresa credenciada pelo DETRAN/MA. Depois, solicite a mudança no DETRAN apresentando os documentos exigidos. Com a guia de emplacamento em mãos, vá até uma de nossas lojas para a estampagem e instalação, finalizando o processo com a emissão do CRLV."
-        },
-        {
-          question: "Perdi uma das placas, como solicitar outra?",
-          answer: "Se perdeu uma placa, faça a vistoria em uma empresa credenciada e solicite a substituição no DETRAN com os documentos necessários. Após pagar a taxa e obter a guia de emplacamento, basta ir a uma de nossas lojas para a confecção e instalação imediata da nova placa."
-        },
-        {
-          question: "Como funciona o primeiro emplacamento?",
-          answer: "O primeiro emplacamento agora é 100% digital e deve ser iniciado pelo site www.emplacamentoma.com.br. É necessário ter a nota fiscal do veículo e realizar o reconhecimento facial do proprietário. Para mais segurança, recomendamos o auxílio de um despachante credenciado."
-        },
-        {
-          question: "Posso instalar a placa em casa?",
-          answer: "Não. A instalação deve ser feita por um profissional credenciado, pois o DETRAN exige validações de segurança antes de emitir o CRLV. Além disso, o processo inclui reconhecimento facial e verificação via inteligência artificial. Mas não se preocupe, é rápido e você sai da loja com o documento pronto."
-        },
-        {
-          question: "Apenas o proprietário pode solicitar uma nova placa?",
-          answer: "Não necessariamente. O proprietário pode ser representado por procuração, que pode ser particular para parentes de primeiro grau e despachantes credenciados, ou pública para os demais casos. A procuração deve conter os dados do veículo e a especificação do serviço, conforme a portaria 767/2015 do DETRAN/MA."
-        },
-        {
-          question: "Ainda é possível obter as placas cinzas?",
-          answer: "Não. Com a adoção do padrão Mercosul, a fabricação e estampagem das placas antigas foram proibidas. No entanto, veículos que já possuem placas cinza em bom estado não precisam trocá-las, salvo em casos de perda, dano ou furto, quando a substituição será obrigatória."
-        },
-        {
-          question: "A placa é entregue na hora?",
-          answer: "Sim. A estampagem e instalação são rápidas, mas só podem ser feitas após a emissão da Guia de Emplacamento pelo DETRAN/MA. Em alguns casos, é necessário que o processo esteja auditado. Após a instalação, as validações de segurança são realizadas e o CRLV é emitido automaticamente."
-        },
-        {
-          question: "Quais são as formas de pagamento aceitas?",
-          answer: "Aceitamos cartão de débito, crédito (parcelado em até 3x sem juros), boleto bancário e PIX. De acordo com as portarias 618/2021 e 537/2023, os pagamentos devem ser rastreáveis, portanto, não aceitamos dinheiro em espécie."
-        },
-      ],
+                        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                            <a
+                                href="https://wa.me/559884209099"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center justify-center gap-2 rounded-md bg-red-600 px-6 py-3.5 text-sm font-extrabold text-white shadow-[0_14px_30px_rgba(220,38,38,0.32)] transition hover:-translate-y-0.5 hover:bg-red-700"
+                            >
+                                <MessageCircle class="h-5 w-5" />
+                                Falar pelo WhatsApp
+                            </a>
+                            <button
+                                type="button"
+                                class="inline-flex items-center justify-center gap-2 rounded-md border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-extrabold text-white backdrop-blur-sm transition hover:bg-white/20"
+                                @click="scrollToSection('lojas')"
+                            >
+                                <MapPin class="h-5 w-5" />
+                                Encontrar uma unidade
+                            </button>
+                        </div>
 
+                        <div class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-white/75">
+                            <span class="inline-flex items-center gap-2">
+                                <Check class="h-4 w-4 text-emerald-400" /> Melhor qualidade
+                            </span>
+                            <span class="inline-flex items-center gap-2">
+                                <Check class="h-4 w-4 text-emerald-400" /> Mais agilidade
+                            </span>
+                            <span class="inline-flex items-center gap-2">
+                                <Check class="h-4 w-4 text-emerald-400" /> Maior segurança
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-      meusLinks: [
-  {
-    label: "Emplacamento Digital",
-    url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23611",
-    icon: "fas fa-car"
-  },
-  {
-    label: "Portarias",
-    url: "https://www.detran.ma.gov.br/inicio/paginas/Portarias.xhtml",
-    icon: "fas fa-file-alt"
-  },
-  {
-    label: "Parcelamento de débitos",
-    url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=22878",
-    icon: "fas fa-coins"
-  },
-  {
-    label: "Vistoria",
-    url: "https://www.detran.ma.gov.br/inicio/paginas/Pagina.xhtml?id=23581",
-    icon: "fas fa-search"
-  },
-  {
-    label: "Credenciados",
-    url: "https://www.detran.ma.gov.br/inicio/paginas/Credenciado.xhtml",
-    icon: "fas fa-id-badge"
-  },
-  {
-    label: "Ciretrans",
-    url: "https://www.detran.ma.gov.br/inicio/paginas/ListarCiretrans.xhtml",
-    icon: "fas fa-building"
-  },
-  {
-    label: "Multas PRF",
-    url: "https://nadaconsta.prf.gov.br/nada_consta/index.jsf",
-    icon: "fas fa-ticket-alt"
-  },
-  {
-    label: "Multas DNIT",
-    url: "https://servicos.dnit.gov.br/multas/",
-    icon: "fas fa-gavel"
-  },
-  {
-    label: "CEP dos Municípios",
-    url: "https://buscacepinter.correios.com.br/app/endereco/index.php",
-    icon: "fas fa-map-marker-alt"
-  }
+            <section class="relative z-10 -mt-20 px-5 lg:px-8" aria-label="Indicadores da Nova Era">
+                <div
+                    class="mx-auto grid max-w-[1320px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.14)] sm:grid-cols-2 lg:grid-cols-4"
+                    data-reveal
+                >
+                    <div
+                        v-for="indicador in indicadores"
+                        :key="indicador.label"
+                        class="flex items-center gap-4 border-b border-slate-200 px-5 py-5 last:border-b-0 sm:[&:nth-child(odd)]:border-r lg:border-b-0 lg:border-r lg:last:border-r-0"
+                    >
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-red-50 text-red-600">
+                            <component :is="indicador.icon" class="h-5 w-5" />
+                        </div>
+                        <div>
+                            <strong class="block font-sans text-lg font-extrabold text-slate-950">
+                                {{ indicador.value }}
+                            </strong>
+                            <span class="text-xs font-semibold text-slate-500">
+                                {{ indicador.label }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-      ],
-      selectedFaq: null
-    };
-  },
+            <section id="sobre" class="scroll-mt-20 px-5 py-24 lg:px-8 lg:py-32">
+                <div class="mx-auto grid max-w-[1320px] gap-14 lg:grid-cols-[0.88fr,1.12fr] lg:items-center">
+                    <div data-reveal="left">
+                        <div class="overflow-hidden rounded-md border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.10)]">
+                            <img
+                                src="/images/foto2.jpg"
+                                alt="Equipe e estrutura da Nova Era Placas"
+                                class="block h-auto w-full object-contain"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <div class="flex items-center gap-4 border-t border-slate-200 bg-white px-5 py-4">
+                                <strong class="site-heading shrink-0 text-xl font-bold text-red-600">25 anos</strong>
+                                <span class="h-8 w-px bg-slate-200"></span>
+                                <p class="text-xs font-semibold leading-5 text-slate-500">
+                                construindo confiança em cada atendimento.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div data-reveal="right">
+                        <p class="section-eyebrow">Quem somos</p>
+                        <h2 class="section-title mt-4">
+                            Qualidade que acompanha cada etapa do seu veículo.
+                        </h2>
+                        <p class="mt-6 text-base leading-8 text-slate-600">
+                            A Nova Era Placas é referência no fornecimento de placas de identificação
+                            veicular. Unimos experiência, atendimento próximo, certificação ISO 9001 e
+                            produção alinhada à ISO 7591 para entregar soluções seguras e em conformidade.
+                        </p>
 
-  
-  mounted() {
+                        <ul class="mt-7 space-y-4">
+                            <li
+                                v-for="diferencial in diferenciais"
+                                :key="diferencial"
+                                class="flex items-start gap-3 text-sm font-semibold leading-6 text-slate-700"
+                            >
+                                <span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                                    <Check class="h-3.5 w-3.5" />
+                                </span>
+                                {{ diferencial }}
+                            </li>
+                        </ul>
 
-    window.addEventListener('resize', this.checkDevice);
-    window.addEventListener('scroll', this.handleScroll);
-    this.checkDevice();
-    this.handleScroll();
+                        <div class="mt-9 grid gap-3 sm:grid-cols-2">
+                            <div class="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4">
+                                <img src="/images/selo.png" alt="Selo de qualidade" class="h-14 w-16 object-contain" loading="lazy" />
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Procedência</p>
+                                    <p class="mt-1 text-sm font-extrabold text-slate-900">Qualidade comprovada</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4">
+                                <img src="/images/iso.png" alt="Certificação ISO 9001" class="h-14 w-16 object-contain" loading="lazy" />
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Certificação</p>
+                                    <p class="mt-1 text-sm font-extrabold text-slate-900">Gestão ISO 9001</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-    this.sectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("fade-in-visible");
-            this.sectionObserver?.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.16,
-        rootMargin: "0px 0px -8% 0px",
-      }
-    );
+            <section
+                id="produtos"
+                class="scroll-mt-20 border-y border-slate-200 bg-white px-5 py-24 lg:px-8"
+            >
+                <div class="mx-auto max-w-[1320px]">
+                    <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between" data-reveal>
+                        <div class="max-w-2xl">
+                            <p class="section-eyebrow">Nossos produtos</p>
+                            <h2 class="section-title mt-4">Soluções para diferentes tipos de veículo.</h2>
+                        </div>
+                        <p class="max-w-md text-sm leading-7 text-slate-500">
+                            Produtos fabricados com materiais selecionados para oferecer acabamento,
+                            resistência e conformidade.
+                        </p>
+                    </div>
 
-    this.$nextTick(() => {
-      document.querySelectorAll(".fade-in").forEach((element) => {
-        this.sectionObserver?.observe(element);
-      });
-    });
-  },
+                    <div v-if="produtos.length" class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        <article
+                            v-for="(produto, index) in produtos"
+                            :key="produto.id ?? index"
+                            class="group overflow-hidden rounded-lg border border-slate-200 bg-[#fafafa] transition duration-300 hover:-translate-y-1 hover:border-red-200 hover:shadow-[0_20px_45px_rgba(15,23,42,0.09)]"
+                            data-reveal
+                            :style="{ '--reveal-delay': `${(index % 3) * 90}ms` }"
+                        >
+                            <div class="overflow-hidden border-b border-slate-200 bg-white">
+                                <img
+                                    :src="produto.imagem"
+                                    :alt="produto.nome"
+                                    class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.025]"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </div>
+                            <div class="p-5">
+                                <div class="flex items-start justify-between gap-4">
+                                    <h3 class="site-heading text-lg font-semibold text-slate-950">
+                                        {{ produto.nome }}
+                                    </h3>
+                                    <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-red-500"></span>
+                                </div>
+                                <p class="mt-3 text-sm leading-6 text-slate-600">
+                                    {{ produto.descricao }}
+                                </p>
+                                <p v-if="produto.exibir_valor" class="mt-5 text-lg font-extrabold text-blue-700">
+                                    {{ produto.valor }}
+                                </p>
+                            </div>
+                        </article>
+                    </div>
 
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-    window.removeEventListener('resize', this.checkDevice);
-    this.sectionObserver?.disconnect();
-  },
+                    <div v-else class="mt-10 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
+                        <p class="text-sm font-bold text-slate-700">Produtos disponíveis em nossas unidades.</p>
+                        <p class="mt-1 text-xs text-slate-500">Fale com nossa equipe para conhecer as opções.</p>
+                    </div>
+                </div>
+            </section>
 
+            <section id="lojas" class="scroll-mt-20 px-5 py-24 lg:px-8">
+                <div class="mx-auto max-w-[1320px]">
+                    <div class="grid gap-8 lg:grid-cols-[1fr,0.8fr] lg:items-end" data-reveal>
+                        <div>
+                            <p class="section-eyebrow">Onde estamos</p>
+                            <h2 class="section-title mt-4">Encontre a Nova Era mais próxima.</h2>
+                            <p class="mt-5 max-w-2xl text-sm leading-7 text-slate-600">
+                                Todas as unidades cadastradas estão disponíveis abaixo. Pesquise por
+                                cidade, bairro ou nome e acesse rapidamente o WhatsApp e a localização.
+                            </p>
+                        </div>
 
+                        <label class="relative block">
+                            <span class="sr-only">Pesquisar unidade</span>
+                            <Search class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                            <input
+                                v-model="buscaLoja"
+                                type="search"
+                                placeholder="Digite uma cidade ou unidade"
+                                class="w-full rounded-lg border-slate-300 bg-white py-3.5 pl-12 pr-4 text-sm font-semibold shadow-sm focus:border-red-500 focus:ring-red-500"
+                            />
+                        </label>
+                    </div>
 
+                    <div v-if="lojasFiltradas.length" class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                        <article
+                            v-for="(loja, index) in lojasFiltradas"
+                            :key="loja.id ?? index"
+                            class="overflow-hidden rounded-lg border border-slate-200 bg-white transition duration-300 hover:border-red-200 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)]"
+                            data-reveal
+                            :style="{ '--reveal-delay': `${(index % 4) * 70}ms` }"
+                        >
+                            <img
+                                v-if="loja.imagem"
+                                :src="loja.imagem"
+                                :alt="loja.nome"
+                                class="h-40 w-full border-b border-slate-100 bg-slate-50 object-cover"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <div v-else class="flex h-28 items-center justify-center border-b border-slate-100 bg-slate-50 text-slate-300">
+                                <Building2 class="h-9 w-9" />
+                            </div>
 
-  methods: {
+                            <div class="p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-red-600">
+                                    {{ loja.endereco?.cidade || 'Unidade Nova Era' }}
+                                </p>
+                                <h3 class="site-heading mt-2 text-base font-semibold text-slate-950">
+                                    {{ loja.nome }}
+                                </h3>
+                                <p class="mt-2 text-[11px] font-semibold text-slate-400">
+                                    CNPJ {{ loja.cnpj_formatado }}
+                                </p>
+                                <p class="mt-3 min-h-[42px] text-xs leading-5 text-slate-500">
+                                    {{ enderecoLoja(loja) || 'Endereço disponível com nosso atendimento.' }}
+                                </p>
 
-    handleScroll() {
-      this.isAtTop = window.scrollY === 0;
-    },
+                                <div class="mt-4 grid grid-cols-2 gap-2 border-t border-slate-100 pt-4">
+                                    <a
+                                        :href="`https://wa.me/55${formatarNumero(loja.telefone)}`"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex items-center justify-center gap-2 rounded-md bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700"
+                                    >
+                                        <Phone class="h-3.5 w-3.5" /> WhatsApp
+                                    </a>
+                                    <a
+                                        :href="mapsUrl(loja)"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex items-center justify-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                                    >
+                                        <MapPin class="h-3.5 w-3.5" /> Mapa
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
 
-    checkDevice() {
-      this.isMobile = window.innerWidth <= 768;
+                    <div v-else class="mt-10 rounded-lg border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+                        <MapPin class="mx-auto h-8 w-8 text-slate-300" />
+                        <p class="mt-3 text-sm font-bold text-slate-700">Nenhuma unidade encontrada.</p>
+                        <p class="mt-1 text-xs text-slate-500">Tente pesquisar por outra cidade ou bairro.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="duvidas" class="scroll-mt-20 border-y border-slate-200 bg-slate-950 px-5 py-24 text-white lg:px-8">
+                <div class="mx-auto grid max-w-[1320px] gap-12 lg:grid-cols-[0.72fr,1.28fr]">
+                    <div data-reveal="left">
+                        <p class="text-xs font-bold uppercase tracking-[0.24em] text-red-400">Dúvidas frequentes</p>
+                        <h2 class="site-heading mt-4 text-3xl font-semibold leading-tight tracking-[-0.02em] sm:text-4xl">
+                            Informação simples para você decidir com segurança.
+                        </h2>
+                        <p class="mt-5 max-w-md text-sm leading-7 text-white/60">
+                            Reunimos respostas para as principais dúvidas sobre emplacamento, instalação e pagamento.
+                        </p>
+                        <a
+                            href="https://wa.me/559884209099"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="mt-8 inline-flex items-center gap-2 rounded-md bg-red-600 px-5 py-3 text-sm font-bold text-white hover:bg-red-700"
+                        >
+                            Ainda tenho uma dúvida
+                            <ArrowRight class="h-4 w-4" />
+                        </a>
+                    </div>
+
+                    <div class="divide-y divide-white/10 border-y border-white/15" data-reveal="right">
+                        <article v-for="(faq, index) in faqs" :key="faq.question">
+                            <button
+                                type="button"
+                                class="flex w-full items-center justify-between gap-5 py-5 text-left"
+                                :aria-expanded="faqAberta === index"
+                                @click="faqAberta = faqAberta === index ? null : index"
+                            >
+                                <span class="text-sm font-bold leading-6 text-white sm:text-base">
+                                    {{ faq.question }}
+                                </span>
+                                <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/15 text-white/60">
+                                    <ChevronDown :class="{ 'rotate-180': faqAberta === index }" class="h-4 w-4 transition" />
+                                </span>
+                            </button>
+                            <div v-show="faqAberta === index">
+                                <p class="max-w-3xl pb-5 pr-12 text-sm leading-7 text-white/60">
+                                    {{ faq.answer }}
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="midia" class="scroll-mt-20 bg-white px-5 py-24 lg:px-8">
+                <VideoGallery />
+            </section>
+
+            <section id="galeria" class="scroll-mt-20 px-5 py-24 lg:px-8">
+                <MovingEventGallery />
+            </section>
+
+            <section id="links" class="scroll-mt-20 border-t border-slate-200 bg-white px-5 py-24 lg:px-8">
+                <LinksSection :links="linksUteis" />
+
+                <div class="mx-auto mt-10 max-w-[1320px] border-t border-slate-200 pt-6 text-xs leading-6 text-slate-500">
+                    <p>
+                        <strong class="text-slate-700">Aviso de isenção de responsabilidade:</strong>
+                        este site não possui vínculo com o Departamento Estadual de Trânsito (DETRAN)
+                        ou outro órgão governamental. Os links oficiais são disponibilizados apenas para
+                        facilitar o acesso a informações públicas.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="border-t-4 border-red-600 bg-[#0d1321] px-5 py-12 text-white lg:px-8">
+            <div class="mx-auto grid max-w-[1320px] gap-10 md:grid-cols-[1.2fr,0.8fr,0.8fr]">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <img src="/images/logo.jpg" alt="Nova Era Placas" class="h-12 w-auto rounded-md bg-white object-contain" />
+                        <div>
+                            <p class="font-sans text-sm font-bold tracking-[0.15em]">NOVA ERA</p>
+                            <p class="text-xs text-white/50">Placas veiculares</p>
+                        </div>
+                    </div>
+                    <p class="mt-5 max-w-md text-sm leading-7 text-white/55">
+                        Qualidade, segurança e atendimento especializado para o seu emplacamento.
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/40">Navegação</p>
+                    <div class="mt-4 grid gap-3">
+                        <button
+                            v-for="item in navItems.slice(1, 5)"
+                            :key="`footer-${item.id}`"
+                            type="button"
+                            class="w-fit text-sm font-semibold text-white/65 hover:text-white"
+                            @click="scrollToSection(item.id)"
+                        >
+                            {{ item.label }}
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/40">Fale conosco</p>
+                    <div class="mt-4 flex gap-2">
+                        <a href="https://www.instagram.com/novaera.placass/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                            <Instagram class="h-5 w-5" />
+                        </a>
+                        <a href="https://www.facebook.com/people/Nova-Era-Placas/61559921292385/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                            <Facebook class="h-5 w-5" />
+                        </a>
+                        <a href="https://wa.me/559884209099" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp">
+                            <MessageCircle class="h-5 w-5" />
+                        </a>
+                        <a href="mailto:novaeraplacas@yahoo.com" class="social-link" aria-label="E-mail">
+                            <Mail class="h-5 w-5" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-auto mt-10 flex max-w-[1320px] flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+                <p>© {{ new Date().getFullYear() }} Nova Era Placas. Todos os direitos reservados.</p>
+                <a href="https://www.detran.ma.gov.br/inicio/paginas/Home.xhtml" target="_blank" rel="noopener noreferrer" class="hover:text-white">
+                    Acessar site oficial do DETRAN/MA
+                </a>
+            </div>
+        </footer>
+
+        <ChatButton />
+    </div>
+</template>
+
+<style scoped>
+.hero-grid {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 52px 52px;
+}
+
+.section-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #dc2626;
+}
+
+.section-title {
+    max-width: 48rem;
+    font-family: 'IBM Plex Sans', Manrope, sans-serif;
+    font-size: clamp(1.75rem, 2.5vw, 2.35rem);
+    font-weight: 600;
+    line-height: 1.16;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+}
+
+.social-link {
+    display: inline-flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 0.375rem;
+    color: rgba(255, 255, 255, 0.68);
+    transition: 180ms ease;
+}
+
+.social-link:hover {
+    border-color: rgba(248, 113, 113, 0.65);
+    background: rgba(220, 38, 38, 0.18);
+    color: white;
+}
+
+[data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0);
+    transition:
+        opacity 750ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 750ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal='left'] {
+    transform: translate3d(-38px, 0, 0);
+}
+
+[data-reveal='right'] {
+    transform: translate3d(38px, 0, 0);
+}
+
+[data-reveal].is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
     }
-  
-  
-  },
-   
-};
-  
-  </script>
-  
-
-  <style>
-  @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");
-  body {
-  font-family: sans-serif;
 }
-.fade-in {
-  opacity: 0;
-  filter: blur(14px);
-  transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 58px), 0) scale(var(--reveal-scale, 0.97));
-  transition:
-    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: transform, opacity, filter;
-}
-.fade-in-visible {
-  opacity: 1;
-  filter: blur(0);
-  transform: translate3d(0, 0, 0) scale(1);
-}
-.fade-in[data-reveal="left"] {
-  --reveal-x: -72px;
-  --reveal-y: 12px;
-}
-.fade-in[data-reveal="right"] {
-  --reveal-x: 72px;
-  --reveal-y: 12px;
-}
-.fade-in[data-reveal="up"] {
-  --reveal-y: 72px;
-}
-.fade-in[data-reveal="zoom"] {
-  --reveal-y: 28px;
-  --reveal-scale: 0.9;
-}
-nav ul li a {
-  transition: color 0.3s;
-}
-nav ul li a:hover {
-  color: #e60000;
-}
-
-/* Efeito de aumentar o card quando o mouse passa sobre ele */
-.hover\:scale-105:hover {
-  transform: scale(1.05);
-}
-
-/* Suaviza o efeito de sombra */
-.hover\:shadow-2xl:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-nav ul li a {
-  transition: color 0.3s;
-}
-
-nav ul li a:hover {
-  color: #e60000;
-}
-
- /* Efeito para abertura e fechamento de card de dúvidas frequentes no 12*/
-
-.modal-enter-active, .modal-leave-active {
-  transition: opacity 0.5s, transform 0.5s ease;
-}
-.modal-enter, .modal-leave-to /* .modal-leave-active em <2.1.8 */ {
-  opacity: 0;
-  transform: translateY(-30px); /* Deslizar para cima ao abrir */
-}
-
-.modal-leave-to {
-  opacity: 0;
-  transform: translateY(30px); /* Deslizar para baixo ao fechar */
-}
-
-/* Efeito para desvanecer a opacidade e mover o modal para a posição inicial */
-.modal-enter-to {
-  opacity: 1;
-  transform: translateY(0); /* Modal começa na posição correta ao abrir */
-}
-
-/*tela inicial*/
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-.animate-spin-slow {
-  animation: spin-slow 10s linear infinite;
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.animate-fade-in {
-  animation: fade-in 1.5s ease-out;
-}
-
-@keyframes slide-in {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-slide-in {
-  animation: slide-in 1.5s ease-out;
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-3deg); }
-  50% { transform: rotate(3deg); }
-}
-.animate-wiggle {
-  animation: wiggle 0.3s ease-in-out infinite;
-}
-
-@keyframes zoom-in {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-.animate-zoom-in {
-  animation: zoom-in 1.5s ease-out;
-}
-  </style>
+</style>

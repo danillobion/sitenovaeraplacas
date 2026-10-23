@@ -1658,145 +1658,192 @@ onBeforeUnmount(() => {
                         class="fixed inset-0 z-[120] bg-slate-950/60 px-4 py-6 backdrop-blur-sm"
                         @click.self="fecharDetalhes"
                     >
-                        <div class="mx-auto flex h-full max-w-7xl flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl">
-                        <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
-                                    Detalhes completos
-                                </p>
-                                <h3 class="mt-2 font-display text-3xl font-extrabold tracking-tight text-slate-900">
-                                    Placa {{ encomendaSelecionada.placa }}
-                                </h3>
-                                <p class="mt-2 text-sm text-slate-500">
-                                    Consulta detalhada com todos os campos retornados pela API.
-                                </p>
+                        <div class="mx-auto flex h-full max-w-[1500px] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl">
+                            <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7">
+                                <div class="border-l-2 border-red-500 pl-4">
+                                    <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-blue-600">
+                                        Detalhes completos
+                                    </p>
+                                    <h3 class="mt-1 font-display text-2xl font-extrabold tracking-tight text-slate-900">
+                                        Placa {{ encomendaSelecionada.placa }}
+                                    </h3>
+                                    <p class="mt-1 text-sm text-slate-500">
+                                        Consulta detalhada com todos os campos retornados pela API.
+                                    </p>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                                    aria-label="Fechar detalhes"
+                                    @click="fecharDetalhes"
+                                >
+                                    <X class="h-5 w-5" />
+                                </button>
                             </div>
 
-                            <button
-                                type="button"
-                                class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
-                                @click="fecharDetalhes"
-                            >
-                                <X class="h-5 w-5" />
-                            </button>
-                        </div>
+                            <div class="grid flex-1 overflow-y-auto lg:grid-cols-[minmax(330px,0.72fr)_minmax(0,1.28fr)]">
+                                <aside class="border-b border-slate-200 bg-slate-50/80 px-5 py-5 sm:px-6 lg:border-b-0 lg:border-r">
+                                    <MercosulPlatePreview
+                                        size="modal"
+                                        :placa="encomendaSelecionada.placa"
+                                        :cidade-uf="encomendaSelecionada.cidadeUf"
+                                        :tipo-veiculo="encomendaSelecionada.tipoVeiculo"
+                                        :placa-dianteira="encomendaSelecionada.placaDianteira"
+                                        :placa-traseira="encomendaSelecionada.placaTraseira"
+                                        :placa-segunda-traseira="encomendaSelecionada.placaSegundaTraseira"
+                                    />
 
-                        <div class="grid flex-1 overflow-y-auto lg:grid-cols-[0.9fr,1.1fr]">
-                            <aside class="border-b border-slate-100 bg-slate-50 px-6 py-6 lg:border-b-0 lg:border-r">
-                                <MercosulPlatePreview
-                                    size="modal"
-                                    :placa="encomendaSelecionada.placa"
-                                    :cidade-uf="encomendaSelecionada.cidadeUf"
-                                    :tipo-veiculo="encomendaSelecionada.tipoVeiculo"
-                                    :placa-dianteira="encomendaSelecionada.placaDianteira"
-                                    :placa-traseira="encomendaSelecionada.placaTraseira"
-                                    :placa-segunda-traseira="encomendaSelecionada.placaSegundaTraseira"
-                                />
-
-                                <div class="mt-6 grid gap-3 sm:grid-cols-2">
-                                    <div class="rounded-[18px] border border-slate-200 bg-white p-4">
-                                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                                            ID
-                                        </p>
-                                        <p class="mt-2 text-2xl font-extrabold text-slate-900">
-                                            {{ encomendaSelecionada.id }}
-                                        </p>
-                                        <p class="mt-2 text-sm text-slate-500">
-                                            Aut. {{ encomendaSelecionada.autorizacao }}
-                                        </p>
-                                    </div>
-
-                                    <div class="rounded-[18px] border border-slate-200 bg-white p-4">
-                                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                                            Configuração
-                                        </p>
-                                        <p class="mt-2 text-2xl font-extrabold text-slate-900">
-                                            {{ encomendaSelecionada.configuracaoPlaca }}
-                                        </p>
-                                        <p class="mt-2 text-sm text-slate-500">
-                                            {{ encomendaSelecionada.tipoVeiculo }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="mt-4 rounded-[18px] border border-slate-200 bg-white p-4">
-                                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                                        Resumo rápido
-                                    </p>
-                                    <div class="mt-4 space-y-4">
-                                        <div v-for="card in resumoDetalhes" :key="card.label">
-                                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
-                                                {{ card.label }}
-                                            </p>
-                                            <p class="mt-1 text-sm font-semibold text-slate-900">
-                                                {{ card.value }}
-                                            </p>
-                                            <p class="mt-1 text-xs text-slate-500">
-                                                {{ card.secondary }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </aside>
-
-                            <div class="space-y-6 px-6 py-6">
-                                <div class="grid gap-4 md:grid-cols-3">
-                                    <div class="rounded-[18px] border border-slate-200 bg-slate-50 p-4">
-                                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                                            Pagamento
-                                        </p>
-                                        <p class="mt-2 text-lg font-bold text-slate-900">
-                                            {{ encomendaSelecionada.pagamento }}
-                                        </p>
-                                    </div>
-
-                                    <div class="rounded-[18px] border border-slate-200 bg-slate-50 p-4">
-                                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                                            Documentos
-                                        </p>
-                                        <p class="mt-2 text-lg font-bold text-slate-900">
-                                            {{ encomendaSelecionada.documentos }}
-                                        </p>
-                                    </div>
-
-                                    <div class="rounded-[18px] border border-slate-200 bg-slate-50 p-4">
-                                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                                            Situação
-                                        </p>
-                                        <p class="mt-2 text-lg font-bold text-slate-900">
-                                            {{ encomendaSelecionada.situacao }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="grid gap-4 xl:grid-cols-2">
-                                    <section
-                                        v-for="section in detalhesEncomenda"
-                                        :key="section.title"
-                                        class="rounded-[20px] border border-slate-200 bg-white p-5 shadow-sm"
-                                    >
-                                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-blue-500">
-                                            {{ section.title }}
-                                        </p>
-
-                                        <div class="mt-4 grid gap-3 sm:grid-cols-2">
-                                            <div
-                                                v-for="field in section.items"
-                                                :key="`${section.title}-${field.label}`"
-                                                class="rounded-[16px] border border-slate-100 bg-slate-50 p-3"
-                                            >
-                                                <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                                                    {{ field.label }}
+                                    <div class="mt-5 overflow-hidden rounded-lg border border-slate-200 bg-white">
+                                        <div class="grid divide-y divide-slate-200 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+                                            <div class="px-4 py-3">
+                                                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                                                    ID da encomenda
                                                 </p>
-                                                <p class="mt-2 break-words text-sm font-semibold text-slate-900">
-                                                    {{ field.value }}
+                                                <p class="mt-1 text-lg font-extrabold text-slate-900">
+                                                    {{ encomendaSelecionada.id }}
+                                                </p>
+                                                <p class="mt-0.5 break-all text-xs text-slate-500">
+                                                    Aut. {{ encomendaSelecionada.autorizacao }}
+                                                </p>
+                                            </div>
+
+                                            <div class="px-4 py-3">
+                                                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                                                    Configuração
+                                                </p>
+                                                <p class="mt-1 text-lg font-extrabold text-slate-900">
+                                                    {{ encomendaSelecionada.configuracaoPlaca }}
+                                                </p>
+                                                <p class="mt-0.5 text-xs text-slate-500">
+                                                    {{ encomendaSelecionada.tipoVeiculo }}
                                                 </p>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <section class="mt-6">
+                                        <div class="flex items-center gap-3">
+                                            <span class="h-px flex-1 bg-slate-200"></span>
+                                            <h4 class="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+                                                Resumo rápido
+                                            </h4>
+                                            <span class="h-px flex-1 bg-slate-200"></span>
+                                        </div>
+
+                                        <dl class="mt-2 divide-y divide-slate-200">
+                                            <div
+                                                v-for="card in resumoDetalhes"
+                                                :key="card.label"
+                                                class="grid gap-1 py-3 sm:grid-cols-[96px_minmax(0,1fr)] sm:gap-4"
+                                            >
+                                                <dt class="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                                                    {{ card.label }}
+                                                </dt>
+                                                <dd class="min-w-0">
+                                                    <p class="break-words text-sm font-semibold text-slate-900">
+                                                        {{ card.value }}
+                                                    </p>
+                                                    <p class="mt-0.5 break-words text-xs text-slate-500">
+                                                        {{ card.secondary }}
+                                                    </p>
+                                                </dd>
+                                            </div>
+                                        </dl>
                                     </section>
+                                </aside>
+
+                                <div class="space-y-5 px-5 py-5 sm:px-6">
+                                    <section class="overflow-hidden rounded-lg border border-slate-200 bg-white">
+                                        <div class="grid divide-y divide-slate-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+                                            <div class="flex items-center gap-3 px-4 py-3.5">
+                                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600">
+                                                    <CircleDollarSign class="h-4 w-4" />
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                                                        Pagamento
+                                                    </p>
+                                                    <span
+                                                        class="mt-1 inline-flex border px-2 py-0.5 text-xs font-bold"
+                                                        :class="classeStatus(encomendaSelecionada.pagamentoCodigo)"
+                                                    >
+                                                        {{ encomendaSelecionada.pagamento }}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex items-center gap-3 px-4 py-3.5">
+                                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-amber-50 text-amber-600">
+                                                    <FileSearch2 class="h-4 w-4" />
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                                                        Documentos
+                                                    </p>
+                                                    <span
+                                                        class="mt-1 inline-flex border px-2 py-0.5 text-xs font-bold"
+                                                        :class="classeStatus(encomendaSelecionada.documentosCodigo)"
+                                                    >
+                                                        {{ encomendaSelecionada.documentos }}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex items-center gap-3 px-4 py-3.5">
+                                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-emerald-50 text-emerald-600">
+                                                    <ShieldCheck class="h-4 w-4" />
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                                                        Situação
+                                                    </p>
+                                                    <span
+                                                        class="mt-1 inline-flex border px-2 py-0.5 text-xs font-bold"
+                                                        :class="classeStatus(encomendaSelecionada.situacaoCodigo)"
+                                                    >
+                                                        {{ encomendaSelecionada.situacao }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <div class="grid items-start gap-4 xl:grid-cols-2">
+                                        <section
+                                            v-for="section in detalhesEncomenda"
+                                            :key="section.title"
+                                            class="overflow-hidden rounded-lg border border-slate-200 bg-white"
+                                        >
+                                            <div class="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
+                                                <span class="h-4 w-0.5 bg-red-500"></span>
+                                                <h4 class="text-[11px] font-bold uppercase tracking-[0.2em] text-blue-600">
+                                                    {{ section.title }}
+                                                </h4>
+                                                <span class="ml-auto text-[10px] font-semibold text-slate-400">
+                                                    {{ section.items.length }}
+                                                    {{ section.items.length === 1 ? 'campo' : 'campos' }}
+                                                </span>
+                                            </div>
+
+                                            <dl class="grid sm:grid-cols-2">
+                                                <div
+                                                    v-for="field in section.items"
+                                                    :key="`${section.title}-${field.label}`"
+                                                    class="min-w-0 border-b border-slate-100 px-4 py-3 sm:odd:border-r"
+                                                >
+                                                    <dt class="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                                                        {{ field.label }}
+                                                    </dt>
+                                                    <dd class="mt-1 break-words text-sm font-semibold leading-5 text-slate-800">
+                                                        {{ field.value }}
+                                                    </dd>
+                                                </div>
+                                            </dl>
+                                        </section>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 </transition>
